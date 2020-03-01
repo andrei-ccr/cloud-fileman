@@ -1,0 +1,4 @@
+#Ignore contents of Uploads folder, but include the folder
+uploads/*
+!uploads/.gitkeep
+UNUSED/

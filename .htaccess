@@ -1,0 +1,12 @@
+Options -Indexes
+
+RewriteEngine On
+
+RewriteCond %{THE_REQUEST} ^.*/index
+RewriteRule ^(.*)index$ /$1 [R=301,L]  
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(([^/]+/)*[^.]+)$ $1.php [L]
+
+RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^/]+/)*[^.#?\ ]+\.php([#?][^\ ]*)?\ HTTP/
+RewriteRule ^(([^/]+/)*[^.]+)\.php /$1 [R=301,L]
