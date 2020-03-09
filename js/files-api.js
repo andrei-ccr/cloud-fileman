@@ -31,6 +31,23 @@ var Files = {
 		});
 	},
 	
+	Newdir : function() {
+		var did = $('#dinfo').data("did");
+		var cdid = $('#dinfo').data("cd");
+		$.ajax( {
+			url: "operations/new",
+			data: {discid: did, cd: cdid},
+			cache: false,
+			type: 'post'
+		})
+		.done(function() {
+			Files.Read();
+		})
+		.fail(function(jqXHR) {
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Folderul nu poate fi creat aici. " + jqXHR.responseText);
+		});
+	},
+	
 	Read : function() {
 		$("#file-listing").empty();
 		var did = $('#dinfo').data("did");
@@ -84,40 +101,6 @@ var Files = {
 
 	Upload : function(files) {
 		var fd = new FormData();
-
-		var StartProgress = function() {
-			var intval = null;
-			var percent = 0;
-
-			$("#progress").show();
-
-			if(intval === null) {
-				intval = window.setInterval(function() {
-					$.ajax({
-						url: "operations/progress",
-						dataType: "json",
-						cache: false,
-						method: "get"
-					})
-					.done( function(data) {
-						if(data) {
-							console.log(data.bytes_processed);
-							console.log(data.content_length);
-							percent = Math.round((data.bytes_processed / data.content_length) * 100);
-						}
-
-						if(data.done) {
-							$("#progress").hide();
-							window.clearInterval(intval);
-							intval = null;
-							percent = 0;
-						}
-
-						$("#progress #percent").html(percent + "%");
-					});
-				}, 2000);
-			}
-		}
 		
 		const json = JSON.stringify({
 			discid: $("#dinfo").data("did"),
@@ -152,8 +135,6 @@ var Files = {
 		.fail(function(resp){
 			$("#errors").html(resp.error);
 		});
-
-		StartProgress();
 	},
 	
 	Deselect : function() {

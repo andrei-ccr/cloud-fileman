@@ -2,3 +2,4 @@
 uploads/*
 !uploads/.gitkeep
 UNUSED/
+disc.code-workspace

@@ -18,7 +18,7 @@ $(document).ready(function() {
 
 $(document).on("mousedown", function(e) {
 	if (!$(e.target).parents(".cm").length > 0) {
-		$(".cm").remove();0
+		$(".cm").remove();
 	}
 	
 	if(!$(e.target).is("input")) {
@@ -44,35 +44,9 @@ $(document).on("click", ".listing-container .f", function(e) {
 	}
 });
 
-/*$(document).on("click", "#side-bar .f", function(e) {
-	var selectedDir = $(this).data("folder");
-	Locations.Change(selectedDir);
-});
-
-$(document).on('contextmenu', "#side-bar .f", function(e) {
-	e.preventDefault();
-	e.stopPropagation();
-});*/
-
-
-//Setting click and modals !!!!!!!!!!!!!!!DEPRECATED !!!!!!!!!!111
-//
-/*$(document).on("click", "#settings-listing .f", function(e) {
-	Settings.ShowModal($(this).attr("class"));
-});
-
-$(document).on("click", ".modal-background", function(e) {
-	Settings.DismissModal();
-});
-
-$(document).on("click", ".modal", function(e) {
-	e.stopPropagation();
-});*/
-
-
 //File rename
 $(document).on('keypress', ".rename-input", function(e) {
-	var key = e.which;
+	let key = e.which;
 	if(key == 13) {
 		if($.trim($(".rename-input").val()) != "") {
 			Files.Rename(Status.targetFile.data("id"), $(".rename-input").val());
@@ -124,107 +98,14 @@ $(document).on('click', "#bar .fa-ellipsis-v", function(e) {
 	
 	json_status = JSON.stringify(Status);
 
-	$.post("inc/mobile-context-menu", {status : json_status}, function(resp) {
+	$.post("inc/bar-menu", {status : json_status}, function(resp) {
 		$("body").append(resp);
 		$(".m-context-menu").show(50).css({
 			top: "35px",
 			right: "0px"
 		});
-
-	});
-
-});
-
-
-$(document).on("click", "#cm-new-folder", function(e) {
-	var did = $('#dinfo').data("did");
-	var cdid = $('#dinfo').data("cd");
-	$.ajax( {
-		url: "../operations/new",
-		data: {discid: did, cd: cdid},
-		cache: false,
-		type: 'post'
-	})
-	.done(function() {
-		Files.Read();
-	})
-	.fail(function(jqXHR) {
-		$("#errors").html("<i class='fas fa-exclamation-circle'></i> Folderul nu poate fi creat aici. " + jqXHR.responseText);
 	});
 });
-
-$(document).on("click", "#cm-refresh", function() {
-	Files.Read();
-});
-
-$(document).on("click", "#cm-download", function() {
-	var fileid = Status.targetFile.data("id");
-	Files.Download(fileid);
-});
-
-$(document).on("click", "#cm-delete", function() {
-	var fileid = Status.targetFile.data("id");
-	Files.Trash(fileid);
-});
-
-$(document).on("click", "#cm-rename", function() {
-	Status.targetFile.find("span").replaceWith("<input type='text' value='"+Status.targetFilename+"' class='rename-input' autofocus>");
-	Status.targetFile.css("width", "auto");
-	$(".rename-input").focus();
-	$(".rename-input").select();
-});
-
-$(document).on("click", "#cm-open", function() {
-	var fileid = Status.targetFile.data("id");
-	
-	if(Status.targetFile.hasClass("dir")) {
-		Files.Change(fileid);
-	}
-});
-
-$(document).on("click", "#cm-view-tiles", function() {
-	$("#file-listing").removeClass("big-thumbs-view");
-	$("#file-listing").removeClass("icons-view");
-	$.post("operations/settings", {"files_view":0});
-});
-
-$(document).on("click", "#cm-view-icons", function() {
-	$("#file-listing").removeClass("big-thumbs-view");
-	$("#file-listing").addClass("icons-view");
-	$.post("operations/settings", {"files_view":1});
-});
-
-$(document).on("click", "#cm-view-bthumbs", function() {
-	$("#file-listing").addClass("big-thumbs-view");
-	$("#file-listing").removeClass("icons-view");
-	$.post("operations/settings", {"files_view":2});
-});
-
-$(document).on('click', "#cm-upload, #bar .fa-upload", function() {
-	$("#file-up").trigger('click');
-});
-
-$(document).on('click', "#cm-to-settings", function() {
-	return false;
-});
-
-$(document).on('click', "#cm-logout", function() {
-	$.get("/operations/logout", function() {
-		window.location = "/" //Reload without GET params
-	});
-});
-
-$(document).on('click', "#cm-login", function() {
-	document.cookie = "guest=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-	location.reload();
-});
-
-
-$(document).on("click", ".cm li", function(e) {
-	e.stopPropagation();
-	$(".cm").remove();
-});
-
 
 //Dismiss error message on click.
 $(document).on("click", "#errors", function() {
@@ -233,7 +114,6 @@ $(document).on("click", "#errors", function() {
 
 //Dismiss guest message on click.
 $(document).on("click", "#guest", function() {
-	
 	$(this).remove();
 });
 

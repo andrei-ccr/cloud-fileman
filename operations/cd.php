@@ -31,11 +31,10 @@
 
 				//Set SESSION vars. For website only
 				$_SESSION['cdid'] = $fid;
-				if(!isset($_SESSION['dir_list'])) { $dir_list = array(); $_SESSION['dir_list'] = array(); }
+				if(!isset($_SESSION['dir_list'])) { $_SESSION['dir_list'] = array(); }
 				array_push($_SESSION['dir_list'], $directory->GetFilename());
-				array_push($dir_list, $directory->GetFilename());
 
-				echo json_encode(array("path" => implode("/", $dir_list), "cdid" => $fid, "root" => false));
+				echo json_encode(array("path" => implode("/", $_SESSION['dir_list']), "cdid" => $fid, "root" => false));
 				http_response_code(200);
 				exit;
 			} else {
