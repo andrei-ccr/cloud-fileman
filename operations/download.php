@@ -37,7 +37,7 @@
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
-		readfile($_SERVER['DOCUMENT_ROOT'] ."/disk/uploads/" . $file->GetKeyname());
+		readfile($_SERVER['DOCUMENT_ROOT'] ."/uploads/" . $file->GetKeyname());
 		/*if($dat->IsLocal()) {
 			readfile($_SERVER['DOCUMENT_ROOT'] ."/disk/uploads/" . $dat->GetKeyname());
 		} else {
