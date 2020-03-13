@@ -1,7 +1,9 @@
 $(document).ready(function() {
 	$(document).on('click', '#btn-enter', function(e) {
-		$emailInput = $("#email-input").val();
-		$passInput = $("#pass-input").val();
+		$emailInput = $("#email").val();
+		$passInput = $("#pass").val();
+		console.log($emailInput);
+		console.log($passInput);
 		
 		$.ajax({
 			url: "/operations/login",
@@ -18,6 +20,10 @@ $(document).ready(function() {
 			}
 		})
 		.fail(function() {
+			if($("#error-container").length>0) {
+				$("#error-container").remove();
+			}
+			$("body").prepend('<div class="box-container" id="error-container"><p class="box-container-txt" style="color:red">Email-ul sau parola sunt incorecte. Incearca din nou.</p></div>');
 			console.log("System error");
 		});
 	});
@@ -36,6 +42,7 @@ $(document).ready(function() {
 			}
 		})
 		.fail(function() {
+			$("body").prepend('<p class="box-container-txt" style="color:red">A aparut o problema si nu va puteti loga. Incercati mai tarziu.</p>');
 			console.log("System error: couldn't log in as guest. Retry later.");
 		});
 	});

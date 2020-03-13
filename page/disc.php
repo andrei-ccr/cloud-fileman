@@ -23,7 +23,7 @@
 	
 	<div style="float:right;">
 		<div id="profile-pic"> <span id="profile-pic-txt">?</span> </div>
-		<span id="profile-name">Neinregistrat</span>
+		<span id="profile-name"><?php echo $username; ?></span>
 		<div id="line-separator"></div> 
 		<i class="fas fa-upload"></i> 
 		<div id="line-separator"></div> 
@@ -62,7 +62,7 @@
 	</div>
 </div>
 
-<div style="display:none;" id="dinfo" data-cd="<?php echo $_SESSION['cdid'];?>" data-did="<?php echo $_COOKIE['guest'];?>"></div>
+<div style="display:none;" id="dinfo" data-cd="<?php echo $_SESSION['cdid'];?>" data-did="<?php echo $discid;?>"></div>
 
 <script>
 	(function() {

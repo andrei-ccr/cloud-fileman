@@ -2,12 +2,15 @@
 	require_once("obj/Disc.php");
 	$isLoggedIn = true;
 	$disc = null;
+	$discid = -1;
+	$username = "Neinregistrat";
 
-	if(isset($_COOKIE['guest'])) {
+	if(isset($_COOKIE['guest']) && isset($_COOKIE['own'])) {
 		
 		//Guest's disc id is invalid
 		if(!is_numeric($_COOKIE['guest'])) {
 			setcookie("guest", "-1", time()-3600, '/') or die("");
+			setcookie("own", "-1", time()-3600, '/') or die("");
 			$isLoggedIn = false;
 		}
 		try {
@@ -15,12 +18,40 @@
 			if($disc->temporary == false) {
 				//This is not a valid guest disc.
 				setcookie("guest", "-1", time()-3600, '/') or die("");
+				setcookie("own", "-1", time()-3600, '/') or die("");
 				$isLoggedIn = false;
 			}
 		} catch(Exception $e){
 			setcookie("guest", "-1", time()-3600, '/') or die("");
+			setcookie("own", "-1", time()-3600, '/') or die("");
 			$isLoggedIn = false;
 			$error = $e->getMessage();
+		}
+
+		if($isLoggedIn) {
+			$discid = $_COOKIE['guest'];
+		}
+		
+	} else if(isset($_COOKIE['uid']) && isset($_COOKIE['per']) && isset($_COOKIE['did'])) {
+		try {
+			$disc = new Disc($_COOKIE['did']);
+			if($disc->temporary == true) {
+				//This is not a valid member disc.
+				setcookie("uid", "-1", time()-3600, '/') or die("");
+				setcookie("perm", "-1", time()-3600, '/') or die("");
+				setcookie("did", "-1", time()-3600, '/') or die("");
+				$isLoggedIn = false;
+			}
+		} catch(Exception $e){
+			setcookie("uid", "-1", time()-3600, '/') or die("");
+			setcookie("perm", "-1", time()-3600, '/') or die("");
+			setcookie("did", "-1", time()-3600, '/') or die("");
+			$isLoggedIn = false;
+			$error = $e->getMessage();
+		}
+		if($isLoggedIn) {
+			$discid = $_COOKIE['did'];
+			$username = "Membru";
 		}
 		
 	} else {
@@ -41,10 +72,10 @@
 	<?php 
 		if($isLoggedIn) {
 			require_once("inc/disc-page-head-includes.php");
-			$pageTitle = "Disc";
+			$pageTitle = "Cloud File Manager";
 		} else {
 			require_once("inc/auth-page-head-includes.php");
-			$pageTitle = "File manager in Cloud";
+			$pageTitle = "Cloud File Manager";
 		}
 	?>
 	
@@ -52,7 +83,7 @@
 	
 </head>
 <body>
-
+	
 	<?php
 		if($isLoggedIn) {
 			require_once("page/disc.php");
