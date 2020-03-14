@@ -1,6 +1,6 @@
 <?php
 	declare(strict_types=1);
-	
+	require_once("Exceptions.php");
 
 	define("DEBUG_SERVER", true);
 	

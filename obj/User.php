@@ -32,14 +32,23 @@ class User extends Connection {
 
 
     public function LoginAsGuest() : void {
-        $stmt = $this->conn->prepare("INSERT INTO discs(name, temporary, visibility) VALUES('__Temp', 1, 'public')");
-		$stmt->execute();
-        $guest_disc_id = (int)$this->conn->lastInsertId();
+        try {
+           $stmt = $this->conn->prepare("INSERT INTO discs(name, temporary, visibility) VALUES('__Temp', 1, 'public')");
+		    $stmt->execute();
+            $guest_disc_id = (int)$this->conn->lastInsertId();
 
-        $this->loggedAsGuest = true;
-        $this->disc_id = $guest_disc_id;
-        $this->permission_id = $this->GeneratePermId();
+            $this->loggedAsGuest = true;
+            $this->disc_id = $guest_disc_id;
+            $this->permission_id = $this->GeneratePermId(); 
 
+        } catch (Exception $e) {
+            $this->loggedAsGuest = false;
+            $this->disc_id = 0;
+            $this->permission_id = "";
+
+            throw new InsertGuestException();
+        }
+        
     }
 
     /** 
@@ -52,26 +61,44 @@ class User extends Connection {
     }
 
     public function LoginAsMember() {
-        if($this->loggedAsGuest) return;
+        if($this->loggedAsGuest) return; //TODO: Make transition from guest to member
 
         $passHash = hash("sha256", $this->password);
         
-        $stmt = $this->conn->prepare("SELECT * FROM users u LEFT JOIN discs_users du ON du.user_id=u.id WHERE u.email=:email AND u.password=:pass");
-        $stmt->bindParam(":email", $this->email);
-        $stmt->bindParam(":pass", $passHash);
-        $stmt->execute();
-        if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $this->user_id = (int)$row['user_id'];
-            $this->disc_id = (int)$row['disc_id'];
-            $this->permission_id = $this->GeneratePermId(); //Generate new permission id for this login
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM users u LEFT JOIN discs_users du ON du.user_id=u.id WHERE u.email=:email AND u.password=:pass");
+            $stmt->bindParam(":email", $this->email);
+            $stmt->bindParam(":pass", $passHash);
+            $stmt->execute();
+            if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $this->user_id = (int)$row['user_id'];
+                $this->disc_id = (int)$row['disc_id'];
+                $this->permission_id = $this->GeneratePermId(); //Generate new permission id for this login
+            } else {
+                $this->user_id = 0;
+                $this->disc_id = 0;
+                $this->permission_id = "";
+                throw new MemberNotFoundException("Row fetch returned false");
+            }
+        } catch (Exception $e) {
+            $this->user_id = 0;
+            $this->disc_id = 0;
+            $this->permission_id = "";
+            throw new MemberNotFoundException("Prepared statement threw an exception");
+        }
 
+        try {
             //Put the new permission id in the database
             $stmt2 = $this->conn->prepare("UPDATE discs SET permission_id=:permid WHERE id=:discid");
             $stmt2->bindParam(":permid", $this->permission_id);
             $stmt2->bindParam(":discid", $this->disc_id);
             $stmt2->execute();
-            
-        }
+        } catch (Exception $e) {
+            $this->user_id = 0;
+            $this->disc_id = 0;
+            $this->permission_id = "";
+            throw new PutPermissionException();
+        }         
     }
 
 

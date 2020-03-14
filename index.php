@@ -1,5 +1,8 @@
 <?php 
 	require_once("obj/Disc.php");
+
+	if(session_status() == PHP_SESSION_NONE) session_start();
+
 	$isLoggedIn = true;
 	$disc = null;
 	$discid = -1;
@@ -54,6 +57,28 @@
 			$username = "Membru";
 		}
 		
+	} else if(isset($_SESSION['uid']) && isset($_SESSION['per']) && isset($_SESSION['did'])) { 
+		try {
+			$disc = new Disc($_SESSION['did']);
+			if($disc->temporary == true) {
+				//This is not a valid member disc.
+				unset($_SESSION['uid']);
+				unset($_SESSION['per']);
+				unset($_SESSION['did']);
+				$isLoggedIn = false;
+				$error = "Not";
+			}
+		} catch(Exception $e){
+			unset($_SESSION['uid']);
+			unset($_SESSION['per']);
+			unset($_SESSION['did']);
+			$isLoggedIn = false;
+			$error = $e->getMessage();
+		}
+		if($isLoggedIn) {
+			$discid = $_SESSION['did'];
+			$username = "Membru";
+		}
 	} else {
 		$isLoggedIn = false;
 	}

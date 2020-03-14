@@ -14,17 +14,28 @@ $(document).ready(function() {
 		})
 		.done(function(resp) {
 			if(resp['result'] == "member") {
-				location.reload();
-			} else if(resp['result'] == "register") {
-				
+				//Client side login for web browser
+				$.ajax({
+					url: "/operations/web/login",
+					data: {
+						uid: resp['userid'], 
+						per: resp['permid'], 
+						did: resp['discid'],
+						remember: null
+					},
+					cache: false,
+					method: "post"
+				})
+				.done(function(res) {
+					location.reload();
+				})
+				.fail(function() {
+					ShowAnError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+				});
 			}
 		})
 		.fail(function() {
-			if($("#error-container").length>0) {
-				$("#error-container").remove();
-			}
-			$("body").prepend('<div class="box-container" id="error-container"><p class="box-container-txt" style="color:red">Email-ul sau parola sunt incorecte. Incearca din nou.</p></div>');
-			console.log("System error");
+			ShowAnError("Email-ul sau parola nu sunt corecte. Incearca din nou.");
 		});
 	});
 	
@@ -38,14 +49,32 @@ $(document).ready(function() {
 		})
 		.done(function(resp) {
 			if(resp['result'] == "guest") {
-				location.reload();
+				$.ajax({
+					url: "/operations/web/login",
+					data: {gdid: resp['discid'], gperid: resp['permid']},
+					cache: false,
+					method: "post"
+				})
+				.done(function(res) {
+					location.reload();
+				})
+				.fail(function() {
+					ShowAnError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+				});
 			}
 		})
 		.fail(function() {
-			$("body").prepend('<p class="box-container-txt" style="color:red">A aparut o problema si nu va puteti loga. Incercati mai tarziu.</p>');
-			console.log("System error: couldn't log in as guest. Retry later.");
+			ShowAnError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
 		});
 	});
 
 });
+
+
+function ShowAnError($error_msg) {
+	if($("#error-container").length>0) { $("#error-container").remove(); }
+	$("body").prepend('<div class="box-container" id="error-container"><p class="box-container-txt" style="color:red">' + $error_msg + '</p></div>');
+	
+}
+
 
