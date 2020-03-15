@@ -154,7 +154,7 @@ var Files = {
 		$.ajax({
 			url: 'operations/download', 
 			cache: false,
-			method: 'post',
+			method: 'get',
 			data: { fid: fid }
 		})
 		.done(function(resp) {
