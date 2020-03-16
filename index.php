@@ -1,5 +1,6 @@
 <?php 
 	require_once("obj/Disc.php");
+	require_once("obj/User.php");
 
 	if(session_status() == PHP_SESSION_NONE) session_start();
 
@@ -9,7 +10,6 @@
 	$username = "Neinregistrat";
 
 	if(isset($_COOKIE['guest']) && isset($_COOKIE['own'])) {
-		
 		//Guest's disc id is invalid
 		if(!is_numeric($_COOKIE['guest'])) {
 			setcookie("guest", "-1", time()-3600, '/') or die("");
@@ -24,6 +24,9 @@
 				setcookie("own", "-1", time()-3600, '/') or die("");
 				$isLoggedIn = false;
 			}
+
+			$user = new User($_COOKIE['own']);
+			$handle = $user->permission_id;
 		} catch(Exception $e){
 			setcookie("guest", "-1", time()-3600, '/') or die("");
 			setcookie("own", "-1", time()-3600, '/') or die("");
@@ -36,18 +39,22 @@
 		}
 		
 	} else if(isset($_COOKIE['uid']) && isset($_COOKIE['per']) && isset($_COOKIE['did'])) {
+
 		try {
 			$disc = new Disc($_COOKIE['did']);
 			if($disc->temporary == true) {
 				//This is not a valid member disc.
 				setcookie("uid", "-1", time()-3600, '/') or die("");
-				setcookie("perm", "-1", time()-3600, '/') or die("");
+				setcookie("per", "-1", time()-3600, '/') or die("");
 				setcookie("did", "-1", time()-3600, '/') or die("");
 				$isLoggedIn = false;
 			}
+
+			$user = new User($_COOKIE['per']);
+			$handle = $user->permission_id;
 		} catch(Exception $e){
 			setcookie("uid", "-1", time()-3600, '/') or die("");
-			setcookie("perm", "-1", time()-3600, '/') or die("");
+			setcookie("per", "-1", time()-3600, '/') or die("");
 			setcookie("did", "-1", time()-3600, '/') or die("");
 			$isLoggedIn = false;
 			$error = $e->getMessage();
@@ -58,6 +65,7 @@
 		}
 		
 	} else if(isset($_SESSION['uid']) && isset($_SESSION['per']) && isset($_SESSION['did'])) { 
+
 		try {
 			$disc = new Disc($_SESSION['did']);
 			if($disc->temporary == true) {
@@ -66,8 +74,11 @@
 				unset($_SESSION['per']);
 				unset($_SESSION['did']);
 				$isLoggedIn = false;
-				$error = "Not";
+				$error = "Invalid Disc";
 			}
+
+			$user = new User($_SESSION['per']);
+			$handle = $user->permission_id;
 		} catch(Exception $e){
 			unset($_SESSION['uid']);
 			unset($_SESSION['per']);

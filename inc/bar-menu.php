@@ -16,7 +16,7 @@
 		<?php if(true) : ?><li id="cm-to-help"><i class="fas fa-question-circle"></i>  Help</li><?php endif; ?>
 		<li class="separator"></li>
 		<?php if(isset($_COOKIE['guest'])): ?>
-			<li id="cm-login"><i class="fas fa-sign-in-alt"></i> Login Page</li>
+			<li id="cm-logout-guest"><i class="fas fa-sign-in-alt"></i> Erase Disc</li>
 		<?php else: ?>
 			<li id="cm-logout"><i class="fas fa-sign-out-alt"></i> Logout</li>
 		<?php endif; ?>

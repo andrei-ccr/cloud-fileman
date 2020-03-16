@@ -17,11 +17,55 @@ class User extends Connection {
 
     protected const GUEST_USER = "##GUEST";
 
-    public function __construct(string $email, string $password) {
+    public function __construct() {
         Connection::__construct(DEBUG_SERVER);
+
+        $a = func_get_args();
+        $i = func_num_args();
+        if (method_exists($this,$f='__construct'.$i)) {
+            call_user_func_array(array($this,$f),$a);
+        }
+
+    }
+
+    public function __construct1(string $handle) {
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM discs d LEFT JOIN discs_users ud ON d.id=ud.disc_id LEFT JOIN users u ON ud.user_id = u.id WHERE d.permission_id=:handle");
+            $stmt->bindParam(":handle", $handle);
+            $stmt->execute();
+            if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if($row["name"] == "__Temp") {
+                    $this->email = User::GUEST_USER;
+                    $this->password = "";
+                    $this->loggedAsGuest = true;
+                    $this->permission_id = $handle;
+                    $this->disc_id = (int)$row['id'];
+                } else {
+                    $this->email = $row['email'];
+                    $this->password = $row['password'];
+                    $this->loggedAsGuest = false;
+                    $this->permission_id = $handle;
+                    $this->disc_id = (int)$row['disc_id'];
+                    $this->user_id = (int)$row['user_id'];
+                }
+            } else {
+                throw new MemberNotFoundException("Couldn't fetch any record with this handle");
+            }
+        } catch(MemberNotFoundException $e) { 
+            throw new MemberNotFoundException($e->getMessage());
+        } catch (PDOException $e) {
+            throw new MemberNotFoundException("Couldn't execute fetch with this handle. ".$e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception("Error on setting data ".$e->getMessage());
+        }
+    }
+
+    public function __construct2(string $email, string $password) {
+        
         $this->email = $email;
-        $this->password = $password;
+        $this->password = $this->PasswordHashFunction($password);
         $this->loggedAsGuest = false;
+
         if($email != User::GUEST_USER) {
             $this->LoginAsMember();
         } else {
@@ -30,16 +74,19 @@ class User extends Connection {
     }
 
 
-
     public function LoginAsGuest() : void {
         try {
-           $stmt = $this->conn->prepare("INSERT INTO discs(name, temporary, visibility) VALUES('__Temp', 1, 'public')");
-		    $stmt->execute();
+
+            $new_temp_permid = $this->GeneratePermId();
+
+            $stmt = $this->conn->prepare("INSERT INTO discs(name, temporary, visibility, permission_id) VALUES('__Temp', 1, 'public', :permid)");
+            $stmt->bindParam(":permid", $new_temp_permid);
+            $stmt->execute();
             $guest_disc_id = (int)$this->conn->lastInsertId();
 
             $this->loggedAsGuest = true;
             $this->disc_id = $guest_disc_id;
-            $this->permission_id = $this->GeneratePermId(); 
+            $this->permission_id = $new_temp_permid;
 
         } catch (Exception $e) {
             $this->loggedAsGuest = false;
@@ -52,23 +99,45 @@ class User extends Connection {
     }
 
     /** 
-     * This function is meant to remove any disc and file associated with this guest
+     * This function is meant to remove any disc and file associated if the
+     * user is a guest or erase the permission id if the user is a member.
      * 
      */
-    public function LogoutGuest() : void {
-        if($this->loggedAsGuest === FALSE) { return; }
+    public function Logout() : void {
+    
+        try {
+            if($this->loggedAsGuest == true) {
+                $stmt = $this->conn->prepare("DELETE FROM discs WHERE id=:disc_id");
+                $stmt->bindParam(":disc_id", $this->disc_id);
+                $stmt->execute();
+                //TODO: Remove files on the disc
+            } else {
+                $stmt = $this->conn->prepare("UPDATE discs SET permission_id=NULL WHERE id=:disc_id");
+                $stmt->bindParam(":disc_id", $this->disc_id);
+                $stmt->execute();
+            }
+
+        } catch (Exception $e) {
+
+        } finally {
+            $this->email = "";
+            $this->password = "";
+            $this->loggedAsGuest = false;
+            $this->user_id = 0;
+            $this->disc_id = 0;
+            $this->permission_id = "";
+        }
 
     }
 
     public function LoginAsMember() {
         if($this->loggedAsGuest) return; //TODO: Make transition from guest to member
-
-        $passHash = hash("sha256", $this->password);
+        if((trim($this->email) == "") || (trim($this->password)=="")) return;
         
         try {
             $stmt = $this->conn->prepare("SELECT * FROM users u LEFT JOIN discs_users du ON du.user_id=u.id WHERE u.email=:email AND u.password=:pass");
             $stmt->bindParam(":email", $this->email);
-            $stmt->bindParam(":pass", $passHash);
+            $stmt->bindParam(":pass", $this->password);
             $stmt->execute();
             if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $this->user_id = (int)$row['user_id'];
@@ -115,6 +184,10 @@ class User extends Connection {
     function GeneratePermId() : string {
         $permid = $this->RandomStr() . time();
         return $permid;
+    }
+
+    function PasswordHashFunction($password) : string {
+        return hash("sha256", $password);
     }
 
 }

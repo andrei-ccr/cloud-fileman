@@ -59,8 +59,20 @@ $(document).on('click', "#cm-to-settings", function() {
 });
 
 $(document).on('click', "#cm-logout", function() {
-	$.get("/operations/logout", function() {
-		window.location = "/" //Reload without GET params
+	let mhand = $("#dinfo").data("hdl");
+	$.post("/operations/logout", {mhandle:mhand}, function() {
+		$.post("/operations/web/logout", {member:1}, function() {
+			window.location = "/";
+		});
+	});
+});
+
+$(document).on('click', "#cm-logout-guest", function() {
+	let mhand = $("#dinfo").data("hdl");
+	$.post("/operations/logout", {mhandle:mhand}, function() {
+		$.post("/operations/web/logout", {guest:1}, function() {
+			window.location = "/";
+		});
 	});
 });
 

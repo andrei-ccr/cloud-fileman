@@ -62,7 +62,7 @@
 	</div>
 </div>
 
-<div style="display:none;" id="dinfo" data-cd="<?php echo $_SESSION['cdid'];?>" data-did="<?php echo $discid;?>"></div>
+<div style="display:none;" id="dinfo" data-hdl="<?php echo $handle; ?>" data-cd="<?php echo $_SESSION['cdid'];?>" data-did="<?php echo $discid;?>"></div>
 
 <script>
 	(function() {
