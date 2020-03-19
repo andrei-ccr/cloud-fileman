@@ -13,14 +13,7 @@
 	
 		try {
 			$file = new File($fid);
-			$deleteResult = $file->Delete();
-			
-			if($deleteResult == false) {
-				//Couldn't delete the file. This is most likely due to a server error
-				http_response_code(500);
-				echo json_encode(array("error" => "Server error. Try again later."));
-				exit;
-			}
+			$file->Delete();
 			
 			http_response_code(200);
 			echo json_encode(array("deleteSuccess" => true));
