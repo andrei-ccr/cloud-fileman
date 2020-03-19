@@ -171,14 +171,15 @@
 			$filesize = $file['size'];
 
 			$kn = Disc::GenerateKey($filename);
-			$physicalPath = "../uploads/" . $kn;
+			$blobdata = file_get_contents($file['tmp_name']);
 			
 			try {
-				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, size, parent_id) VALUES(:name, :kn, :size, :pid)");
+				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, size, parent_id, binary_data) VALUES(:name, :kn, :size, :pid, :bindat)");
 				$stmt->bindParam(":name", $filename);
 				$stmt->bindParam(":kn", $kn);
 				$stmt->bindParam(":size", $filesize);
 				$stmt->bindParam(":pid", $cdid);
+				$stmt->bindParam(":bindat", $blobdata);
 				$stmt->execute();
 
 			} catch (Exception $e) {
@@ -196,28 +197,6 @@
 				throw new Exception("Inserting data into database has failed.");
 			}
 
-			$res = move_uploaded_file($file['tmp_name'], $physicalPath); //Store the uploaded file on the local server
-			if(!$res) {
-				//TODO: Revert DB changes
-				throw new Exception("Failed to move file from temp location.");
-			}
-
-
-			//Upload the stored file to the file server if $uploadLocal = false
-			/*if(!$bool_remote_path) {
-				$fserver = new FileServerGoogle(BUCKET_NAME);
-				$res = $fserver->Upload($kn, $physicalPath);
-				if(is_null($res)) {
-					//TODO: Revert DB changes
-
-					unlink($physicalPath);
-					throw new Exception("Upload on fileserver fail");
-
-				}
-
-				//Delete the file from local server
-				unlink($physicalPath);
-			}*/
 		}
 
 

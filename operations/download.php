@@ -16,19 +16,19 @@
 			http_response_code(405);
 			exit;
 		}
+
+		header('Content-type: application/octet-stream');
+		header('Content-Disposition: attachment; filename=' . $file->GetFilename());
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		echo $file->GetBinaryData();
+		http_response_code(200);
+		exit;
+
 	} catch(Exception $e) {
 		http_response_code(400);
 		exit;
 	}
-	
-	header('Content-type: application/octet-stream');
-	header('Content-Disposition: attachment; filename=' . $file->GetFilename());
-	header('Expires: 0');
-	header('Cache-Control: must-revalidate');
-	header('Pragma: public');
-	readfile($_SERVER['DOCUMENT_ROOT'] ."/uploads/" . $file->GetKeyname());
-	http_response_code(200);
-	exit;
-	
 	
 ?>

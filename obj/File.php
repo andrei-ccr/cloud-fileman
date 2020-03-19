@@ -121,6 +121,19 @@
 
 			return $this->filesize;
 		}
+
+		public function GetBinaryData() {
+			try {
+				$stmt = $this->conn->prepare("SELECT binary_data FROM files WHERE key_name=:kn");
+				$stmt->bindParam(":kn", $this->keyname);
+				$stmt->execute();
+				$row = $stmt->fetch(PDO::FETCH_ASSOC);
+				return $row["binary_data"];
+			} catch (Exception $e) {
+				throw new Exception($e->getMessage());
+			}
+			
+		}
 		
 	}
 
