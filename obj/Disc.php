@@ -132,6 +132,59 @@
 
 
 		/**
+		 * Creates a new file with no content with the specified name $name and returns the id.
+		 *
+		 * @param string $name 	The name of the new file
+		 * 
+		 * @return int	Returns the id of the file 
+		 *
+		 * @throws Exception Throws an Exception if filename is invalid or database query fails
+		 */ 
+		public function CreateFile(string $name, int $cd=0, string $data=null) : int {
+			
+			if(!Disc::ValidFilename($name)) {
+				throw new Exception("Invalid name provided.");
+			}
+
+			if($cd != 0) {
+				try {
+					$file = new File($cd);
+					if(!$file->IsDir()) throw new Exception();
+				} catch (Exception $e) {
+					throw new Exception("Current directory id is not a valid directory.");
+				}
+			}
+			
+			$current_dir_id = $cd;
+			
+			$kn = Disc::GenerateKey($name);
+			
+			$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, binary_data) VALUES(:name, :keyname, 0, :parid, :bin_data)");
+			$stmt->bindParam(":name", $name);
+			$stmt->bindParam(":keyname", $kn);
+			$stmt->bindParam(":parid", $current_dir_id);
+			$stmt->bindParam(":bin_data", $data);
+			$res = $stmt->execute();
+			
+			if($res == false) {
+				throw new Exception($stmt->error);
+			}
+
+			$fid = (int)$this->conn->lastInsertId();
+
+			$stmt = $this->conn->prepare("INSERT INTO files_discs(disc_id, file_id) VALUES(:discid, :fid)");
+			$stmt->bindParam(":discid", $this->discid);
+			$stmt->bindParam(":fid", $fid);
+			$res = $stmt->execute();
+			
+			if($res == false) {
+				throw new Exception($stmt->error);
+			}
+
+			return $fid;
+		}
+
+		/**
 		 * Uploads a file to the server. 
 		 *
 		 * @param array $file 	Contains the file as send through Form Data

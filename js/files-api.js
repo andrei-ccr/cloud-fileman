@@ -47,6 +47,23 @@ var Files = {
 			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Folderul nu poate fi creat aici. " + jqXHR.responseText);
 		});
 	},
+
+	Newfile : function() {
+		var did = $('#dinfo').data("did");
+		var cdid = $('#dinfo').data("cd");
+		$.ajax( {
+			url: "operations/newfile",
+			data: {discid: did, cd: cdid},
+			cache: false,
+			type: 'post'
+		})
+		.done(function() {
+			Files.Read();
+		})
+		.fail(function(jqXHR) {
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Fisierul nu poate fi creat aici. " + jqXHR.responseText);
+		});
+	},
 	
 	Read : function() {
 		$("#file-listing").empty();

@@ -3,6 +3,10 @@ $(document).on("click", ".cm-new-folder", function(e) {
 	Files.Newdir();
 });
 
+$(document).on("click", ".cm-new-file", function(e) {
+	Files.Newfile();
+});
+
 $(document).on("click", ".cm-refresh", function() {
 	Files.Read();
 });

@@ -20,8 +20,12 @@ var Properties = {
 			$("#fileicon").html("<i class='fas fa-folder'></i>");
 		} else {
 			var fx = Files.GetFileExtension(fn);
-			var ext = fx['ext'];
-			t = ext.toUpperCase() + " File";
+			if(fx['ext']!=null) {
+				var ext = fx['ext'];
+				t = ext.toUpperCase() + " File";
+			} else {
+				t = "File";
+			}
 
 			$("#fileicon").html(fx['icon']);
 		}
