@@ -1,3 +1,24 @@
+$(document).on("click", ".cm-cut", function(e) {
+	let fileid = Status.targetFile.data("id");
+	ClipboardStatus.file = fileid;
+	ClipboardStatus.cut = true;
+
+});
+
+$(document).on("click", ".cm-copy", function(e) {
+	let fileid = Status.targetFile.data("id");
+	ClipboardStatus.file = fileid;
+	ClipboardStatus.cut = false;
+
+});
+
+$(document).on("click", ".cm-paste", function(e) {
+	if($(this).hasClass("cm-disabled")) return;
+
+	Files.Paste();
+	ClipboardStatus.file = null;
+});
+
 
 $(document).on("click", ".cm-new-folder", function(e) {
 	Files.Newdir();

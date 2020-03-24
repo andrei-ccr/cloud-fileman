@@ -19,11 +19,11 @@
 		);
 		
 		//Properties
-		protected $discid;
-		public $temporary;
+		protected int $discid;
+		public bool $temporary;
 		public $visibility;
-		public $name;
-		public $maxSpace;
+		public string $name;
+		public int $maxSpace;
 		public $dateCreated;
 		
 		public function __construct(int $discid) {
@@ -37,11 +37,11 @@
 
 				$row = $stmt->fetch();
 				if($row !== FALSE) {
-					$this->discid = $discid;
-					$this->temporary = $row['temporary']; 
+					$this->discid = (int)$discid;
+					$this->temporary = (bool)$row['temporary']; 
 					$this->visibility = $row['visibility'];
 					$this->name = $row['name'];
-					$this->maxSpace = $row['space'];
+					$this->maxSpace = (int)$row['space'];
 					$this->dateCreated = $row['date_created'];
 
 					if($this->IsDiscExpired()) {
@@ -127,7 +127,7 @@
 				throw new Exception($stmt->error);
 			}
 
-			return $fid;
+			return (int)$fid;
 		}
 
 
@@ -181,7 +181,7 @@
 				throw new Exception($stmt->error);
 			}
 
-			return $fid;
+			return (int)$fid;
 		}
 
 		/**
@@ -307,6 +307,10 @@
 			if($used == -1) return -1;
 			
 			return $this->maxSpace - $used;
+		}
+
+		public function GetDiscId() : int {
+			return $this->discid;
 		}
 		
 		public static function FormatBytes(float $bytes, int $prefferedUnit = 0) :array {

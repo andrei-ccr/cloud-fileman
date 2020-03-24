@@ -467,7 +467,15 @@ svg.fa-file-video{
 }
 
 .cm li.cm-disabled {
-	color: gray;
+	color: #555;
+	cursor: default;
+}
+.cm li.cm-disabled:hover {
+	color: #555;
+	background: #efefef;
+}
+.cm li.cm-disabled svg {
+	color: #bbb;
 }
 
 .cm li.separator {
@@ -481,9 +489,7 @@ svg.fa-file-video{
 	background: none;
 }
 
-.cm li.cm-disabled:hover {
-	background: #efefef;
-}
+
 
 .cm li svg {
 	color:#444;

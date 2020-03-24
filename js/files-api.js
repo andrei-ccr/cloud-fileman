@@ -1,4 +1,25 @@
 var Files = {
+	Paste : function() {
+		
+		if (ClipboardStatus.file == null) return;
+		let fid = ClipboardStatus.file;
+		let dest_id = $('#dinfo').data("cd");
+		let transf_op = (ClipboardStatus.cut)?2:1;
+
+		$.ajax( {
+			url: "operations/transfer",
+			data: {source_fid: fid, destination_folder: dest_id, transfer_op: transf_op},
+			cache: false,
+			type: 'post'
+		})
+		.done(function() {
+			Files.Read();
+		})
+		.fail(function(jqXHR) {
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Nu se poate muta/copia aici. " + jqXHR.responseText);
+		});
+	},
+
 	Change: function($id) {
 		if($(".rename-input").length>0) {
 			//Don't change path if renaming proccess is active
