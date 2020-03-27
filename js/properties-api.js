@@ -1,4 +1,8 @@
-var Properties = {
+import { Files } from './files-api.js';
+
+import { Status, ClipboardStatus } from './states.js';
+
+export const Properties = {
 	GetDiskSpace: function() {
 		$.ajax({
 			url: "operations/properties",

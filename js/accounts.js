@@ -1,13 +1,11 @@
-$(document).ready(function() {
+export function AuthSystem() {
 	$(document).on('click', '#btn-enter', function(e) {
-		$emailInput = $("#email").val();
-		$passInput = $("#pass").val();
-		console.log($emailInput);
-		console.log($passInput);
+		let emailInput = $("#email").val();
+		let passInput = $("#pass").val();
 		
 		$.ajax({
 			url: "/operations/login",
-			data: {email: $emailInput, pass: $passInput},
+			data: {email: emailInput, pass: passInput},
 			cache: false,
 			method: "post",
 			dataType: "json"
@@ -30,12 +28,12 @@ $(document).ready(function() {
 					location.reload();
 				})
 				.fail(function() {
-					ShowAnError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+					ShowAuthError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
 				});
 			}
 		})
 		.fail(function() {
-			ShowAnError("Email-ul sau parola nu sunt corecte. Incearca din nou.");
+			ShowAuthError("Email-ul sau parola nu sunt corecte. Incearca din nou.");
 		});
 	});
 	
@@ -59,19 +57,17 @@ $(document).ready(function() {
 					location.reload();
 				})
 				.fail(function() {
-					ShowAnError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+					ShowAuthError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
 				});
 			}
 		})
 		.fail(function() {
-			ShowAnError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+			ShowAuthError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
 		});
 	});
+}
 
-});
-
-
-function ShowAnError($error_msg) {
+export function ShowAuthError($error_msg) {
 	if($("#error-container").length>0) { $("#error-container").remove(); }
 	$("body").prepend('<div class="box-container" id="error-container"><p class="box-container-txt" style="color:red">' + $error_msg + '</p></div>');
 	

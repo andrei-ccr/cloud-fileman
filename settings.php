@@ -127,7 +127,7 @@
 
 	<link rel="stylesheet" type="text/css" href="css/style-page-disc.css?v=1">
 
-	<script src="/js/settings.js"></script>
+	<script script type="module" src="js/index-settings.js"></script>
 
 	<title>Settings</title>
 	

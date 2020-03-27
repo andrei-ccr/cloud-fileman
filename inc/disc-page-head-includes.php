@@ -11,7 +11,4 @@
 
 <link rel="stylesheet" type="text/css" href="css/style-page-disc.css?v=1">
 
-<script src="js/context-menu-buttons.js"></script>
-<script src="js/files-api.js"></script>
-<script src="js/properties-api.js"></script>
-<script src="js/main.js"></script>
+<script script type="module" src="js/index-disc.js"></script>

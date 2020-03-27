@@ -10,4 +10,4 @@
 
 <link rel="stylesheet" type="text/css" href="/css/style-page-login.css">
 
-<script src="/js/accounts.js"></script>
+<script script type="module" src="js/index-auth.js"></script>

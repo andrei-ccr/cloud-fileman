@@ -1,4 +1,6 @@
-var Files = {
+import {Status, ClipboardStatus} from './states.js';
+import {Properties} from './properties-api.js';
+export const Files = {
 	Paste : function() {
 		
 		if (ClipboardStatus.file == null) return;
@@ -38,7 +40,7 @@ var Files = {
 			Files.Read();
 
 			//Write the current path on the bar
-			$dir_list = resp["path"].split("/");
+			let $dir_list = resp["path"].split("/");
 			$("#path-bar").html('<span id="root-location"><i class="fas fa-cloud"></i></span>');
 			if(!(($dir_list.length == 1) && ($dir_list[0] == ""))){				
 				for(var i=0;i<$dir_list.length;i++) {

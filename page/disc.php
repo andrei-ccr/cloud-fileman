@@ -64,7 +64,8 @@
 
 <div style="display:none;" id="dinfo" data-hdl="<?php echo $handle; ?>" data-cd="<?php echo $_SESSION['cdid'];?>" data-did="<?php echo $discid;?>"></div>
 
-<script>
+<script type="module">
+	import { Files } from '../js/files-api.js';
 	(function() {
 		Files.Read();
 	})();
