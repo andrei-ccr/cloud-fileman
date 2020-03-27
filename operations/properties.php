@@ -3,10 +3,7 @@
 	require_once("../obj/Disc.php");
 	require_once("../obj/File.php");
 
-	if(!isset($_GET['discid'])) {
-		http_response_code(400);
-		exit;
-	}
+	
 
 	if(isset($_GET['fid'])) {
 		//Get file properties
@@ -19,6 +16,7 @@
 			} else {
 				echo json_encode(array("size" => $size));
 			}
+			
 			http_response_code(200);
 			
 		} catch (Exception $e) {
@@ -42,6 +40,9 @@
 		}
 	}
 
-	
+	if(!isset($_GET['discid'])) {
+		http_response_code(400);
+		exit;
+	}
 
 ?>
