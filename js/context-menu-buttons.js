@@ -79,8 +79,8 @@ $(document).on('click', ".cm-upload, #bar .fa-upload", function() {
 	$("#file-up").trigger('click');
 });
 
-$(document).on('click', ".cm-to-settings", function() {
-	return false;
+$(document).on('click', ".cm-to-settings, #profile-pic, #profile-name", function() {
+	window.location.href = "/settings";
 });
 
 $(document).on('click', ".cm-logout", function() {

@@ -489,8 +489,6 @@ svg.fa-file-video{
 	background: none;
 }
 
-
-
 .cm li svg {
 	color:#444;
 	padding-right:5px;
@@ -546,7 +544,7 @@ svg.fa-file-video{
 }
 
 #profile-name {
-	font-size: 12px; vertical-align: middle; padding: 15px; color: #555; cursor: pointer; position: relative;top: -13px;
+	font-size: 12px; vertical-align: middle; padding: 15px; color: #555; cursor: pointer; position: relative;top: -13px; font-weight: 500;
 }
 
 #bar #line-separator {

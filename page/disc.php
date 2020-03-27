@@ -22,7 +22,7 @@
 	</div>
 	
 	<div style="float:right;">
-		<div id="profile-pic"> <span id="profile-pic-txt">?</span> </div>
+		<div id="profile-pic"> <span id="profile-pic-txt"><?php echo $profile_pic; ?></span> </div>
 		<span id="profile-name"><?php echo $username; ?></span>
 		<div id="line-separator"></div> 
 		<i class="fas fa-upload"></i> 
