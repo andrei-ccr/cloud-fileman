@@ -17,6 +17,22 @@ class User extends Connection {
 
     protected const GUEST_USER = "##GUEST";
 
+    public static function RegisterUser($email, $password) {
+        $conn = new Connection(DEBUG_SERVER);
+        $p = User::PasswordHashFunction($password);
+
+        try {
+            $stmt = $conn->conn->prepare("INSERT INTO users(email, password) VALUES (:email, :pass)");
+            $stmt->bindParam(":email", $email);
+            $stmt->bindParam(":pass", $p);
+            $stmt->execute();
+        }
+        catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+        
+    }
+
     public function __construct() {
         Connection::__construct(DEBUG_SERVER);
 
@@ -64,7 +80,7 @@ class User extends Connection {
     public function __construct2(string $email, string $password) {
         
         $this->email = $email;
-        $this->password = $this->PasswordHashFunction($password);
+        $this->password = User::PasswordHashFunction($password);
         $this->loggedAsGuest = false;
 
         if($email != User::GUEST_USER) {
@@ -187,7 +203,7 @@ class User extends Connection {
         return $permid;
     }
 
-    function PasswordHashFunction($password) : string {
+    static function PasswordHashFunction($password) : string {
         return hash("sha256", $password);
     }
 

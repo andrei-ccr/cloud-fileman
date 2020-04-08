@@ -36,6 +36,36 @@ export function AuthSystem() {
 			ShowAuthError("Email-ul sau parola nu sunt corecte. Incearca din nou.");
 		});
 	});
+
+	$(document).on('click', '#btn-register', function(e) {
+		let emailInput = $("#email").val();
+		let passInput = $("#pass").val();
+		if ($.trim(emailInput).length<=0) {
+			ShowAuthError("Completeaza adresa de email!");
+			return;
+		}
+		if ($.trim(passInput).length<=0) {
+			ShowAuthError("Completeaza parola!");
+			return;
+		}
+		if (passInput.length<=5) {
+			ShowAuthError("Parola trebuie sa fie mai lunga de 5 caractere!");
+			return;
+		}
+		
+		$.ajax({
+			url: "/operations/register",
+			data: {email: emailInput, pass: passInput},
+			cache: false,
+			method: "post",
+		})
+		.done(function(resp) {	
+			ShowAuthError("Contul a fost creat cu SUCCES!");
+		})
+		.fail(function() {
+			ShowAuthError("Contul nu a putut fi creat. Incearca din nou!");
+		});
+	});
 	
 	$(document).on('click', '#btn-no-acc', function(e) {
 		$.ajax({
