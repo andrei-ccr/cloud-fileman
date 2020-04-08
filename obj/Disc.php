@@ -249,7 +249,6 @@
 			} catch (Exception $e) {
 				throw new Exception("Inserting data into database has failed.");
 			}
-
 		}
 
 
@@ -281,29 +280,37 @@
 			return $f;
 		}
 		
-		public function GetUsedSpace() :float {
-			/*try {
-				$stmt = $conn->prepare("SELECT m.filesize AS filesize FROM files AS f, metadata AS m WHERE f.email=:email AND m.type='file' AND m.keyname=f.keyname");
-				$stmt->bindParam(":email", $email);
+		public function GetUsedSpace() {
+			try {
+				$sum = 0;
+				$did = $this->discid;
+				$stmt = $this->conn->prepare("
+					SELECT f.size AS filesize 
+					FROM files f 
+					LEFT JOIN files_discs fd ON f.id = fd.file_id
+					LEFT JOIN discs d ON fd.disc_id = d.id 
+					WHERE d.id=:did");
+				$stmt->bindParam(":did", $did);
 				$stmt->execute();
+
+				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				if(count($rows)>0) {
+					foreach($rows as $row) {
+						$sum += (int)$row['filesize'];
+					}
+					
+				} else {
+					throw new Exception("GetUsedSpace(): No rows returned");
+				}
 			} catch(Exception $e) {
 				return -1;
 			}
-			
-			$res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			if(count($res) <= 0) return 0; //No files
-			
-			$total = 0;
-			foreach($res as $file) {
-				$total += intval($file['filesize']);
-			}
-			
-			return $total;*/
-			return 0;
+
+			return (int)$sum;
 		}
 		
-		public function GetFreeSpace() : float {
-			$used = Disc::GetUsedSpace();
+		public function GetFreeSpace() : int {
+			$used = (int)$this->GetUsedSpace();
 			if($used == -1) return -1;
 			
 			return $this->maxSpace - $used;

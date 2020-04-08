@@ -1,48 +1,82 @@
 <?php
-	session_start();
+	require_once("../obj/User.php");
 	require_once("../obj/Disc.php");
 	require_once("../obj/File.php");
 
-	
+	//If handle is not set, exit.
+	if(!isset($_GET['h'])) {
+		http_response_code(400);
+		exit;
+	}
+
+	try {
+		$u = new User($_GET['h']);
+	} catch (Exception $e) {
+		http_response_code(400);
+		exit;
+	}
 
 	if(isset($_GET['fid'])) {
-		//Get file properties
 		try {
+			//Get file properties
 			$file = new File((int)$_GET['fid']);
-			$size = $file->GetSize();
-			if(isset($_GET['format'])) {
+
+			if($file->GetDiscId() != $u->disc_id ) {
+				throw new Exception("File is not in current disc");
+			}
+
+			if($file->IsDir()) {
+				$count = $file->GetItemsCount();
+
+				echo json_encode(array("filecount" => $count));
+				http_response_code(200);
+				exit;
+			} else {
+				$size = $file->GetSize();
 				$size = Disc::FormatBytes($size);
 				echo json_encode(array("size" => $size[0], "unit" => $size[1]));
-			} else {
-				echo json_encode(array("size" => $size));
+		
+				http_response_code(200);
+				exit;
 			}
-			
-			http_response_code(200);
-			
+
 		} catch (Exception $e) {
 			http_response_code(400);
 			exit;
 		}
 	
-		exit;
-	} else {
-		if(isset($_GET['cdid'])) {
-			//Get current directory properties
+	} else if(isset($_GET['cdid'])) {
+		try {
+			$d = new Disc($u->disc_id);
+
 			if($_GET['cdid'] == 0) {
-				$maxspace = Disc::FormatBytes(MAX_SPACE);
-				$freespace = DiskSize::FormatBytes(DiskSize::GetFreeSpace($contact->conn, $contact->GetEmail()));
+				$maxspace = Disc::FormatBytes($d->maxSpace);
+				$freespace = DiskSize::FormatBytes($d->GetFreeSpace());
 				
-				echo json_encode(array("freespace" => $freespace, "maxspace" => $maxspace));
+				echo json_encode(array("freespace" => $freespace, "maxspace" => $maxspace, "filecount" => "0"));
+				http_response_code(200);
+				exit;
+			} else {
+				$file = new File((int)$_GET['cdid']);
+				if($d->GetDiscId() != $file->GetDiscId()) {
+					throw new Exception("Requested dir not on current disc");
+				}
+
+				$count = $file->GetItemsCount();
+				echo json_encode(array("fileCount" => $count));
+				http_response_code(200);
+				exit;
 			}
-		} else {
+		} catch (Exception $e) {
 			http_response_code(400);
 			exit;
 		}
-	}
+		
 
-	if(!isset($_GET['discid'])) {
+	} else {
 		http_response_code(400);
 		exit;
 	}
+
 
 ?>

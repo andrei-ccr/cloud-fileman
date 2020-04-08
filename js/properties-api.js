@@ -1,27 +1,49 @@
 import { Files } from './files-api.js';
 
-import { Status, ClipboardStatus } from './states.js';
+import { Status } from './states.js';
 
 export const Properties = {
-	GetDiskSpace: function() {
+
+	ShowDiskSpace: function() {
+		let m = "";
+
 		$.ajax({
 			url: "operations/properties",
 			cache: false,
 			method: "post",
+			data: {cdid: "0"},
 			dataType: "json"
 		})
 		.done(function(res) {
-			var $mem = res['freespace'][0] + res['freespace'][1] + " / " + res['maxspace'][0] + res['maxspace'][1];
-			$("#memory #n").html($mem);
+			m = res['freespace'][0] + res['freespace'][1] + " / " + res['maxspace'][0] + res['maxspace'][1];
+			$("#memory #n").html(m);
 		});
 	},
 
-	ShowInfo: function() {
-		var t;
-		var fn = Status.targetFile.children("span").html();
+	ShowCDInfo: function() {
+		let t = "Directory";
+		let cdid = $('#dinfo').data("cd");
+		let fn = ""
+
+		$("#fileicon").html("<i class='fas fa-folder'></i>");
+		Properties.ShowFolderItems(cdid);
+
+		$("#fileicon").css("display", "inline-block");
+		$("#filename").html(fn);
+		$("#filetype").html(t);
+		
+		$("#info-bar .disc-info").hide();
+		$("#info-bar .file-info").show();
+	},
+
+	ShowFileInfo: function() {
+		let t;
+		let fn = Status.targetFile.children("span").html();
+
 		if(Status.targetFile.hasClass("dir")) {
-			t="Directory";
+			t = "Directory";
 			$("#fileicon").html("<i class='fas fa-folder'></i>");
+			Properties.ShowFolderItems();
 		} else {
 			var fx = Files.GetFileExtension(fn);
 			if(fx['ext']!=null) {
@@ -32,39 +54,56 @@ export const Properties = {
 			}
 
 			$("#fileicon").html(fx['icon']);
+			Properties.ShowFileSize();
 		}
 
 		$("#fileicon").css("display", "inline-block");
 		$("#filename").html(fn);
 		$("#filetype").html(t);
-		if(Status.targetFile.data("marked")>0)
-			$("#marked").html("Marked");
-		else
-			$("#marked").html("");
-		Properties.GetSize();
 		
-		$("#info-bar #gen").hide();
-		$("#info-bar #inf").show();
+		$("#info-bar .disc-info").hide();
+		$("#info-bar .file-info").show();
 	},
 
-	HideInfo: function() {
+	HideFileInfo: function() {
 		$("#fileicon").hide();
 		$("#filename").html("");
 		$("#filetype").html("");
 		$("#filesize").html("");
-		$("#marked").html("");
 		
-		$("#info-bar #gen").show();
-		$("#info-bar #inf").hide();
+		$("#info-bar .disc-info").show();
+		$("#info-bar .file-info").hide();
 	},
 
-	GetSize: function() {
+	ShowFileSize: function() {
 		if(Status.targetFile == null) return -1;
 		if(Status.targetFile.hasClass("dir")) return -1; //Size is not calculated for directories
 
-		$.getJSON("operations/properties", {fid: Status.targetFile.data("id"), format:1}, function (res) {
+		let fid = Status.targetFile.data("id");
+		let hdl = $("#dinfo").data("hdl");
+
+		$.getJSON("operations/properties", {'fid': fid, 'h' : hdl}, function (res) {
 			$("#filesize").html("Size: " + res.size + " " + res.unit);
 			return res.size;
+		});
+	},
+
+	ShowFolderItems: function(folderid = -1) {
+		
+		let fid;
+		if(folderid == -1) {
+			if(Status.targetFile == null) return -1;
+			if(!Status.targetFile.hasClass("dir")) return -1; //Items count is not calculated for files
+			fid = Status.targetFile.data("id");
+		} else {
+			fid = folderid;
+		}
+			
+		let hdl = $("#dinfo").data("hdl");
+
+		$.getJSON("operations/properties", {'fid': fid, 'h' : hdl}, function (res) {
+			$("#filesize").html(res.filecount + " item(s)");
+			return res.fileCount;
 		});
 	}
 };

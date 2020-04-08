@@ -12,7 +12,7 @@
 		private $filename = null; //Original filename
 		private $keyname = null; //Unique identifier for file
 		private $isDir = false; //True if file is a directory
-		private $filesize = 0; //Size of the file or total size of directory
+		private int $filesize = 0; //Size of the file or total size of directory
 		private int $disc = 0; //The disc where this file is located on
 
 		public function __construct(int $fid) {
@@ -42,7 +42,7 @@
 				$this->keyname = $res['key_name'];
 				$this->filename = $res['name'];
 				$this->isDir = $res['isDir'];
-				$this->size = $res['size'];
+				$this->filesize = (int)$res['size'];
 				$this->disc = (int)$res['disc_id'];
 			} else {
 				throw new Exception("No resource with this id exists.");
@@ -126,6 +126,25 @@
 
 		public function GetDiscId() : int {
 			return $this->disc;
+		}
+
+		public function GetItemsCount() : int {
+			if($this->isDir == false) throw new Exception("Can't return items count for non-directories");
+
+			try {
+				$stmt = $this->conn->prepare("SELECT COUNT(*) AS itemsc FROM files WHERE parent_id=:fid");
+				$stmt->bindParam(":fid", $this->fid);
+				$stmt->execute();
+				$row = $stmt->fetch(PDO::FETCH_ASSOC);
+				if(count($row) > 0) {
+					return (int)$row['itemsc'];
+				} else {
+					return 0;
+				}
+			} catch (Exception $e) {
+				throw new Exception($e->getMessage());
+			}
+			
 		}
 
 		public function GetBinaryData() {

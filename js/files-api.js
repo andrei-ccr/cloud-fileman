@@ -1,5 +1,6 @@
 import {Status, ClipboardStatus} from './states.js';
 import {Properties} from './properties-api.js';
+
 export const Files = {
 	Paste : function() {
 		
@@ -119,6 +120,11 @@ export const Files = {
 					$("#file-listing").append(afile);
 				}
 			});
+
+			if(cdid != 0)
+				Properties.ShowCDInfo();
+			else
+				Properties.HideFileInfo();
 		})
 		.fail( function() {
 			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Nu s-au putut citi fisierele!");
@@ -136,7 +142,7 @@ export const Files = {
 		Status.targetFilename = fileElement.find("span").html();
 		fileElement.addClass("selected");
 
-		Properties.ShowInfo();
+		Properties.ShowFileInfo();
 	},
 
 	Upload : function(files) {
@@ -169,7 +175,7 @@ export const Files = {
 		.done(function(resp){
 			$("#errors").html("");
 			Files.Read();
-			Properties.GetDiskSpace();
+			Properties.ShowDiskSpace();
 
 		})
 		.fail(function(resp){
@@ -187,7 +193,13 @@ export const Files = {
 		Status.targetFilename = "";
 		$(".f").removeClass("selected");
 
-		Properties.HideInfo();
+		if($("#dinfo").data("cd") != 0) {
+			Properties.HideFileInfo();
+			Properties.ShowCDInfo();
+		} else {
+			Properties.HideFileInfo();
+		}
+		
 	},
 	
 	Download : function(fid) {
@@ -291,7 +303,7 @@ export const Files = {
 			if(res.result == true) {
 				if(!preventRefresh) {
 					Locations.List.Trash();
-					Properties.GetDiskSpace();
+					Properties.ShowDiskSpace();
 				}
 			} else {
 				$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Fisierul nu a putut fi sters.");

@@ -8,6 +8,8 @@
 	$freespace = Disc::FormatBytes($disc->GetFreeSpace());
 
 	$fvclass = "icons-view";
+	
+	
 ?>
 
 <script type="text/javascript">
@@ -35,31 +37,31 @@
 </div>
 
 <div id="file-zone">
-	<div class="listing-container <?= $fvclass; ?>" id="file-listing"><span class="msg">Se incarca...</span></div>
+	<div class="listing-container <?= $fvclass; ?>" id="file-listing"><span class="msg">Se incarca fisierele...</span></div>
 </div>
 
 <div id="info-bar">
-	<div class="col" id="gen">
-		
+
+	<div class="disc-info">
+		<i class="fas fa-hdd"></i>
+		<span id="disc-name">Disc A</span>
+		<div id="memory" style="display:inline-block;">
+			<span>Spatiu:</span> <span id="n"><?php echo $freespace[0] . $freespace[1] . " / " . $maxspace[0] . $maxspace[1]; ?></span>
+		</div>
 		<?php if($disc->temporary == true): ?>
-			<span id="guest" title="Click pentru a inchide" style="color:#1b1b1b; cursor:pointer; display: inline-block;"><i class="fas fa-exclamation-triangle"></i> Utilizatorii neinregistrati vor pierde fisierele in 30 de minute de la incarcare!</span>
-		<?php else: ?>
-			<i class="fas fa-hdd"></i>
-			<span id="disc-name">Disc</span>
-			<span id="memory"><span>Spatiu:</span><span id="n"><?php echo $freespace[0] . $freespace[1] . " / " . $maxspace[0] . $maxspace[1]; ?></span></span>
+			<span id="guest" title="Click pentru a inchide" style="color:#1b1b1b; cursor:pointer; display: inline-block;"><i class="fas fa-exclamation-triangle"></i> Fisierele se vor sterge in 30:00. Intra in cont pentru pastra fisierele.</span>
 		<?php endif; ?>
-		
-		<span id="progress" style="display:none; vertical-align: baseline; "><span style="color: #005aff ;">Se incarca </span><span id="percent" style="vertical-align:middle; color: #005aff ;font-weight: 500;">...</span> </span>
-		
-		<span id="errors" title="Click pentru a inchide" style="color:red; font-weight: 500; cursor:pointer;"></span>
 	</div>
-	
-	<div class="col" id="inf" style="display:none;">
+				
+	<div class="file-info">
 		<span id="fileicon"></span>
 		<span id="filename" style="display:inline-block;"></span>
 		<span id="filetype" style="color:#222; display:inline-block;"></span>
 		<span id="filesize" style="color:#5f5f5f; display:inline-block;"></span>
 	</div>
+	
+	<!-- TODO: Move this as modal -->
+	<span id="errors" title="Click pentru a inchide" style="color:red; font-weight: 500; cursor:pointer; display:inherit;"></span>
 </div>
 
 <div style="display:none;" id="dinfo" data-hdl="<?php echo $handle; ?>" data-cd="<?php echo $_SESSION['cdid'];?>" data-did="<?php echo $disc->GetDiscId();?>"></div>

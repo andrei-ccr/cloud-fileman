@@ -47,7 +47,7 @@ $(document).on("click", ".listing-container .f", function(e) {
 	} else {
 		if($(this).hasClass("dir")) {
 			Files.Change($(this).data("id"));
-			Properties.HideInfo();
+			Properties.HideFileInfo();
 		}
 	}
 });
