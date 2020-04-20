@@ -300,7 +300,8 @@
 					}
 					
 				} else {
-					throw new Exception("GetUsedSpace(): No rows returned");
+					//No files on this disc.
+					return 0;
 				}
 			} catch(Exception $e) {
 				return -1;
