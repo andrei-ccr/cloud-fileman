@@ -134,6 +134,10 @@ export function Menus() {
 		window.location.href = "/settings";
 	});
 
+	$(document).on('click', ".cm-to-help", function() {
+		window.location.href = "/help";
+	});
+
 	$(document).on('click', ".cm-logout", function() {
 		let mhand = $("#dinfo").data("hdl");
 		$.post("/operations/logout", {mhandle:mhand}, function() {

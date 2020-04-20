@@ -12,6 +12,7 @@
 
 <div class="m-context-menu cm mcm">
 	<ul>
+		<?php if(true) : ?><li class="cm-upload"><i class="fas fa-upload"></i> Upload File(s)</li><?php endif; ?>
 		<?php if($fs ) : ?><li class="cm-download"><i class="fas fa-download"></i> Download</li><?php endif; ?>
 		<li class="separator"></li>
 		<?php if(true) : ?><li class="cm-to-settings"><i class="fas fa-cog"></i>  Settings</li><?php endif; ?>

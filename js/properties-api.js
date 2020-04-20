@@ -42,7 +42,7 @@ export const Properties = {
 
 		if(Status.targetFile.hasClass("dir")) {
 			t = "Directory";
-			$("#fileicon").html("<i class='fas fa-folder'></i>");
+			$("#fileicon").html("<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill: #e0b85b;'></path></svg>");
 			Properties.ShowFolderItems();
 		} else {
 			var fx = Files.GetFileExtension(fn);

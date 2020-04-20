@@ -24,10 +24,8 @@
 	</div>
 	
 	<div style="float:right;">
-		<div id="profile-pic"> <span id="profile-pic-txt"><?php echo $profile_pic; ?></span> </div>
+		<div id="profile-pic">  </div>
 		<span id="profile-name"><?php echo $username; ?></span>
-		<div id="line-separator"></div> 
-		<i class="fas fa-upload"></i> 
 		<div id="line-separator"></div> 
 		<i class="fas fa-ellipsis-v"></i>
 	</div>
@@ -42,22 +40,22 @@
 
 <div id="info-bar">
 
-	<div class="disc-info">
-		<i class="fas fa-hdd"></i>
-		<span id="disc-name">Disc A</span>
-		<div id="memory" style="display:inline-block;">
-			<span>Spatiu:</span> <span id="n"><?php echo $freespace[0] . $freespace[1] . " / " . $maxspace[0] . $maxspace[1]; ?></span>
+	<div class="disc-info" style="margin-left: 10px; padding: 5px;">
+		<i class="fas fa-hdd" style="color: #5f5f5f;
+    vertical-align: middle;"></i>
+		<div id="memory" style="display:inline-block; vertical-align:middle;">
+			<span id="n"><?php echo "Liber: " . $freespace[0] ." ". $freespace[1] . " din " . $maxspace[0] ." ". $maxspace[1]; ?></span>
 		</div>
 		<?php if($disc->temporary == true): ?>
 			<span id="guest" title="Click pentru a inchide" style="color:#1b1b1b; cursor:pointer; display: inline-block;"><i class="fas fa-exclamation-triangle"></i> Fisierele se vor sterge in 30:00. Intra in cont pentru pastra fisierele.</span>
 		<?php endif; ?>
 	</div>
 				
-	<div class="file-info">
+	<div class="file-info noselect" >
 		<span id="fileicon"></span>
-		<span id="filename" style="display:inline-block;"></span>
-		<span id="filetype" style="color:#222; display:inline-block;"></span>
-		<span id="filesize" style="color:#5f5f5f; display:inline-block;"></span>
+		<span id="filename" class="noselect" style="display:inline-block;"></span>
+		<span id="filetype" class="noselect" style="color: #464646; display: inline-block; font-size: 13px;"></span>
+		<span id="filesize" class="noselect" style="color:#5f5f5f; display:inline-block;"></span>
 	</div>
 	
 	<!-- TODO: Move this as modal -->
