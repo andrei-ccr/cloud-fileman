@@ -196,19 +196,19 @@
 		public function UploadFile(array $file, int $cdid=0, bool $uploadLocal=false) : void {
 			
 			if(!Disc::ValidFilename($file['name'])) {
-				throw new Exception("Invalid name provided.");
+				throw new Exception("Invalid name provided.",0);
 			}
 
 			if($file['error'] > 0) {
-				throw new Exception("Upload error. Code: " . $file['error']);
+				throw new Exception("Upload error. Code: " . $file['error'],1);
 			}
 			
 			if($file['size'] > 1*GB ) {
-				throw new Exception("File size exceeds 1GB limit.");
+				throw new Exception("File size exceeds 1GB limit.",2);
 			}
 
 			if($this->GetFreeSpace() < $file['size']) {
-				throw new Exception("File size exceeds free space limit.");
+				throw new Exception("File size exceeds free space limit.",3);
 			}
 			
 			if($cdid != 0) {
@@ -216,7 +216,7 @@
 					$f = new File($cdid);
 					if(!$f->IsDir()) throw new Exception();
 				} catch (Exception $e) {
-					throw new Exception("Current directory id is not a valid directory.");
+					throw new Exception("Current directory id is not a valid directory.",4);
 				}
 			}
 			
@@ -236,7 +236,7 @@
 				$stmt->execute();
 
 			} catch (Exception $e) {
-				throw new Exception("Inserting data into database has failed.");
+				throw new Exception("Inserting data into database has failed.",5);
 			}
 
 			$uploaded_fid = $this->conn->lastInsertId();
@@ -247,7 +247,7 @@
 				$stmt->execute();
 
 			} catch (Exception $e) {
-				throw new Exception("Inserting data into database has failed.");
+				throw new Exception("Inserting data into database has failed.",6);
 			}
 		}
 

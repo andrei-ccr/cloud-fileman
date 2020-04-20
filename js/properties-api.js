@@ -6,16 +6,17 @@ export const Properties = {
 
 	ShowDiskSpace: function() {
 		let m = "";
+		let hdl = $("#dinfo").data("hdl");
 
 		$.ajax({
 			url: "operations/properties",
 			cache: false,
-			method: "post",
-			data: {cdid: "0"},
+			method: "get",
+			data: {cdid: "0", h: hdl},
 			dataType: "json"
 		})
 		.done(function(res) {
-			m = res['freespace'][0] + res['freespace'][1] + " / " + res['maxspace'][0] + res['maxspace'][1];
+			m = "Liber: " + res['freespace'][0] + " "+ res['freespace'][1] + " din " + res['maxspace'][0] + " " + res['maxspace'][1];
 			$("#memory #n").html(m);
 		});
 	},

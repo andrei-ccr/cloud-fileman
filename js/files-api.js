@@ -124,8 +124,10 @@ export const Files = {
 
 			if(cdid != 0)
 				Properties.ShowCDInfo();
-			else
+			else {
 				Properties.HideFileInfo();
+				Properties.ShowDiskSpace();
+			}
 		})
 		.fail( function() {
 			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Nu s-au putut citi fisierele!");
@@ -180,7 +182,7 @@ export const Files = {
 
 		})
 		.fail(function(resp){
-			$("#errors").html(resp.error);
+			$("#errors").html(resp.responseJSON.error);
 		});
 	},
 	

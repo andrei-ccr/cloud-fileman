@@ -6,6 +6,7 @@
 	//If handle is not set, exit.
 	if(!isset($_GET['h'])) {
 		http_response_code(400);
+		echo json_encode(array("internalError"=>"No handle."));
 		exit;
 	}
 
@@ -13,6 +14,7 @@
 		$u = new User($_GET['h']);
 	} catch (Exception $e) {
 		http_response_code(400);
+		echo json_encode(array("internalError"=>"Bad handle."));
 		exit;
 	}
 
@@ -42,6 +44,7 @@
 
 		} catch (Exception $e) {
 			http_response_code(400);
+			echo json_encode(array("internalError"=>$e->getMessage()));
 			exit;
 		}
 	
@@ -51,7 +54,7 @@
 
 			if($_GET['cdid'] == 0) {
 				$maxspace = Disc::FormatBytes($d->maxSpace);
-				$freespace = DiskSize::FormatBytes($d->GetFreeSpace());
+				$freespace = Disc::FormatBytes($d->GetFreeSpace());
 				
 				echo json_encode(array("freespace" => $freespace, "maxspace" => $maxspace, "filecount" => "0"));
 				http_response_code(200);
@@ -69,12 +72,14 @@
 			}
 		} catch (Exception $e) {
 			http_response_code(400);
+			echo json_encode(array("internalError"=>$e->getMessage()));
 			exit;
 		}
 		
 
 	} else {
 		http_response_code(400);
+		echo json_encode(array("internalError"=>"No parameters."));
 		exit;
 	}
 
