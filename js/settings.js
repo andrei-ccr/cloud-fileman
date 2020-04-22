@@ -1,3 +1,5 @@
+
+
 function GetSetting(setting_name) {
     let sn = setting_name;
     return Promise.resolve(
@@ -29,7 +31,7 @@ export function Settings() {
         $(".settings-tab").removeClass("tab-selected");
         $(this).addClass("tab-selected");
     });
-    $(document).on("click", ".s-tab-account", async (e) => {
+    $(document).on("click", ".s-tab-fileman", async (e) => {
         let setting_show_context_menu = await GetSetting("ShowContextMenu");
         
         console.log(setting_show_context_menu);
@@ -38,8 +40,14 @@ export function Settings() {
         });
         
     });
-    $(document).on("click", ".s-tab-fileman", async (e) => {
-        $(settingsContainer).html("File Manager");
+    $(document).on("click", ".s-tab-account", async (e) => {
+        let setting_show_context_menu = await GetSetting("ShowContextMenu");
+        
+        console.log(setting_show_context_menu);
+        $.get("/page/tabs/settings-dashboard", {'setting-show-context-menu': setting_show_context_menu} , function(data) {
+            $(settingsContainer).html(data);
+            LoadChart1();   
+        });
     });
     $(document).on("click", ".s-tab-about",async (e) => {
         $(settingsContainer).html("About");
@@ -47,4 +55,25 @@ export function Settings() {
     $(document).on("click", ".s-tab-back", function(e) {
         window.location.href = "../index";
     });
+
+}
+
+function LoadChart1() {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [10, 20, 30]
+            }],
+        
+            // These labels appear in the legend and in the tooltips when hovering different arcs
+            labels: [
+                'Red',
+                'Yellow',
+                'Blue'
+            ]
+        }
+    });
+
 }
