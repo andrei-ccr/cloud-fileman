@@ -1,6 +1,6 @@
 import { Files } from './files-api.js';
 import { Properties } from './properties-api.js';
-import { Menus } from './menus.js';
+import { Menus, Modals } from './menus.js';
 import { Uploader } from './uploader.js';
 
 import { Status, ClipboardStatus } from './states.js';
@@ -14,6 +14,7 @@ if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
 
 Uploader();
 Menus();
+Modals();
 
 //Clicking anywhere on the screen
 $(document).on("mousedown", function(e) {

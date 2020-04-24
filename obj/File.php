@@ -160,6 +160,19 @@
 			
 		}
 
+		public function WriteBinaryData($data) {
+			try {
+				$stmt = $this->conn->prepare("UPDATE files SET binary_data=:bd WHERE key_name=:kn");
+				$stmt->bindParam(":kn", $this->keyname);
+				$stmt->bindParam(":bd", $data);
+				$stmt->execute();
+				
+			} catch (Exception $e) {
+				throw new Exception($e->getMessage());
+			}
+			
+		}
+
 		private function _Copy(int $s_fid, int $d_fid) {
 
 			try {

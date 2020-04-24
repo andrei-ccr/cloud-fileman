@@ -12,9 +12,6 @@
 
 	//$fld = isset($_POST['fld'])?$_POST['fld']:false; //True if selected element is a folder
 
-	//<li id="cm-open">Open</li>
-	//<li class="cm-disabled" id="cm-properties">Properties</li>
-
 ?>
 
 
@@ -28,6 +25,9 @@
 										</ul>
 									</li> <?php endif; ?>
 		<?php /*if($fs && ($loc_disk || $loc_fav)) : ?><li id="cm-add-to-fav"><i class="fas fa-star"></i> Mark</li><?php endif;*/ ?>
+
+		<?php if($fs ) :?><li class="cm-edit">Edit</li><?php endif;?>
+
 		<?php if(!$fs ) : ?><li class="cm-refresh"><i class="fas fa-redo"></i> Refresh</li><?php endif; ?>
 		<?php if(!$fs ) : ?><li class="cm-new-folder"><i class="fas fa-folder"></i> New Folder</li><?php endif; ?>
 		<?php if(!$fs ) : ?><li class="cm-new-file"><i class="fas fa-file"></i> New File</li><?php endif; ?>
