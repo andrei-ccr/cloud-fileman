@@ -257,7 +257,7 @@
 		 */ 
 		public function ReadDirectory(int $id) : array {
 			try {
-				$stmt = $this->conn->prepare("SELECT f.id, f.name, f.isDir FROM files f LEFT JOIN files_discs fd ON fd.file_id= f.id WHERE f.parent_id=:parid AND fd.disc_id=:discid");
+				$stmt = $this->conn->prepare("SELECT f.id, f.name, f.isDir FROM files f LEFT JOIN files_discs fd ON fd.file_id= f.id WHERE f.parent_id=:parid AND fd.disc_id=:discid ORDER BY f.isDir DESC");
 				$stmt->bindValue(":parid", $id);
 				$stmt->bindValue(":discid", $this->discid);
 				$stmt->execute();
