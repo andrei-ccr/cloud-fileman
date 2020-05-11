@@ -6,10 +6,11 @@ export function Modals() {
 		let fileid = $(".modal").data("fid");
 		let did = $('#dinfo').data("did");
 		let c = $(".modal textarea").val();
+		let perm = $('#dinfo').data("hdl");
 
 		$.ajax({
 			url: 'operations/writefile', 
-			data: {discid: did, fid: fileid, content: c},
+			data: {discid: did, fid: fileid, content: c, permid: perm},
 			dataType: 'json',
 			cache: false,
 			type: 'post'
@@ -79,10 +80,11 @@ export function Menus() {
 	$(document).on("click", ".cm-edit", function(e) {
 		let fileid = Status.targetFile.data("id");
 		let did = $('#dinfo').data("did");
+		let perm = $('#dinfo').data("hdl");
 
 		$.ajax({
 			url: 'operations/readfile', 
-			data: {discid: did, fid: fileid},
+			data: {discid: did, fid: fileid, permid: perm},
 			dataType: 'json',
 			cache: false,
 			type: 'post'

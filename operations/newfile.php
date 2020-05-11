@@ -1,7 +1,7 @@
 <?php
 	require_once("../obj/Disc.php");
 	
-	if(isset($_POST['discid'])) {
+	if(isset($_POST['discid']) && isset($_POST['permid'])) {
 
 		//Check if $disc_id is a positive integer
 		if(!is_numeric($_POST['discid']) || ($_POST['discid'] < 0)) {
@@ -10,7 +10,7 @@
 		}
 
 		try {
-			$disc = new Disc($_POST['discid']);
+			$disc = new Disc($_POST['discid'], $_POST['permid']);
 			if(isset($_POST['cd'])) {
 				$dir_id = $disc->CreateFile("File", $_POST['cd']);
 			} else {

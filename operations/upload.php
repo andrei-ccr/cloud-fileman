@@ -11,7 +11,7 @@
 	unlink($_FILES['discdata']['tmp_name']);
 
 	try {
-		$disc = new Disc((int)$discdata->discid);
+		$disc = new Disc((int)$discdata->discid, $discdata->permid);
 	} catch (Exception $e) {
 		http_response_code(400);
 		echo json_encode(array("internalError" => "Invalid disc id.", "error" => "Internal error."));

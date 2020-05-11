@@ -12,8 +12,9 @@
 		private bool $isDir = false; //True if file is a directory
 		private int $filesize = 0; //Size of the file in bytes
 		private int $discid = 0; //The disc id where this file is located on
+		private string $permission_id = "";
 
-		public function __construct($identifier) {
+		public function __construct($identifier, string $permission_id) {
 
 			Connection::__construct();
 
@@ -23,11 +24,11 @@
 					throw new Exception("Invalid negative file id");
 				}
 
-				$res = $this->LoadResourceFromId((int)$identifier);
+				$res = $this->LoadResourceFromId((int)$identifier, $permission_id);
 
 			} 
 			else if(gettype($identifier) == "string") {
-				$res = $this->LoadResourceFromKey((string)$identifier);
+				$res = $this->LoadResourceFromKey((string)$identifier, $permission_id);
 			} 
 			else {
 				throw new Exception("Invalid identifier type");
@@ -35,18 +36,20 @@
 
 			$this->fid = (int)$res['id'];
 			$this->keyname = $res['key_name'];
-			$this->filename = $res['name'];
+			$this->filename = $res['filename'];
 			$this->isDir = (bool)$res['isDir'];
 			$this->filesize = (int)$res['size'];
 			$this->discid = (int)$res['disc_id'];
+			$this->permission_id = $permission_id;
 
 		}
 		
-		private function LoadResourceFromId(int $fid) : array {
+		private function LoadResourceFromId(int $fid, string $permission_id) : array {
 
 			try {
-				$stmt = $this->conn->prepare("SELECT * FROM files f LEFT JOIN files_discs fd ON fd.file_id=f.id WHERE f.id=:id");
+				$stmt = $this->conn->prepare("SELECT *, f.name AS filename FROM files f LEFT JOIN files_discs fd ON fd.file_id=f.id LEFT JOIN discs d ON d.id = fd.disc_id WHERE f.id=:id AND d.permission_id=:permid");
 				$stmt->bindValue(":id", $fid);
+				$stmt->bindValue(":permid", $permission_id);
 				$stmt->execute();
 			} 
 			catch (PDOException $e) {
@@ -62,11 +65,12 @@
 			return $res;
 		}
 
-		private function LoadResourceFromKey(string $key_name) : array {
+		private function LoadResourceFromKey(string $key_name, string $permission_id) : array {
 
 			try {
-				$stmt = $this->conn->prepare("SELECT * FROM files f LEFT JOIN files_discs fd ON fd.file_id=f.id WHERE f.key_name=:kn");
+				$stmt = $this->conn->prepare("SELECT * FROM files f LEFT JOIN files_discs fd ON fd.file_id=f.id LEFT JOIN discs d ON d.id = fd.disc_id WHERE f.key_name=:kn AND d.permission_id=:permid");
 				$stmt->bindValue(":kn", $key_name);
+				$stmt->bindValue(":permid", $permission_id);
 				$stmt->execute();
 			} 
 			catch (PDOException $e) {
@@ -156,7 +160,8 @@
 			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			if($row === FALSE) throw new Exception("No source file with this id");
 
-			$d = new Disc((int)$row['disc_id']);
+			//TODO:New Disc object created every recursive call. Get this once as parameter.
+			$d = new Disc((int)$row['disc_id'], $this->permission_id); 
 
 			if((bool)$row['isDir'] === true) {
 				$new_folder_id = $d->CreateDirectory($row['name'], $d_fid);
@@ -193,6 +198,10 @@
 		 */
 		public function Copy(int $folder_id) : void {
 
+			if(!File::HasFilePermission((int)$folder_id, $this->permission_id) && ($folder_id!=0)) {
+				throw new Exception("Target directory is not on the same disc");
+			}
+
 			try {
 				$stmt = $this->conn->prepare("SELECT * FROM files WHERE key_name=:kn");
 				$stmt->bindValue(":kn", $this->keyname);
@@ -204,7 +213,7 @@
 			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			if($row === FALSE) throw new Exception("Source file not found");
 
-			$d = new Disc((int)$this->discid);
+			$d = new Disc((int)$this->discid, $this->permission_id);
 
 			//Copy location is the same as current location. Prepend a "Copy -" to filename
 			$filename = ( ($folder_id == $row['parent_id'] ) ?"Copy - ":"") . $this->filename;
@@ -241,6 +250,10 @@
 
 		public function Move(int $folder_id) : void {
 
+			if(!File::HasFilePermission((int)$folder_id, $this->permission_id) && ($folder_id!=0)) {
+				throw new Exception("Target directory is not on the same disc");
+			}
+
 			try {
 				$stmt = $this->conn->prepare("SELECT * FROM files WHERE key_name=:kn");
 				$stmt->bindParam(":kn", $this->keyname);
@@ -252,22 +265,13 @@
 					return;
 				} 
 
-				//Check if target folder is on the same disc as source file
-				$stmt = $this->conn->prepare("SELECT fd.disc_id AS did FROM files f LEFT JOIN files_discs fd ON fd.file_id=f.id WHERE f.id=:id");
-				$stmt->bindParam(":id", $folder_id);
-				$stmt->execute();
-				$row_discid = $stmt->fetch(PDO::FETCH_ASSOC);
-				if((int)$row_discid["did"] != (int)$this->discid) {
-					throw new Exception("Target is not on the same disc");
-				}
-
 				//Move the file to the new directory
 				$stmt = $this->conn->prepare("UPDATE files SET parent_id=:newparent WHERE key_name=:kn");
 				$stmt->bindParam(":kn", $this->keyname);
 				$stmt->bindParam(":newparent", $folder_id);
 				$stmt->execute();
 
-			} catch (Exception $e) {
+			} catch (PDOException $e) {
 				throw new Exception($e->getMessage());
 			}
 		}
@@ -356,6 +360,19 @@
 
 		public function GetId() : int {
 			return $this->id;
+		}
+
+
+		public static function HasFilePermission(int $id, string $permission_id) : bool {
+			try {
+				$f = new File($id , $permission_id);
+			}
+			catch(Exception $e) {
+				return false;
+			}
+
+			return true;
+			
 		}
 		
 	}

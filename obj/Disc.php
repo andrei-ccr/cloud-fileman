@@ -15,16 +15,18 @@
 		private bool $temporary;
 		private int $maxSpace;
 		private $dateCreated;
+		private string $permission_id;
 		
-		public function __construct(int $discid) {
+		public function __construct(int $discid, string $permission_id) {
 			if($discid <= 0) {
 				throw new Exception("Invalid negative disc id");
 			}
 
 			Connection::__construct();
 
-			$stmt = $this->conn->prepare("SELECT * FROM discs WHERE id=:id LIMIT 1");
+			$stmt = $this->conn->prepare("SELECT * FROM discs WHERE id=:id AND permission_id=:permid LIMIT 1");
 			$stmt->bindValue(":id", $discid);
+			$stmt->bindValue(":permid", $permission_id);
 			$stmt->execute();
 
 			$row = $stmt->fetch();
@@ -35,9 +37,9 @@
 				$this->temporary = (bool)$row['temporary']; 
 				$this->maxSpace = (int)$row['space'];
 				$this->dateCreated = $row['date_created'];
+				$this->permission_id = $permission_id;
 
 				if($this->IsDiscExpired()) {
-				
 					throw new Exception("Disc is expired");
 				}
 				
@@ -87,11 +89,8 @@
 			}
 
 			if($cd != 0) {
-				$file = new File($cd);
+				$file = new File($cd, $this->permission_id);
 				if(!$file->IsDir()) throw new Exception("Target is not a directory");
-
-				//TODO!: Check if $cd points to a directory on the this disc
-
 			}
 
 			$kn = Security::GenerateKey($name);
@@ -145,10 +144,8 @@
 			}
 
 			if($cd != 0) {
-				$file = new File($cd);
+				$file = new File($cd, $this->permission_id);
 				if(!$file->IsDir()) throw new Exception("Target is not a directory");
-
-				//TODO: Check if $cd points to a directory in this disc
 			}
 			
 			$kn = Security::GenerateKey($name);
@@ -210,7 +207,7 @@
 			}
 			
 			if($target_dir != 0) {
-				$f = new File((int)$target_dir);
+				$f = new File((int)$target_dir, $this->permission_id);
 				if($f->IsDir() === false) throw new Exception("Target id doesn't point to a directory", 4);
 			}
 			

@@ -23,7 +23,7 @@
 	if(isset($_COOKIE['guest']) && isset($_COOKIE['own'])) {
 
 		try {
-			$disc = new Disc($_COOKIE['guest']);
+			$disc = new Disc($_COOKIE['guest'], $_COOKIE['own']);
 			if($disc->IsTemporary() == false) {
 				throw new Exception("Not a guest disc");
 			}
@@ -42,7 +42,7 @@
 	} else if(isset($_COOKIE['uid']) && isset($_COOKIE['per']) && isset($_COOKIE['did'])) {
 
 		try {
-			$disc = new Disc($_COOKIE['did']);
+			$disc = new Disc($_COOKIE['did'], $_COOKIE['per']);
 			if($disc->IsTemporary() == true) {
 				throw new Exception("Not a member disc");
 			}
@@ -63,7 +63,7 @@
 	} else if(isset($_SESSION['uid']) && isset($_SESSION['per']) && isset($_SESSION['did'])) { 
 
 		try {
-			$disc = new Disc($_SESSION['did']);
+			$disc = new Disc($_SESSION['did'], $_SESSION['per']);
 			if($disc->IsTemporary() == true) {
 				throw new Exception("Not a member disc");
 			}

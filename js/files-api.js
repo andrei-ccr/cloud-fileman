@@ -5,13 +5,15 @@ export const Files = {
 	Paste : function() {
 		
 		if (ClipboardStatus.file == null) return;
+
 		let fid = ClipboardStatus.file;
 		let dest_id = $('#dinfo').data("cd");
+		let perm = $('#dinfo').data("hdl");
 		let transf_op = (ClipboardStatus.cut)?2:1;
 
 		$.ajax( {
 			url: "operations/transfer",
-			data: {source_fid: fid, destination_folder: dest_id, transfer_op: transf_op},
+			data: {source_fid: fid, destination_folder: dest_id, transfer_op: transf_op, permid: perm},
 			cache: false,
 			type: 'post'
 		})
@@ -29,12 +31,14 @@ export const Files = {
 			return false;
 		}
 
+		let perm = $('#dinfo').data("hdl");
+
 		$.ajax({
 			url: 'operations/cd', 
 			cache: false,         
 			method: 'post',
 			dataType: 'json',
-			data: { fid: $id }
+			data: { fid: $id, permid: perm }
 		})
 		.done(function(resp) {
 			$('#dinfo').data('cd', $id);
@@ -58,9 +62,10 @@ export const Files = {
 	Newdir : function() {
 		var did = $('#dinfo').data("did");
 		var cdid = $('#dinfo').data("cd");
+		let perm = $('#dinfo').data("hdl");
 		$.ajax( {
 			url: "operations/new",
-			data: {discid: did, cd: cdid},
+			data: {discid: did, cd: cdid, permid: perm},
 			cache: false,
 			type: 'post'
 		})
@@ -75,9 +80,10 @@ export const Files = {
 	Newfile : function() {
 		var did = $('#dinfo').data("did");
 		var cdid = $('#dinfo').data("cd");
+		let perm = $('#dinfo').data("hdl");
 		$.ajax( {
 			url: "operations/newfile",
-			data: {discid: did, cd: cdid},
+			data: {discid: did, cd: cdid, permid: perm},
 			cache: false,
 			type: 'post'
 		})
@@ -93,10 +99,11 @@ export const Files = {
 		$("#file-listing").empty();
 		var did = $('#dinfo').data("did");
 		var cdid = $('#dinfo').data("cd");
+		let perm = $('#dinfo').data("hdl");
 
 		var filesAjax = $.ajax({
 			url: 'operations/read', 
-			data: {discid: did, cd: cdid},
+			data: {discid: did, cd: cdid, permid: perm},
 			dataType: 'json',
 			cache: false,
 			type: 'post'
@@ -153,7 +160,8 @@ export const Files = {
 		
 		const json = JSON.stringify({
 			discid: $("#dinfo").data("did"),
-			cd: $("#dinfo").data("cd")
+			cd: $("#dinfo").data("cd"),
+			permid: $("#dinfo").data("hdl")
 		});
 		const blob = new Blob([json], {
 			type: 'application/json'
@@ -206,14 +214,16 @@ export const Files = {
 	},
 	
 	Download : function(fid) {
+		let perm = $('#dinfo').data("hdl");
+
 		$.ajax({
 			url: 'operations/download', 
 			cache: false,
 			method: 'get',
-			data: { fid: fid }
+			data: { fid: fid, permid: perm }
 		})
 		.done(function(resp) {
-			$("body").append("<iframe src='operations/download?fid=" + fid + "' style='display: none;' ></iframe>");
+			$("body").append("<iframe src='operations/download?fid=" + fid + "&permid=" + perm + "' style='display: none;' ></iframe>");
 			setTimeout(function() {
 				$("iframe").remove();
 			}, 3000);
@@ -249,9 +259,11 @@ export const Files = {
 	},
 	
 	Rename: function(fid, newname, did) {
+		let perm = $('#dinfo').data("hdl");
+
 		$.ajax({
 			url: 'operations/rename', 
-			data: { fid: fid, fn: newname, discid: did  },
+			data: { fid: fid, fn: newname, discid: did, permid: perm  },
 			dataType: 'json',
 			cache: false,
 			type: 'post'
@@ -267,6 +279,7 @@ export const Files = {
 	},
 	
 	Trash: function(fid) {
+		let perm = $('#dinfo').data("hdl");
 		$.ajax({
 			url: 'operations/delete', 
 			data: { fid: fid, totrash: 1 },
@@ -293,9 +306,11 @@ export const Files = {
 	},
 	
 	Delete: function(fid, preventRefresh = false) {
+		let perm = $('#dinfo').data("hdl");
+
 		$.ajax({
 			url: 'operations/delete', 
-			data: { fid: fid },
+			data: { fid: fid, permid: perm },
 			dataType: 'json',
 			cache: false,
 			type: 'post'

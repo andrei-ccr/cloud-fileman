@@ -2,7 +2,7 @@
 	if (session_status() == PHP_SESSION_NONE) session_start();
 	require_once("../obj/File.php");
 	
-	if(isset($_POST['fid'])) {
+	if(isset($_POST['fid']) && isset($_POST['permid'])) {
 		
 		//Check if $fid is a positive integer
 		if(!is_numeric($_POST['fid']) || ($_POST['fid']<0)) {
@@ -26,10 +26,10 @@
 
 		//Change to entered directory here
 		try {
-			$directory = new File($fid);
+			$directory = new File($fid, $_POST['permid']);
 			if($directory->IsDir()) {
 
-				//Set SESSION vars. For website only
+				//Set SESSION vars
 				$_SESSION['cdid'] = $fid;
 				if(!isset($_SESSION['dir_list'])) { $_SESSION['dir_list'] = array(); }
 				array_push($_SESSION['dir_list'], $directory->GetFilename());
@@ -52,7 +52,7 @@
 		
 	} else {
 		http_response_code(400);
-		echo json_encode(array("error" => "No file id."));
+		echo json_encode(array("error" => "No file id or permission."));
 		exit;
 	}
 	

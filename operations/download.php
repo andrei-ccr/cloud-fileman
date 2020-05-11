@@ -1,7 +1,7 @@
 <?php
 	require_once("../obj/File.php");
 	
-	if(!isset($_GET['fid'])) {
+	if(!isset($_GET['fid']) || !isset($_GET['permid'])) {
 		http_response_code(400);
 		exit;
 	}
@@ -10,7 +10,7 @@
 	
 	//Load the file in memory
 	try {
-		$file = new File((int)$fid);
+		$file = new File((int)$fid, $_GET['permid']);
 		if($file->IsDir()) {
 
 			//Folders are not downloadable yet.

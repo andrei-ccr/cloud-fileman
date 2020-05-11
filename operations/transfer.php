@@ -1,7 +1,7 @@
 <?php
 	require_once("../obj/File.php");
 	
-	if(!(isset($_POST['source_fid']) && isset($_POST['destination_folder']) && isset($_POST['transfer_op']))) {
+	if(!(isset($_POST['source_fid']) && isset($_POST['destination_folder']) && isset($_POST['transfer_op']) && isset($_POST['permid']))) {
 		http_response_code(400);
 		echo json_encode(array("error" => "Must provide target file and destination and transfer operation"));
 		exit;
@@ -14,7 +14,7 @@
     }
 	
 	try {
-		$file = new File((int)$_POST['source_fid']);
+		$file = new File((int)$_POST['source_fid'], $_POST['permid']);
 		
         if((int)$_POST['transfer_op'] == 1) {
             $file->Copy($_POST['destination_folder']);

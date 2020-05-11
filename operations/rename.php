@@ -1,7 +1,7 @@
 <?php
 	require_once("../obj/File.php");
 	
-	if(!(isset($_POST['fid']) && isset($_POST['fn']))) {
+	if(!(isset($_POST['fid']) && isset($_POST['fn']) && isset($_POST['permid']))) {
 		http_response_code(400);
 		echo json_encode(array("error" => "No file id and new file name."));
 		exit;
@@ -19,7 +19,7 @@
 	$originalFilename = null;
 	
 	try {
-		$file = new File($fid);
+		$file = new File($fid, $_POST['permid']);
 		$originalFilename = $file->GetFilename(); //Get the original filename
 		$file->Rename($fn);
 		http_response_code(200);

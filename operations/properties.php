@@ -21,7 +21,7 @@
 	if(isset($_GET['fid'])) {
 		try {
 			//Get file properties
-			$file = new File((int)$_GET['fid']);
+			$file = new File((int)$_GET['fid'], $_GET['h']);
 
 			if($file->GetDiscId() != $u->disc_id ) {
 				throw new Exception("File is not in current disc");
@@ -50,10 +50,10 @@
 	
 	} else if(isset($_GET['cdid'])) {
 		try {
-			$d = new Disc($u->disc_id);
+			$d = new Disc($u->disc_id, $_GET['h']);
 
 			if($_GET['cdid'] == 0) {
-				$maxspace = Disc::FormatBytes($d->maxSpace);
+				$maxspace = Disc::FormatBytes($d->GetMaxSpace());
 				$freespace = Disc::FormatBytes($d->GetFreeSpace());
 				
 				echo json_encode(array("freespace" => $freespace, "maxspace" => $maxspace, "filecount" => "0"));
@@ -75,7 +75,6 @@
 			echo json_encode(array("internalError"=>$e->getMessage()));
 			exit;
 		}
-		
 
 	} else {
 		http_response_code(400);
