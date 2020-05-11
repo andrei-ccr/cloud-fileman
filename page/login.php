@@ -12,7 +12,7 @@
 			<button id="btn-register" style="margin: 10px 20px;border: 1px solid #0f7dcc; background-color: white; color: #0f7dcc; font-size:13px;">Creeaza cont</button>
 		</div>
 	</div>
-	
+
 	<div class="box-container">
 		<p class="box-container-txt">Nu vrei cont? <a id="btn-no-acc" style="cursor: pointer;">Intra fara cont</a></p>
 	</div>

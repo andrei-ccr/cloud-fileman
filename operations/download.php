@@ -2,7 +2,7 @@
 	require_once("../obj/File.php");
 	
 	if(!isset($_GET['fid'])) {
-		http_response_code(403);
+		http_response_code(400);
 		exit;
 	}
 	
@@ -12,6 +12,7 @@
 	try {
 		$file = new File((int)$fid);
 		if($file->IsDir()) {
+
 			//Folders are not downloadable yet.
 			http_response_code(405);
 			exit;
@@ -22,7 +23,7 @@
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
-		echo $file->GetBinaryData();
+		echo $file->ReadBinaryData();
 		http_response_code(200);
 		exit;
 

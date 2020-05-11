@@ -4,7 +4,7 @@
 	$_SESSION['cdid'] = 0;
 	
 	//Calculate free space
-	$maxspace = Disc::FormatBytes($disc->maxSpace);
+	$maxspace = Disc::FormatBytes($disc->GetMaxSpace());
 	$freespace = Disc::FormatBytes($disc->GetFreeSpace());
 
 	$fvclass = "icons-view";
@@ -46,7 +46,7 @@
 		<div id="memory" style="display:inline-block; vertical-align:middle;">
 			<span id="n"><?php echo "Liber: " . $freespace[0] ." ". $freespace[1] . " din " . $maxspace[0] ." ". $maxspace[1]; ?></span>
 		</div>
-		<?php if($disc->temporary == true): ?>
+		<?php if($disc->IsTemporary() == true): ?>
 			<span id="guest" title="Click pentru a inchide" style="color:#1b1b1b; cursor:pointer; display: inline-block;"><i class="fas fa-exclamation-triangle"></i> Fisierele se vor sterge in 30:00. Intra in cont pentru pastra fisierele.</span>
 		<?php endif; ?>
 	</div>

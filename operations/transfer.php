@@ -14,7 +14,8 @@
     }
 	
 	try {
-        $file = new File($_POST['source_fid']);
+		$file = new File((int)$_POST['source_fid']);
+		
         if((int)$_POST['transfer_op'] == 1) {
             $file->Copy($_POST['destination_folder']);
         } else if ((int)$_POST['transfer_op'] == 2) {

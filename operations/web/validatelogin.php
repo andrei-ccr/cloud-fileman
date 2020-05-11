@@ -24,12 +24,12 @@
 
 		try {
 			$disc = new Disc($_COOKIE['guest']);
-			if($disc->temporary == false) {
+			if($disc->IsTemporary() == false) {
 				throw new Exception("Not a guest disc");
 			}
 
 			$user = new User($_COOKIE['own']);
-			$handle = $user->permission_id;
+			$handle = $user->GetPermissionId();
 			$username = $user->GetEmail(true);
 
 		} catch(Exception $e){
@@ -43,12 +43,12 @@
 
 		try {
 			$disc = new Disc($_COOKIE['did']);
-			if($disc->temporary == true) {
+			if($disc->IsTemporary() == true) {
 				throw new Exception("Not a member disc");
 			}
 
 			$user = new User($_COOKIE['per']);
-			$handle = $user->permission_id;
+			$handle = $user->GetPermissionId();
 			$username = $user->GetEmail(true);
 			$profile_pic = strtoupper(substr($username,0,1));
 
@@ -64,7 +64,7 @@
 
 		try {
 			$disc = new Disc($_SESSION['did']);
-			if($disc->temporary == true) {
+			if($disc->IsTemporary() == true) {
 				throw new Exception("Not a member disc");
 			}
 

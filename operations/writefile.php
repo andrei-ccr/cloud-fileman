@@ -15,7 +15,7 @@
 	try {
 
 		$disc = new Disc($_POST['discid']);
-        $f = new File($_POST['fid']);
+        $f = new File((int)$_POST['fid']);
 
         if($disc->GetDiscId() != $f->GetDiscId()) 
             throw new Exception("File is not on the current disc");

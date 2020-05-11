@@ -1,9 +1,8 @@
 <?php
 	declare(strict_types=1);
-	require_once($_SERVER['DOCUMENT_ROOT'] . "/obj/Connection.php");
+	require_once("Connection.php");
+	require_once("Security.php");
 	require_once("File.php");
-
-	if(session_status() == PHP_SESSION_NONE) session_start();
 	
 	define("KB", 1024);
 	define("MB", 1024*KB);
@@ -12,66 +11,58 @@
 
 	class Disc extends Connection {
 
-		private $dummyFile = array(
-			"id" => 0,
-			"name" => "_dummy_",
-			"isDir" => false
-		);
-		
-		//Properties
-		protected int $discid;
-		public bool $temporary;
-		public $visibility;
-		public string $name;
-		public int $maxSpace;
-		public $dateCreated;
+		private int $discid;
+		private bool $temporary;
+		private int $maxSpace;
+		private $dateCreated;
 		
 		public function __construct(int $discid) {
-			if($discid>0) {
-				Connection::__construct(DEBUG_SERVER);
-				$stmt = $this->conn->prepare("SELECT * FROM discs WHERE id=:id LIMIT 1");
-				$stmt->bindParam(":id", $discid);
-				$res = $stmt->execute();
-
-				if($res == false) throw new Exception("Database query failed.");
-
-				$row = $stmt->fetch();
-				if($row !== FALSE) {
-					$this->discid = (int)$discid;
-					$this->temporary = (bool)$row['temporary']; 
-					$this->visibility = $row['visibility'];
-					$this->name = $row['name'];
-					$this->maxSpace = (int)$row['space'];
-					$this->dateCreated = $row['date_created'];
-
-					if($this->IsDiscExpired()) {
-						throw new Exception("Disc is expired.");
-					}
-					
-				} else {
-					throw new Exception("No disc exists with this id.");
-				}
-			} else {
-				throw new Exception("Invalid disc id.");
+			if($discid <= 0) {
+				throw new Exception("Invalid negative disc id");
 			}
+
+			Connection::__construct();
+
+			$stmt = $this->conn->prepare("SELECT * FROM discs WHERE id=:id LIMIT 1");
+			$stmt->bindValue(":id", $discid);
+			$stmt->execute();
+
+			$row = $stmt->fetch();
+
+			if($row !== FALSE) {
+
+				$this->discid = (int)$discid;
+				$this->temporary = (bool)$row['temporary']; 
+				$this->maxSpace = (int)$row['space'];
+				$this->dateCreated = $row['date_created'];
+
+				if($this->IsDiscExpired()) {
+				
+					throw new Exception("Disc is expired");
+				}
+				
+			} else {
+				throw new Exception("No disc exists with this id exists");
+			}
+		
 		}
 
 
 		/**
-		 * Checks if 30 minutes have passed since the creation of this disc. Returns true if it did, false otherwise.
+		 * Checks if disc is temporary and older than 30 minutes since it was created.
 		 * 
 		 * @param void
 		 *
 		 * @return bool Returns true if disc is expired, false otherwise.
 		 */ 
-		protected function IsDiscExpired() : bool{
+		public function IsDiscExpired() : bool{
 			if($this->temporary == false) {
 				//This disc is not temporary. It cannot expire.
 				return false; 
 			}
-
-			if($this->dateCreated <= time() + (60*60*2) - (60*30)) {
-				return false; // TODO:This should be true
+			$dt = new DateTime($this->dateCreated);
+			if($dt->getTimestamp() <= (time() + 60*60 - 60*30)) {// TODO: PHP time() returns without daylight saving. MySQL time is server's locale
+				return true; 
 			} else {
 				return false;
 			}
@@ -83,6 +74,8 @@
 		 *
 		 * @param string $name 	The name of the new directory
 		 * 
+		 * @param int $cd  The directory in which the new directory will be created
+		 * 
 		 * @return int	Returns the id of the directory 
 		 *
 		 * @throws Exception Throws an Exception if filename is invalid or database query fails
@@ -90,42 +83,43 @@
 		public function CreateDirectory(string $name, int $cd=0) : int {
 			
 			if(!Disc::ValidFilename($name)) {
-				throw new Exception("Invalid name provided.");
+				throw new Exception("Invalid name provided");
 			}
 
 			if($cd != 0) {
-				try {
-					$file = new File($cd);
-					if(!$file->IsDir()) throw new Exception();
-				} catch (Exception $e) {
-					throw new Exception("Current directory id is not a valid directory.");
-				}
-			}
-			
-			$current_dir_id = $cd;
+				$file = new File($cd);
+				if(!$file->IsDir()) throw new Exception("Target is not a directory");
 
-			$kn = Disc::GenerateKey($name);
-			
-			$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id) VALUES(:name, :keyname, 1, :parid)");
-			$stmt->bindParam(":name", $name);
-			$stmt->bindParam(":keyname", $kn);
-			$stmt->bindParam(":parid", $current_dir_id);
-			$res = $stmt->execute();
-			
-			if($res == false) {
-				throw new Exception($stmt->error);
+				//TODO!: Check if $cd points to a directory on the this disc
+
 			}
 
+			$kn = Security::GenerateKey($name);
+			
+			try {
+				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id) VALUES(:name, :keyname, 1, :parid)");
+				$stmt->bindValue(":name", $name);
+				$stmt->bindValue(":keyname", $kn);
+				$stmt->bindValue(":parid", $cd);
+				$stmt->execute();
+			} 
+			catch (PDOException $e) {
+				throw new Exception("Couldn't create new directory: " . $e->getMessage());
+			}
+			
 			$fid = (int)$this->conn->lastInsertId();
 
-			$stmt = $this->conn->prepare("INSERT INTO files_discs(disc_id, file_id) VALUES(:discid, :fid)");
-			$stmt->bindParam(":discid", $this->discid);
-			$stmt->bindParam(":fid", $fid);
-			$res = $stmt->execute();
-			
-			if($res == false) {
-				throw new Exception($stmt->error);
+			try {
+				$stmt = $this->conn->prepare("INSERT INTO files_discs(disc_id, file_id) VALUES(:discid, :fid)");
+				$stmt->bindValue(":discid", $this->discid);
+				$stmt->bindValue(":fid", $fid);
+				$stmt->execute();
 			}
+			catch (PDOException $e) {
+				throw new Exception("Couldn't create new directory: " . $e->getMessage());
+			}
+			
+			//TODO: Make only one query
 
 			return (int)$fid;
 		}
@@ -136,6 +130,10 @@
 		 *
 		 * @param string $name 	The name of the new file
 		 * 
+		 * @param int $cd	The directory in which the new file will be created
+		 * 
+		 * @param string [$data]   Optional. Data to be inserted into the file.
+		 * 
 		 * @return int	Returns the id of the file 
 		 *
 		 * @throws Exception Throws an Exception if filename is invalid or database query fails
@@ -143,42 +141,40 @@
 		public function CreateFile(string $name, int $cd=0, string $data=null) : int {
 			
 			if(!Disc::ValidFilename($name)) {
-				throw new Exception("Invalid name provided.");
+				throw new Exception("Invalid name provided");
 			}
 
 			if($cd != 0) {
-				try {
-					$file = new File($cd);
-					if(!$file->IsDir()) throw new Exception();
-				} catch (Exception $e) {
-					throw new Exception("Current directory id is not a valid directory.");
-				}
+				$file = new File($cd);
+				if(!$file->IsDir()) throw new Exception("Target is not a directory");
+
+				//TODO: Check if $cd points to a directory in this disc
 			}
 			
-			$current_dir_id = $cd;
+			$kn = Security::GenerateKey($name);
 			
-			$kn = Disc::GenerateKey($name);
-			
-			$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, binary_data) VALUES(:name, :keyname, 0, :parid, :bin_data)");
-			$stmt->bindParam(":name", $name);
-			$stmt->bindParam(":keyname", $kn);
-			$stmt->bindParam(":parid", $current_dir_id);
-			$stmt->bindParam(":bin_data", $data);
-			$res = $stmt->execute();
-			
-			if($res == false) {
-				throw new Exception($stmt->error);
+			try {
+				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, binary_data) VALUES(:name, :keyname, 0, :parid, :bin_data)");
+				$stmt->bindValue(":name", $name);
+				$stmt->bindValue(":keyname", $kn);
+				$stmt->bindValue(":parid", $cd);
+				$stmt->bindValue(":bin_data", $data);
+				$stmt->execute();
+			}
+			catch (PDOException $e) {
+				throw new Exception($e->getMessage());
 			}
 
 			$fid = (int)$this->conn->lastInsertId();
 
-			$stmt = $this->conn->prepare("INSERT INTO files_discs(disc_id, file_id) VALUES(:discid, :fid)");
-			$stmt->bindParam(":discid", $this->discid);
-			$stmt->bindParam(":fid", $fid);
-			$res = $stmt->execute();
-			
-			if($res == false) {
-				throw new Exception($stmt->error);
+			try {
+				$stmt = $this->conn->prepare("INSERT INTO files_discs(disc_id, file_id) VALUES(:discid, :fid)");
+				$stmt->bindValue(":discid", $this->discid);
+				$stmt->bindValue(":fid", $fid);
+				$stmt->execute();
+			}
+			catch (PDOException $e) {
+				throw new Exception($e->getMessage());
 			}
 
 			return (int)$fid;
@@ -189,11 +185,13 @@
 		 *
 		 * @param array $file 	Contains the file as send through Form Data
 		 * 
+		 * @param int $target_dir	Id of the directory where the files will be uploaded
+		 * 
 		 * @return void
 		 *
 		 * @throws Exception Throws an Exception in case of error
 		 */ 
-		public function UploadFile(array $file, int $cdid=0, bool $uploadLocal=false) : void {
+		public function UploadFile(array $file, int $target_dir=0) : void {
 			
 			if(!Disc::ValidFilename($file['name'])) {
 				throw new Exception("Invalid name provided.",0);
@@ -211,42 +209,41 @@
 				throw new Exception("File size exceeds free space limit.",3);
 			}
 			
-			if($cdid != 0) {
-				try {
-					$f = new File($cdid);
-					if(!$f->IsDir()) throw new Exception();
-				} catch (Exception $e) {
-					throw new Exception("Current directory id is not a valid directory.",4);
-				}
+			if($target_dir != 0) {
+				$f = new File((int)$target_dir);
+				if($f->IsDir() === false) throw new Exception("Target id doesn't point to a directory", 4);
 			}
 			
 			$filename = $file['name'];
 			$filesize = $file['size'];
 
-			$kn = Disc::GenerateKey($filename);
+			$kn = Security::GenerateKey($filename);
 			$blobdata = file_get_contents($file['tmp_name']);
 			
 			try {
 				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, size, parent_id, binary_data) VALUES(:name, :kn, :size, :pid, :bindat)");
-				$stmt->bindParam(":name", $filename);
-				$stmt->bindParam(":kn", $kn);
-				$stmt->bindParam(":size", $filesize);
-				$stmt->bindParam(":pid", $cdid);
-				$stmt->bindParam(":bindat", $blobdata);
+				$stmt->bindValue(":name", $filename);
+				$stmt->bindValue(":kn", $kn);
+				$stmt->bindValue(":size", $filesize);
+				$stmt->bindValue(":pid", $target_dir);
+				$stmt->bindValue(":bindat", $blobdata);
 				$stmt->execute();
-
-			} catch (Exception $e) {
+				
+			} 
+			catch (PDOException $e) {
 				throw new Exception("Inserting data into database has failed.",5);
 			}
 
 			$uploaded_fid = $this->conn->lastInsertId();
+			
 			try {
 				$stmt = $this->conn->prepare("INSERT INTO files_discs(disc_id, file_id) VALUES(:did, :fid)");
-				$stmt->bindParam(":did", $this->discid);
-				$stmt->bindParam(":fid", $uploaded_fid);
+				$stmt->bindValue(":did", $this->discid);
+				$stmt->bindValue(":fid", $uploaded_fid);
 				$stmt->execute();
 
-			} catch (Exception $e) {
+			} 
+			catch (PDOException $e) {
 				throw new Exception("Inserting data into database has failed.",6);
 			}
 		}
@@ -255,7 +252,7 @@
 		/**
 		 * Reads a directory $id and returns an array of file objects. 
 		 *
-		 * @param array $id 	The id of the directory
+		 * @param array $id 	The id of the directory to read
 		 * 
 		 * @return array 
 		 *
@@ -264,8 +261,8 @@
 		public function ReadDirectory(int $id) : array {
 			try {
 				$stmt = $this->conn->prepare("SELECT f.id, f.name, f.isDir FROM files f LEFT JOIN files_discs fd ON fd.file_id= f.id WHERE f.parent_id=:parid AND fd.disc_id=:discid");
-				$stmt->bindParam(":parid", $id);
-				$stmt->bindParam(":discid", $this->discid);
+				$stmt->bindValue(":parid", $id);
+				$stmt->bindValue(":discid", $this->discid);
 				$stmt->execute();
 			} catch (PDOException $e) {
 				throw new Exception("Failed to read the files.");
@@ -273,43 +270,58 @@
 			
 			$f = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-			//Create a dummy hidden file because this folder doens't contain any files
+			//Create a dummy hidden file because this folder doesn't contain any files
 			if(count($f) <= 0) {
-				$f = array($this->dummyFile);
+				$f = array($this->GetDummyFile());
 			};
 			return $f;
 		}
 		
+
+		/**
+		 * Calculates the used storage space. 
+		 * 
+		 * @return int Returns -1 in case of error or how many bytes are used 
+		 * 
+		 */ 
 		public function GetUsedSpace() {
+			$sum = 0;
+			$did = $this->discid;
+
 			try {
-				$sum = 0;
-				$did = $this->discid;
 				$stmt = $this->conn->prepare("
 					SELECT f.size AS filesize 
 					FROM files f 
 					LEFT JOIN files_discs fd ON f.id = fd.file_id
 					LEFT JOIN discs d ON fd.disc_id = d.id 
 					WHERE d.id=:did");
-				$stmt->bindParam(":did", $did);
+				$stmt->bindValue(":did", $did);
 				$stmt->execute();
 
-				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				if(count($rows)>0) {
-					foreach($rows as $row) {
-						$sum += (int)$row['filesize'];
-					}
-					
-				} else {
-					//No files on this disc.
-					return 0;
-				}
-			} catch(Exception $e) {
+			} catch(PDOException $e) {
 				return -1;
+			}
+			
+			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($rows !== FALSE) {
+				foreach($rows as $row) {
+					$sum += (int)$row['filesize'];
+				}
+			} else {
+				//No files on this disc.
+				return 0;
 			}
 
 			return (int)$sum;
 		}
 		
+
+		/**
+		 * Calculates the free storage space. 
+		 * 
+		 * @return int Returns -1 in case of error or how many bytes are free.
+		 * 
+		 */ 
 		public function GetFreeSpace() : int {
 			$used = (int)$this->GetUsedSpace();
 			if($used == -1) return -1;
@@ -317,10 +329,32 @@
 			return $this->maxSpace - $used;
 		}
 
+		private function GetDummyFile() : array {
+			return array(
+				"id" => 0,
+				"name" => "_dummy_",
+				"isDir" => false,
+				"key_name" => "null"
+			);
+		} 
+
 		public function GetDiscId() : int {
 			return $this->discid;
 		}
+
+		public function GetDateCreated() {
+			return $this->dateCreated;
+		}
+
+		public function IsTemporary() : bool {
+			return $this->temporary;
+		}
+
+		public function GetMaxSpace() : int {
+			return $this->maxSpace;
+		}
 		
+
 		public static function FormatBytes(float $bytes, int $prefferedUnit = 0) :array {
 			if($bytes < KB) return array($bytes, "B");
 			if($bytes < MB) return array(number_format($bytes/KB, 2), "KB");
@@ -328,15 +362,6 @@
 			return array(number_format($bytes/GB, 2), "GB");
 		}
 		
-		private static function RandomStr() : string {
-			$str = "";
-			$arr = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9');
-			
-			for($i=0;$i<10;$i++) {
-				$str .= $arr[mt_rand(0, count($arr)-1)];
-			}
-			return $str;
-		}
 
 		public static function ValidFilename(string $filename) : bool {
 			if(preg_match('/[\/:"*?<>|]/', $filename)) {
@@ -353,37 +378,6 @@
 			return true;
 		}
 		
-		public static function GenerateKey(string $filename) : string {
-			$kn = $filename . Disc::RandomStr();
-			$kn = hash("sha256", $kn);
-			$kn .= "!";
-			
-			return $kn;
-		}
 
 	}
-
-
-		/*public static function ValidDisk(PDO $conn, int $id) : bool {
-			$stmt = $conn->prepare("SELECT email FROM contacts WHERE id=:id");
-			$stmt->bindParam(":id", $id);
-			$stmt->execute();
-
-			$res = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($res) {
-				return true;
-			} else return false;
-		}
-
-		public static function ValidFile(PDO $conn, string $key) : bool {
-			$stmt = $conn->prepare("SELECT * FROM files WHERE keyname=:key");
-			$stmt->bindParam(":key", $key);
-			$stmt->execute();
-
-			$res = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($res) {
-				return true;
-			} else 
-				return false;
-		}*/
 ?>

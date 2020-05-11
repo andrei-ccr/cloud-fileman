@@ -16,8 +16,8 @@
 			$newGuest = null;
 			try {
 				$newGuest = new Guest();
-				$guest_disc_id = $newGuest->disc_id;
-				$guest_permission_id = $newGuest->permission_id;
+				$guest_disc_id = $newGuest->GetDiscId();
+				$guest_permission_id = $newGuest->GetPermissionId();
 			} catch (InsertGuestException $e) {
 				http_response_code(400);
 				exit;
@@ -36,21 +36,30 @@
 	try {
 		$user = new User($_POST['email'], $_POST['pass']);
 	} catch (MemberNotFoundException $e) {
+		echo json_encode(array(
+			"error" => "MemberNotFoundException"
+		));
 		http_response_code(400);
 		exit;
 	} catch (PutPermissionException $e) {
+		echo json_encode(array(
+			"error" => "PutPermissionException"
+		));
 		http_response_code(400);
 		exit;
 	} catch (Exception $e) {
+		echo json_encode(array(
+			"error" => "Exception"
+		));
 		http_response_code(400);
 		exit;
 	}
 
 	echo json_encode(array(
 		"result" => "member", 
-		"userid" => $user->user_id,
-		"permid" => $user->permission_id, 
-		"discid"=> $user->disc_id) 
+		"userid" => $user->GetUserId(),
+		"permid" => $user->GetPermissionId(), 
+		"discid"=> $user->GetDiscId()) 
 	);
 
 	http_response_code(200);
