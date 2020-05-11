@@ -282,48 +282,16 @@ export const Files = {
 		let perm = $('#dinfo').data("hdl");
 		$.ajax({
 			url: 'operations/delete', 
-			data: { fid: fid, totrash: 1 },
+			data: { fid: fid, permid: perm },
 			dataType: 'json',
 			cache: false,
 			type: 'post'
 		})
 		.done(function() {
 			Files.Read();
-		});
-	},
-	
-	Restore: function(fid) {
-		$.ajax({
-			url: 'operations/delete', 
-			data: { fid: fid, restore: 1 },
-			dataType: 'json',
-			cache: false,
-			type: 'post'
 		})
-		.done(function() {
-			Locations.List.Trash();
-		});
-	},
-	
-	Delete: function(fid, preventRefresh = false) {
-		let perm = $('#dinfo').data("hdl");
-
-		$.ajax({
-			url: 'operations/delete', 
-			data: { fid: fid, permid: perm },
-			dataType: 'json',
-			cache: false,
-			type: 'post'
-		})
-		.done(function(res) {
-			if(res.result == true) {
-				if(!preventRefresh) {
-					Locations.List.Trash();
-					Properties.ShowDiskSpace();
-				}
-			} else {
-				$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Fisierul nu a putut fi sters.");
-			}
+		.fail(function() {
+			$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Fisierul nu a putut fi sters.");
 		});
 	}
 };
