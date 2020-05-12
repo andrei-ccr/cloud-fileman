@@ -20,7 +20,6 @@
 	<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-	<!--<script defer src="js/jquery.mobile.custom.min.js"></script>-->
 
 	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
 
@@ -42,13 +41,13 @@
 	}
 
 	div.settings-container {
-		background: #fff;
-		width: 100%;
-		padding: 45px;
-		display: grid;
-    grid-column-gap: 50px;
-	grid-row-gap: 50px;
-    grid-template-columns: auto auto auto;
+		background: #f3f3f3;
+    width: 100%;
+    padding: 45px;
+    display: grid;
+    grid-column-gap: 40px;
+    grid-row-gap: 40px;
+    grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
 	}
 	div.settings-side-bar a:hover {
 		font-weight: 500;
@@ -61,15 +60,15 @@
 
 	div.settings-container > .info-box {
 		display: inline-block;
-    	border: 1px solid #adadad;
-    	padding: 10px;
-    	background: #eee;
+    box-shadow: 0px 0px 4px #ddd;
+    padding: 10px;
+    background: #fff;
 	}
 	div.settings-container > .info-box > h4 {
 		margin: 0;
 		margin-bottom: 15px;
 		font-weight: 300;
-		color: #333;
+		color: #8e8e8e;
 		font-size: 18px;
 	}
 
@@ -177,11 +176,13 @@ label.checkbox-label {
 </style>
 <body>
 	<div class="settings-page" style="width: 100%; height: 100%; display:flex;">
-		<div class="settings-side-bar" style="width: 250px; background: #eaeaea; height: 100%; border-right:1px solid #c3c3c3;">
+		<div class="settings-side-bar" style="    width: 250px;
+    background: #ffffff;
+    height: 100%;
+    border-right: 1px solid #c3c3c3;">
 			<span style="background: #0869ff; text-align: center; display: block; color: #fff; padding: 10px; font-size:13px; font-weight: 500;">Account</span>
 			<a class="settings-tab s-tab-account">Dashboard</a>
 			<a class="settings-tab s-tab-fileman">Settings</a>
-			<a class="settings-tab s-tab-about">About</a>
 			<a class="settings-tab s-tab-back">Back to Files</a>
 		</div>
 		<div class="settings-container">
