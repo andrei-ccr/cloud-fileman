@@ -14,10 +14,10 @@
 	<?php 
 		if($isLoggedIn) {
 			require_once("inc/disc-page-head-includes.php");
-			$pageTitle = "Cloud File Manager";
+			$pageTitle = "Cloud Files";
 		} else {
 			require_once("inc/auth-page-head-includes.php");
-			$pageTitle = "Cloud File Manager";
+			$pageTitle = "Cloud Files";
 		}
 	?>
 	
