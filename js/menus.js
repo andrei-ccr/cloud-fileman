@@ -19,7 +19,7 @@ export function Modals() {
 			$(".modal").remove();
 		})
 		.fail( function() {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Nu s-a putut salva!");
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't save the file!");
 		});
 
 	});

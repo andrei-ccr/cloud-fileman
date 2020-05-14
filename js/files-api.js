@@ -21,7 +21,7 @@ export const Files = {
 			Files.Read();
 		})
 		.fail(function(jqXHR) {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Nu se poate muta/copia aici. " + jqXHR.responseText);
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Can't move/copy here. " + jqXHR.responseText);
 		});
 	},
 
@@ -55,7 +55,7 @@ export const Files = {
 
 		})
 		.fail(function(resp) {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Folderul nu poate fi accesat!");
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't access the folder!");
 		});
 	},
 	
@@ -73,7 +73,7 @@ export const Files = {
 			Files.Read();
 		})
 		.fail(function(jqXHR) {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Folderul nu poate fi creat aici. " + jqXHR.responseText);
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't create the folder! " + jqXHR.responseText);
 		});
 	},
 
@@ -81,6 +81,7 @@ export const Files = {
 		var did = $('#dinfo').data("did");
 		var cdid = $('#dinfo').data("cd");
 		let perm = $('#dinfo').data("hdl");
+
 		$.ajax( {
 			url: "operations/newfile",
 			data: {discid: did, cd: cdid, permid: perm},
@@ -91,7 +92,7 @@ export const Files = {
 			Files.Read();
 		})
 		.fail(function(jqXHR) {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Fisierul nu poate fi creat aici. " + jqXHR.responseText);
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't create the file! " + jqXHR.responseText);
 		});
 	},
 	
@@ -114,7 +115,7 @@ export const Files = {
 			var afile;
 			res.forEach(function(elem) {
 				if((elem['name'] == "_dummy_") && (elem['id'] == 0)) {
-					$("#file-listing").append("<span class='msg'>Niciun fisier aici</span>");
+					$("#file-listing").append("<span class='msg'>Folder is empty</span>");
 				} else {
 					
 					afile = "<div class='f noselect " + ((elem['isDir']!=false)?"dir":"") + "' data-id='"+elem['id']+"'>";
@@ -137,7 +138,7 @@ export const Files = {
 			}
 		})
 		.fail( function() {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Nu s-au putut citi fisierele!");
+			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't read the folder!");
 		});
 	},
 	
@@ -270,7 +271,7 @@ export const Files = {
 		})
 		.done(function(res) {
 			if(res.result == false) {
-				$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Fisierul nu a putut fi redenumit.");
+				$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Couldn't rename the file!");
 				Status.targetFile.children("span").html(res.oldfn);
 			}
 		});
@@ -291,7 +292,7 @@ export const Files = {
 			Files.Read();
 		})
 		.fail(function() {
-			$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Fisierul nu a putut fi sters.");
+			$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Couldn't delete the file!");
 		});
 	}
 };

@@ -44,10 +44,10 @@
 		<i class="fas fa-hdd" style="color: #5f5f5f;
     vertical-align: middle;"></i>
 		<div id="memory" style="display:inline-block; vertical-align:middle;">
-			<span id="n"><?php echo "Liber: " . $freespace[0] ." ". $freespace[1] . " din " . $maxspace[0] ." ". $maxspace[1]; ?></span>
+			<span id="n"><?php echo "Free: " . $freespace[0] ." ". $freespace[1] . " of " . $maxspace[0] ." ". $maxspace[1]; ?></span>
 		</div>
 		<?php if($disc->IsTemporary() == true): ?>
-			<span id="guest" title="Click pentru a inchide" style="color:#1b1b1b; cursor:pointer; display: inline-block;"><i class="fas fa-exclamation-triangle"></i> Fisierele se vor sterge in 30:00. Intra in cont pentru pastra fisierele.</span>
+			<span id="guest" title="Click to dismiss" style="color:#1b1b1b; cursor:pointer; display: inline-block;"><i class="fas fa-exclamation-triangle"></i> All files will be deleted in 30:00. Login to save.</span>
 		<?php endif; ?>
 	</div>
 				
@@ -59,7 +59,7 @@
 	</div>
 	
 	<!-- TODO: Move this as modal -->
-	<span id="errors" title="Click pentru a inchide" style="color:red; font-weight: 500; cursor:pointer; display:inherit;"></span>
+	<span id="errors" title="Click to dismiss" style="color:red; font-weight: 500; cursor:pointer; display:inherit;"></span>
 </div>
 
 <div style="display:none;" id="dinfo" data-hdl="<?php echo $handle; ?>" data-cd="<?php echo $_SESSION['cdid'];?>" data-did="<?php echo $disc->GetDiscId();?>"></div>

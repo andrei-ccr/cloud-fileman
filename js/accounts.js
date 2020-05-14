@@ -28,12 +28,12 @@ export function AuthSystem() {
 					location.reload();
 				})
 				.fail(function() {
-					ShowAuthError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+					ShowAuthError("An error has occured! Try again later.");
 				});
 			}
 		})
 		.fail(function() {
-			ShowAuthError("Email-ul sau parola nu sunt corecte. Incearca din nou.");
+			ShowAuthError("The email or password is incorrect!");
 		});
 	});
 
@@ -41,15 +41,15 @@ export function AuthSystem() {
 		let emailInput = $("#email").val();
 		let passInput = $("#pass").val();
 		if ($.trim(emailInput).length<=0) {
-			ShowAuthError("Completeaza adresa de email!");
+			ShowAuthError("Enter an email address!");
 			return;
 		}
 		if ($.trim(passInput).length<=0) {
-			ShowAuthError("Completeaza parola!");
+			ShowAuthError("Enter your password!");
 			return;
 		}
 		if (passInput.length<=5) {
-			ShowAuthError("Parola trebuie sa fie mai lunga de 5 caractere!");
+			ShowAuthError("Password should be longer than 5 characters!");
 			return;
 		}
 		
@@ -60,10 +60,10 @@ export function AuthSystem() {
 			method: "post",
 		})
 		.done(function(resp) {	
-			ShowAuthError("Contul a fost creat cu SUCCES!");
+			ShowAuthError("New account created successfully!");
 		})
 		.fail(function() {
-			ShowAuthError("Contul nu a putut fi creat. Incearca din nou!");
+			ShowAuthError("Couldn't create a new account! Try again later.");
 		});
 	});
 	
@@ -87,17 +87,18 @@ export function AuthSystem() {
 					location.reload();
 				})
 				.fail(function() {
-					ShowAuthError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+					ShowAuthError("An error has occured! Try again later.");
 				});
 			}
 		})
 		.fail(function() {
-			ShowAuthError("A aparut o problema si nu va puteti loga. Incercati mai tarziu.");
+			ShowAuthError("Couldn't log in as a guest! Try again later.");
 		});
 	});
 }
 
 export function ShowAuthError($error_msg) {
+	
 	if($("#error-container").length>0) { $("#error-container").remove(); }
 	$("body").prepend('<div class="box-container" id="error-container"><p class="box-container-txt" style="color:red">' + $error_msg + '</p></div>');
 	
