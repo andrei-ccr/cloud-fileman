@@ -104,7 +104,7 @@ export function DeclareMenuButtons() {
 	});
 
 	$(document).on("click", ".cm-rename", function() {
-		Status.targetFile.find("span").replaceWith("<input type='text' value='"+Status.targetFilename+"' class='rename-input' autofocus>");
+		Status.targetFile.find("p").replaceWith("<input type='text' value='"+Status.targetFilename+"' class='rename-input' autofocus>");
 		Status.targetFile.css("width", "auto");
 		$(".rename-input").focus();
 		$(".rename-input").select();

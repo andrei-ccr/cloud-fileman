@@ -36,7 +36,7 @@ $(document).on("mousedown", function(e) {
 	if(!$(e.target).is("input")) {
 		if($(".rename-input").length>0) {
 			Rename(Status.targetFile.data("id"), $(".rename-input").val(), 1);
-			$(".rename-input").replaceWith("<span>"+$(".rename-input").val()+"</span>");
+			$(".rename-input").replaceWith("<p>"+$(".rename-input").val()+"</p>");
 		}
 	}
 
@@ -67,7 +67,7 @@ $(document).on('keypress', ".rename-input", function(e) {
 	if(key == 13) {
 		if($.trim($(".rename-input").val()) != "") {
 			Rename(Status.targetFile.data("id"), $(".rename-input").val());
-			$(".rename-input").replaceWith("<span>"+$(".rename-input").val()+"</span>");
+			$(".rename-input").replaceWith("<p>"+$(".rename-input").val()+"</p>");
 		}
 	}
 });

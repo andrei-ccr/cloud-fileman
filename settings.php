@@ -13,7 +13,7 @@
 <html lang="en">
 <head>
 
-	<?php require_once("inc/auth-page-head-includes.php");?>
+	<?php require_once("inc/head-settings-page.php");?>
 
 	<title>Account - Cloud Disc</title>
 	

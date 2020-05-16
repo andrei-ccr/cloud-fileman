@@ -254,8 +254,8 @@ input {
     border-radius: 5px;
 	overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 110px;
+	width: 110px;
+	vertical-align:top;
 }
 
 
@@ -301,13 +301,18 @@ svg.fa-file-video{
 	text-align:center;
 }
 
-.icons-view .f span {
+.icons-view .f p {
 	display:block;
 	margin: 5px 0px;
 	white-space: nowrap;
 	overflow: hidden !important;
 	text-overflow: ellipsis;
 	font-weight: 300;
+}
+
+.icons-view .f.selected p {
+	white-space: normal !important;
+	word-wrap: break-word; 
 }
 
 .icons-view .f svg {

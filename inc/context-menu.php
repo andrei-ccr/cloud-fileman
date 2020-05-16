@@ -17,7 +17,7 @@
 
 <div class="context-menu cm">
 	<ul>
-		<?php if(!$fs) : ?><li class="cm-views">View <i class="fas fa-caret-right"></i>
+		<?php if(!$fs && false) : ?><li class="cm-views">View <i class="fas fa-caret-right"></i>
 										<ul id="cm-views-subm">
 											<li class="cm-view-tiles">Tiles</li>
 											<li class="cm-view-icons">Icons</li>

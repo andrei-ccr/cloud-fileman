@@ -53,7 +53,7 @@ import { Status, GetDiscData } from './states.js';
 
 	export function ShowFileInfo() {
 		let t;
-		let fn = Status.targetFile.children("span").html();
+		let fn = Status.targetFile.children("p").html();
 
 		if(Status.targetFile.hasClass("dir")) {
 			t = "Directory";
