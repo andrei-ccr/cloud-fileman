@@ -1,34 +1,6 @@
 import { Status, ClipboardStatus } from './states.js';
 import { Select, PasteFile, NewFolder, NewFile, ReadCurrentDirectory, Download, Trash, ChangeCurrentDirectory } from './files.js';
-
-//ToDo: Move this in a separate module
-export function Modals() {
-	$(document).on("click", ".modal #save", function(e) {
-		let fileid = $(".modal").data("fid");
-		let did = $('#dinfo').data("did");
-		let c = $(".modal textarea").val();
-		let perm = $('#dinfo').data("hdl");
-
-		$.ajax({
-			url: 'operations/writefile', 
-			data: {discid: did, fid: fileid, content: c, permid: perm},
-			dataType: 'json',
-			cache: false,
-			type: 'post'
-		})
-		.done( function(res){
-			$(".modal").remove();
-		})
-		.fail( function() {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't save the file!");
-		});
-
-	});
-
-	$(document).on("click", ".modal #cancel", function(e) {
-		$(".modal").remove();
-	});
-}
+import { ShowEditModal } from './modals.js';
 
 
 export function IntegrateBarMenu() {
@@ -84,25 +56,7 @@ export function IntegrateContextMenu() {
 export function DeclareMenuButtons() {
 	$(document).on("click", ".cm-edit", function(e) {
 		let fileid = Status.targetFile.data("id");
-		let did = $('#dinfo').data("did");
-		let perm = $('#dinfo').data("hdl");
-
-		$.ajax({
-			url: 'operations/readfile', 
-			data: {discid: did, fid: fileid, permid: perm},
-			dataType: 'json',
-			cache: false,
-			type: 'post'
-		})
-		.done( function(res){
-			$.post("inc/modal-edit-file", {content: res.content, fid: fileid }, function(resp) {
-				$("body").append(resp);
-			});
-		})
-		.fail( function() {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Nu s-a putut citi fisierul!");
-		});
-
+		ShowEditModal(fileid);
 	});
 
 	$(document).on("click", ".cm-cut", function(e) {

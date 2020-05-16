@@ -9,6 +9,13 @@
     } else {
         $content = $_POST['content'];
     }
+
+    if(!isset($_POST['filename'])) {
+        http_response_code(400);
+        exit;
+    } else {
+        $filename = $_POST['filename'];
+    }
 ?>
 
 <style>
@@ -24,14 +31,33 @@
 		cursor: pointer;
 		margin: 15px;
     }
+
+    .modal {
+        position: absolute; 
+        top:0; left:0; 
+        width:100%; 
+        min-height:100%; 
+        background:#FFFFFFDD;  
+        z-index:100; 
+        text-align:center;
+    }
+
+    .modal > .container {
+        width:25%; height: auto; background: white; margin: 10px auto;
+    }
+
+    .modal > textarea{
+        color:#333; width:85%; height:35vh; border: 1px solid #ddd; padding: 15px; font-family: 'Roboto',sans-serif;
+    }
 </style>
-<div class="modal" data-fid="<?php echo $_POST['fid']?>" style="position: absolute; top:0; left:0; width:100%; height:100%; background:#33333333;  z-index:100; text-align:center;">
-    <div style="width:640px; height: 480px; background: white; margin: 20px auto;">
-        <textarea style="width:100%; height:100%; border:0; font-family: 'Roboto',sans-serif;"><?php echo $content; ?></textarea>
+<div class="modal" data-fid="<?php echo $_POST['fid']?>" style="">
+    <div class="container" style="color: #777; font-weight: 500; font-size: 14px;">
+        <?php echo $filename; ?>
     </div>
-    <div style="width:640px; height: auto; background: white; margin: 10px auto;">
-        <button id="save" style="background-color:green;">Save</button>
+    <div class="container">
+        <button id="save" style="background-color:#0869ff;">Save</button>
         <button id="cancel" style="border: 1px solid gray; background:white; color:gray;">Cancel</button>
     </div>
+    <textarea placeholder="Enter text here..."><?php echo $content; ?></textarea>
 
 </div>

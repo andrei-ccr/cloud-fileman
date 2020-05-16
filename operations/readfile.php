@@ -13,15 +13,23 @@
         if($disc->GetDiscId() != $f->GetDiscId()) 
             throw new Exception("File is not on the current disc");
 
+        if($f->IsDir()) {
+            throw new Exception("Editing function doesn't work on folders");
+        }
+        
         $file_content = $f->ReadBinaryData();
-        if(strlen($file_content) > (1024*1024)) {
+        if(is_null($file_content) ) {
+            $file_content = "";
+        }
+
+        if(strlen($file_content) >= (1024*1024*1024*2-1)) {
             
-            echo json_encode(array("error"=>"File exceeds 1MB"));
+            echo json_encode(array("error"=>"File exceeds 2GB"));
             http_response_code(400);
             exit;
         }
 
-        echo json_encode(array("content" => $file_content, "dummydata"=>"dummydata"));
+        echo json_encode(array("content" => $file_content, "dummydata"=>"dummydata", "filename" => $f->GetFilename()));
         http_response_code(200);
 		exit;
 	} catch (Exception $e) {
