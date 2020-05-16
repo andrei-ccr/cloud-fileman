@@ -72,6 +72,39 @@
 
 
 		/**
+		 * Searches for one or more files based on the files' content. Currently searches only in filename.
+		 * 
+		 * @param string $content  The content to search for
+		 *
+		 * @return bool Returns an array of files or null if nothing is found
+		 * 
+		 * @throws
+		 */ 
+		public function IsOnDisc(string $content) {
+			try {
+				$stmt = $this->conn->prepare("SELECT *, f.id AS fid, f.name AS filename FROM files f LEFT JOIN files_discs fd ON f.id=fd.file_id LEFT JOIN discs d ON fd.disc_id=d.id WHERE d.id=:did AND f.name LIKE :squery ");
+				$stmt->bindValue(":did", $this->discid, PDO::PARAM_INT);
+				$stmt->bindValue(":squery", '%'. $content . '%');
+				$stmt->execute();
+			} 
+			catch (PDOException $e) {
+				throw new Exception("Searching in database failed: " . $e->getMessage());
+			}
+
+			$files = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($files === FALSE) {
+				return null;
+			}
+			if(count($files) == 0) {
+				return null;
+			}
+			return $files;
+
+			
+		}
+
+
+		/**
 		 * Creates a new empty directory on the disk with the specified name $name and returns the id.
 		 *
 		 * @param string $name 	The name of the new directory

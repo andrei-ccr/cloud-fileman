@@ -1,7 +1,7 @@
-import { ChangeCurrentDirectory, Rename, Select, DeselectAll} from './modules/files.js';
+import { ChangeCurrentDirectory, Rename, Select, DeselectAll, ReadCurrentDirectory} from './modules/files.js';
 import { ShowCDInfo } from './modules/properties.js';
 import { IntegrateBarMenu, IntegrateContextMenu, DeclareMenuButtons } from './modules/menus.js';
-import { Status } from './modules/states.js';
+import { Status, GetDiscData } from './modules/states.js';
 import { Upload, IntegrateDragDropUploader } from './modules/uploader.js';
 import { DeclareModalButtons } from './modules/modals.js';
 
@@ -90,6 +90,47 @@ $(document).on("click", "#errors", function() {
 $(document).on("click", "#guest", function() {
 	$(this).remove();
 });
+
+$(document).on("input", "#search-bar", function() {
+	if($(this).val().length == 0) {
+		ReadCurrentDirectory();
+		return;
+	}
+
+	let dd = GetDiscData();
+
+	$("#file-listing").html("<span class='msg'>Searching...</span>");
+	$.ajax({
+		url: 'operations/search', 
+		data: { query: $(this).val(), discid: dd.discid, permid: dd.permid },
+		dataType: 'json',
+		cache: false,
+		type: 'post'
+	})
+	.done(function(JSONResp) {
+		if(JSONResp.found === false){
+			$("#file-listing").html("<span class='msg'>No results found.</span>");
+		} else {
+			$("#file-listing").html("");
+			let FileDOM = "";
+			let FilesJSON = JSONResp.result;
+			FilesJSON.forEach(function(file) {
+				FileDOM = "<div class='f noselect " + ((file["isDir"]!=false)?"dir":"") + "' data-id='"+file["fid"]+"'>";
+					if(file.isDir != false) 
+						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill: #e0b85b;'></path></svg>";
+					else
+						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M15.475,6.692l-4.084-4.083C11.32,2.538,11.223,2.5,11.125,2.5h-6c-0.413,0-0.75,0.337-0.75,0.75v13.5c0,0.412,0.337,0.75,0.75,0.75h9.75c0.412,0,0.75-0.338,0.75-0.75V6.94C15.609,6.839,15.554,6.771,15.475,6.692 M11.5,3.779l2.843,2.846H11.5V3.779z M14.875,16.75h-9.75V3.25h5.625V7c0,0.206,0.168,0.375,0.375,0.375h3.75V16.75z' style='fill: #0869ff;'></path></svg>";
+					
+					FileDOM += "<span>" + file["filename"] + "</span></div>";
+					$("#file-listing").append(FileDOM);
+			});
+		}
+	})
+	.fail(function(res) {
+		$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Searching process failed!");
+	});
+
+})
 
 
 

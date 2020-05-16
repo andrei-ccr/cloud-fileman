@@ -23,7 +23,11 @@
 		<span id="root-location"><i class="fas fa-cloud"></i></span>
 	</div>
 	
-	<div style="float:right;">
+	<div>
+		<input type="text" placeholder="Search..." id="search-bar" style="position: relative;
+top: -13px;
+left: -13px;
+font-size: 12px;">
 		<div id="profile-pic">  </div>
 		<span id="profile-name"><?php echo $username; ?></span>
 		<div id="line-separator"></div> 
@@ -35,7 +39,7 @@
 </div>
 
 <div id="file-zone">
-	<div class="listing-container <?= $fvclass; ?>" id="file-listing"><span class="msg">Se incarca fisierele...</span></div>
+	<div class="listing-container <?= $fvclass; ?>" id="file-listing"><span class="msg">Loading files...</span></div>
 </div>
 
 <div id="info-bar">

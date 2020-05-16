@@ -131,7 +131,9 @@ input {
     background: #fff;
 	z-index:100;
 	border-bottom: 1px solid #eaeaea;
-    height: 35px;
+	height: 35px;
+	display: flex;
+	justify-content: space-between;
 }
 
 #bar .path-separator {
@@ -154,7 +156,8 @@ input {
     cursor: default;
     position: relative;
     top: 8px;
-    margin-left:30px;
+	margin-left:30px;
+	
 }
 
 #bar .icn {
