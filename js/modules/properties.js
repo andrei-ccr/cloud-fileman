@@ -1,33 +1,31 @@
-import { Files } from './files-api.js';
+import { Status, GetDiscData } from './states.js';
 
-import { Status } from './states.js';
+	export function ShowDiskSpace() {
 
-export const Properties = {
-
-	ShowDiskSpace: function() {
-		let m = "";
-		let hdl = $("#dinfo").data("hdl");
+		let dd = GetDiscData();
 
 		$.ajax({
 			url: "operations/properties",
 			cache: false,
 			method: "get",
-			data: {cdid: "0", h: hdl},
+			data: {cdid: "0", h: dd.permid},
 			dataType: "json"
 		})
 		.done(function(res) {
-			m = "Liber: " + res['freespace'][0] + " "+ res['freespace'][1] + " din " + res['maxspace'][0] + " " + res['maxspace'][1];
-			$("#memory #n").html(m);
+			$("#memory #n").html("Free: " + res['freespace'][0] + " "+ res['freespace'][1] + " of " + res['maxspace'][0] + " " + res['maxspace'][1]);
+		})
+		.fail(function() {
+			$("#memory #n").html("Couldn't retrieve storage space information!");
 		});
-	},
+	}
 
-	ShowCDInfo: function() {
+	export function ShowCDInfo() {
 		let t = "Directory";
 		let cdid = $('#dinfo').data("cd");
 		let fn = ""
 
 		$("#fileicon").html("<i class='fas fa-folder'></i>");
-		Properties.ShowFolderItems(cdid);
+		ShowFolderItems(cdid);
 
 		$("#fileicon").css("display", "inline-block");
 		$("#filename").html(fn);
@@ -35,18 +33,34 @@ export const Properties = {
 		
 		$("#info-bar .disc-info").hide();
 		$("#info-bar .file-info").show();
-	},
+	}
 
-	ShowFileInfo: function() {
+	export function ExtractFileMeta(Filename) {
+		let FileExt = Filename.split(".");
+		let FileIcon;
+
+		FileExt = (FileExt.length==1)?null:FileExt[FileExt.length-1];
+		FileIcon = "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M15.475,6.692l-4.084-4.083C11.32,2.538,11.223,2.5,11.125,2.5h-6c-0.413,0-0.75,0.337-0.75,0.75v13.5c0,0.412,0.337,0.75,0.75,0.75h9.75c0.412,0,0.75-0.338,0.75-0.75V6.94C15.609,6.839,15.554,6.771,15.475,6.692 M11.5,3.779l2.843,2.846H11.5V3.779z M14.875,16.75h-9.75V3.25h5.625V7c0,0.206,0.168,0.375,0.375,0.375h3.75V16.75z' style='fill: #0869ff;'></path></svg> ";
+		
+		var result = {
+			fn : Filename.replace(FileExt, ""),
+			ext : FileExt,
+			icon : FileIcon
+		};
+
+		return result;
+	}
+
+	export function ShowFileInfo() {
 		let t;
 		let fn = Status.targetFile.children("span").html();
 
 		if(Status.targetFile.hasClass("dir")) {
 			t = "Directory";
-			$("#fileicon").html("<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill: #e0b85b;'></path></svg>");
-			Properties.ShowFolderItems();
+			$("#fileicon").html("<i class='fas fa-folder'></i>");
+			ShowFolderItems();
 		} else {
-			var fx = Files.GetFileExtension(fn);
+			var fx = ExtractFileMeta(fn);
 			if(fx['ext']!=null) {
 				var ext = fx['ext'];
 				t = ext.toUpperCase() + " File";
@@ -55,7 +69,7 @@ export const Properties = {
 			}
 
 			$("#fileicon").html(fx['icon']);
-			Properties.ShowFileSize();
+			ShowFileSize();
 		}
 
 		$("#fileicon").css("display", "inline-block");
@@ -64,19 +78,21 @@ export const Properties = {
 		
 		$("#info-bar .disc-info").hide();
 		$("#info-bar .file-info").show();
-	},
+	}
 
-	HideFileInfo: function() {
+	export function ShowDiskInfo() {
 		$("#fileicon").hide();
 		$("#filename").html("");
 		$("#filetype").html("");
 		$("#filesize").html("");
+
+		ShowDiskSpace();
 		
 		$("#info-bar .disc-info").show();
 		$("#info-bar .file-info").hide();
-	},
+	}
 
-	ShowFileSize: function() {
+	export function ShowFileSize() {
 		if(Status.targetFile == null) return -1;
 		if(Status.targetFile.hasClass("dir")) return -1; //Size is not calculated for directories
 
@@ -87,9 +103,9 @@ export const Properties = {
 			$("#filesize").html("Size: " + res.size + " " + res.unit);
 			return res.size;
 		});
-	},
+	}
 
-	ShowFolderItems: function(folderid = -1) {
+	export function ShowFolderItems(folderid = -1) {
 		
 		let fid;
 		if(folderid == -1) {
@@ -107,4 +123,4 @@ export const Properties = {
 			return res.fileCount;
 		});
 	}
-};
+

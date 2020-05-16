@@ -1,6 +1,7 @@
 import { Status, ClipboardStatus } from './states.js';
-import { Files } from './files-api.js';
+import { Select, PasteFile, NewFolder, NewFile, ReadCurrentDirectory, Download, Trash, ChangeCurrentDirectory } from './files.js';
 
+//ToDo: Move this in a separate module
 export function Modals() {
 	$(document).on("click", ".modal #save", function(e) {
 		let fileid = $(".modal").data("fid");
@@ -30,7 +31,7 @@ export function Modals() {
 }
 
 
-export function Menus() {
+export function IntegrateBarMenu() {
 
 	//Click on menu button on the top bar
 	$(document).on('click', "#bar .fa-ellipsis-v", function(e) {
@@ -46,7 +47,9 @@ export function Menus() {
 			});
 		});
 	});
+}
 
+export function IntegrateContextMenu() {
 
 	//Right clicks on file zone or a file
 	$(document).on('contextmenu', "#file-zone, .listing-container .f", function(e) {
@@ -58,7 +61,7 @@ export function Menus() {
 		}
 
 		if( $(this).hasClass("f") ) { 
-			Files.Select($(this)); 
+			Select($(this)); 
 		}
 
 		let json_status = JSON.stringify(Status);
@@ -76,7 +79,9 @@ export function Menus() {
 		});
 
 	});
+}
 
+export function DeclareMenuButtons() {
 	$(document).on("click", ".cm-edit", function(e) {
 		let fileid = Status.targetFile.data("id");
 		let did = $('#dinfo').data("did");
@@ -117,31 +122,31 @@ export function Menus() {
 	$(document).on("click", ".cm-paste", function(e) {
 		if($(this).hasClass("cm-disabled")) return;
 
-		Files.Paste();
+		PasteFile();
 		ClipboardStatus.file = null;
 	});
 
 
 	$(document).on("click", ".cm-new-folder", function(e) {
-		Files.Newdir();
+		NewFolder();
 	});
 
 	$(document).on("click", ".cm-new-file", function(e) {
-		Files.Newfile();
+		NewFile();
 	});
 
 	$(document).on("click", ".cm-refresh", function() {
-		Files.Read();
+		ReadCurrentDirectory();
 	});
 
 	$(document).on("click", ".cm-download", function() {
 		let fileid = Status.targetFile.data("id");
-		Files.Download(fileid);
+		Download(fileid);
 	});
 
 	$(document).on("click", ".cm-delete", function() {
 		let fileid = Status.targetFile.data("id");
-		Files.Trash(fileid);
+		Trash(fileid);
 	});
 
 	$(document).on("click", ".cm-rename", function() {
@@ -155,7 +160,7 @@ export function Menus() {
 		let fileid = Status.targetFile.data("id");
 		
 		if(Status.targetFile.hasClass("dir")) {
-			Files.Change(fileid);
+			ChangeCurrentDirectory(fileid);
 		}
 	});
 

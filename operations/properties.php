@@ -23,12 +23,12 @@
 			//Get file properties
 			$file = new File((int)$_GET['fid'], $_GET['h']);
 
-			if($file->GetDiscId() != $u->disc_id ) {
+			if($file->GetDiscId() != $u->GetDiscId() ) {
 				throw new Exception("File is not in current disc");
 			}
 
 			if($file->IsDir()) {
-				$count = $file->GetItemsCount();
+				$count = $file->ItemsCount();
 
 				echo json_encode(array("filecount" => $count));
 				http_response_code(200);
@@ -50,7 +50,7 @@
 	
 	} else if(isset($_GET['cdid'])) {
 		try {
-			$d = new Disc($u->disc_id, $_GET['h']);
+			$d = new Disc($u->GetDiscId(), $_GET['h']);
 
 			if($_GET['cdid'] == 0) {
 				$maxspace = Disc::FormatBytes($d->GetMaxSpace());

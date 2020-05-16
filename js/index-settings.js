@@ -1,3 +1,3 @@
-import {Settings} from './settings.js';
+import {Settings} from './modules/settings.js';
 
 Settings();

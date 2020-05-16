@@ -63,7 +63,7 @@
 				return false; 
 			}
 			$dt = new DateTime($this->dateCreated);
-			if($dt->getTimestamp() <= (time() + 60*60 - 60*30)) {// TODO: PHP time() returns without daylight saving. MySQL time is server's locale
+			if($dt->getTimestamp() <= (time() + 60*30)) {
 				return true; 
 			} else {
 				return false;

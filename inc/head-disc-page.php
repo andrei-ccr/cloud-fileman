@@ -5,7 +5,7 @@
 
 <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--<script defer src="js/jquery.mobile.custom.min.js"></script>-->
+<script defer src="js/jquery.mobile.custom.min.js"></script>
 
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
 

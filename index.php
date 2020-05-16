@@ -13,10 +13,10 @@
 <head>
 	<?php 
 		if($isLoggedIn) {
-			require_once("inc/disc-page-head-includes.php");
+			require_once("inc/head-disc-page.php");
 			$pageTitle = "Cloud Files";
 		} else {
-			require_once("inc/auth-page-head-includes.php");
+			require_once("inc/head-auth-page.php");
 			$pageTitle = "Cloud Files";
 		}
 	?>
@@ -25,7 +25,7 @@
 	
 </head>
 <body>
-	
+
 	<?php
 		if($isLoggedIn) {
 			require_once("page/disc.php");
