@@ -63,7 +63,7 @@
 				return false; 
 			}
 			$dt = new DateTime($this->dateCreated);
-			if($dt->getTimestamp() <= (time() + 60*30)) {
+			if(time() - $dt->getTimestamp() >= 60*30  ) {
 				return true; 
 			} else {
 				return false;
