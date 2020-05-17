@@ -62,7 +62,7 @@ class User extends Connection {
     public function __construct2(string $email, string $password) {
         
         $this->email = $email;
-        $this->password = Security::PasswordHashFunction($password);
+        $this->password = $password;
         $this->loggedAsGuest = false;
 
         if($email != User::GUEST_USER) {
@@ -77,23 +77,29 @@ class User extends Connection {
         if((trim($this->email) == "") || (trim($this->password)=="")) return;
         
         try {
-            $stmt = $this->conn->prepare("SELECT * FROM users u LEFT JOIN discs_users du ON du.user_id=u.id WHERE u.email=:email AND u.password=:pass");
+            $stmt = $this->conn->prepare("SELECT * FROM users u LEFT JOIN discs_users du ON du.user_id=u.id WHERE u.email=:email");
             $stmt->bindValue(":email", $this->email);
-            $stmt->bindValue(":pass", $this->password);
             $stmt->execute();
         } 
         catch (PDOException $e) {
             $this->deconstruct();
-            throw new MemberNotFoundException("Prepared statement threw an exception");
+            throw new MemberNotFoundException("Prepared statement threw an exception ");
         }
 
         if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $this->user_id = (int)$row['user_id'];
-            $this->disc_id = (int)$row['disc_id'];
-            $this->permission_id = Security::GeneratePermId(); //Generate new permission id for this login
+            if(Security::PasswordVerifyFunction($this->password, $row['password'])) {
+                $this->user_id = (int)$row['user_id'];
+                $this->disc_id = (int)$row['disc_id'];
+                $this->permission_id = Security::GeneratePermId(); //Generate new permission id for this login
+            } 
+            else {
+                $this->deconstruct();
+                throw new Exception("Authentication failed: Wrong password");
+            }
+
         } else {
             $this->deconstruct();
-            throw new MemberNotFoundException("Row fetch returned false");
+            throw new MemberNotFoundException("Row fetch returned false for: " . $this->email . " and " . $this->password);
         }
 
         try {

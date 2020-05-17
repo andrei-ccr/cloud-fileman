@@ -20,7 +20,11 @@
         }
 
         public static function PasswordHashFunction($password) : string {
-            return hash("sha256", $password);
+            return password_hash($password, PASSWORD_BCRYPT);
+        }
+
+        public static function PasswordVerifyFunction($password, $hash) : bool {
+            return password_verify($password, $hash);
         }
 
         public static function GeneratePermId() : string {
