@@ -119,7 +119,7 @@ class User extends Connection {
         
         $new_temp_permid = Security::GeneratePermId();
         try {
-            $stmt = $this->conn->prepare("INSERT INTO discs(name, temporary, visibility, permission_id) VALUES('__Temp', 1, 'public', :permid)");
+            $stmt = $this->conn->prepare("INSERT INTO discs(name, temporary, permission_id) VALUES('__Temp', 1, :permid)");
             $stmt->bindParam(":permid", $new_temp_permid);
             $stmt->execute();
         }

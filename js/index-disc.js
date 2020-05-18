@@ -101,7 +101,7 @@ $(document).on("input", "#search-bar", function() {
 
 	$("#file-listing").html("<span class='msg'>Searching...</span>");
 	$.ajax({
-		url: 'operations/search', 
+		url: 'sys/api/search', 
 		data: { query: $(this).val(), discid: dd.discid, permid: dd.permid },
 		dataType: 'json',
 		cache: false,

@@ -1,5 +1,8 @@
 <?php 
-	require_once("operations/web/validatelogin.php");
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+	require_once("sys/api/web/validatelogin.php");
 ?>
 
 <?php
@@ -11,21 +14,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta charset="utf-8">
 	<?php 
 		if($isLoggedIn) {
+			$pageTitle = "Cloud Files";
 			require_once("inc/head-disc-page.php");
-			$pageTitle = "Cloud Files";
+			
 		} else {
-			require_once("inc/head-auth-page.php");
 			$pageTitle = "Cloud Files";
+			require_once("inc/head-auth-page.php");
 		}
 	?>
-	
-	<title><?php echo $pageTitle;?></title>
-	
 </head>
 <body>
-
 	<?php
 		if($isLoggedIn) {
 			require_once("page/disc.php");

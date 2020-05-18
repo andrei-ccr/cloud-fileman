@@ -1,5 +1,5 @@
 <?php 
-	require_once("operations/web/validatelogin.php");
+	require_once("sys/api/web/validatelogin.php");
 ?>
 
 <?php
@@ -12,11 +12,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+	<meta charset="utf-8">
 	<?php require_once("inc/head-settings-page.php");?>
-
-	<title>Account - Cloud Disc</title>
-	
 </head>
 <style>
 	div.settings-side-bar a {

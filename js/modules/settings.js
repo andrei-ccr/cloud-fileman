@@ -3,7 +3,7 @@
 function GetSetting(setting_name) {
     let sn = setting_name;
     return Promise.resolve(
-        $.post("/operations/profile", 
+        $.post("/sys/api/profile", 
         {
             'user': "1",
             'pwd':"",
@@ -14,7 +14,7 @@ function GetSetting(setting_name) {
 function SetSetting(setting_name, setting_val) {
     let sn = setting_name;
     let sv = setting_val;
-    $.post("/operations/profile", 
+    $.post("/sys/api/profile", 
     {
         'user': "1",
         'pwd':"",

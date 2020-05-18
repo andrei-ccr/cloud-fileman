@@ -11,8 +11,8 @@
 	 * 
 	 */
 
-	require_once("obj/Disc.php");
-	require_once("obj/User.php");
+	require_once("sys/obj/Disc.php");
+	require_once("sys/obj/User.php");
 
 	if(session_status() == PHP_SESSION_NONE) session_start();
 

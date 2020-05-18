@@ -121,19 +121,19 @@ export function DeclareMenuButtons() {
 	$(document).on("click", ".cm-view-tiles", function() {
 		$("#file-listing").removeClass("big-thumbs-view");
 		$("#file-listing").removeClass("icons-view");
-		$.post("operations/settings", {"files_view":0});
+		$.post("sys/api/settings", {"files_view":0});
 	});
 
 	$(document).on("click", ".cm-view-icons", function() {
 		$("#file-listing").removeClass("big-thumbs-view");
 		$("#file-listing").addClass("icons-view");
-		$.post("operations/settings", {"files_view":1});
+		$.post("sys/api/settings", {"files_view":1});
 	});
 
 	$(document).on("click", ".cm-view-bthumbs", function() {
 		$("#file-listing").addClass("big-thumbs-view");
 		$("#file-listing").removeClass("icons-view");
-		$.post("operations/settings", {"files_view":2});
+		$.post("sys/api/settings", {"files_view":2});
 	});
 
 	$(document).on('click', ".cm-upload, #bar .fa-upload", function() {
@@ -150,8 +150,8 @@ export function DeclareMenuButtons() {
 
 	$(document).on('click', ".cm-logout", function() {
 		let mhand = $("#dinfo").data("hdl");
-		$.post("/operations/logout", {mhandle:mhand}, function() {
-			$.post("/operations/web/logout", {member:1}, function() {
+		$.post("/sys/api/logout", {mhandle:mhand}, function() {
+			$.post("/sys/api/web/logout", {member:1}, function() {
 				window.location = "/";
 			});
 		});
@@ -159,8 +159,8 @@ export function DeclareMenuButtons() {
 
 	$(document).on('click', ".cm-logout-guest", function() {
 		let mhand = $("#dinfo").data("hdl");
-		$.post("/operations/logout", {mhandle:mhand}, function() {
-			$.post("/operations/web/logout", {guest:1}, function() {
+		$.post("/sys/api/logout", {mhandle:mhand}, function() {
+			$.post("/sys/api/web/logout", {guest:1}, function() {
 				window.location = "/";
 			});
 		});

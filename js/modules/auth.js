@@ -1,6 +1,6 @@
 export function Login(Email, Pwd) {
 	$.ajax({
-		url: "/operations/login",
+		url: "/sys/api/login",
 		data: {email: Email, pass: Pwd},
 		cache: false,
 		method: "post",
@@ -20,7 +20,7 @@ export function Login(Email, Pwd) {
 
 export function Register(Email, Pwd) {
 	$.ajax({
-		url: "/operations/register",
+		url: "/sys/api/register",
 		data: {email: Email, pass: Pwd},
 		cache: false,
 		method: "post",
@@ -35,7 +35,7 @@ export function Register(Email, Pwd) {
 
 export function LoginAsGuest() {
 	$.ajax({
-		url: "/operations/login",
+		url: "/sys/api/login",
 		data: {guest: true},
 		cache: false,
 		method: "post",
@@ -70,7 +70,7 @@ export function ShowAuthMessage(msg) {
 function AuthenticateInBrowser(JSONResponse, AsSession=false) {
 
 	$.ajax({
-		url: "/operations/web/login",
+		url: "/sys/api/web/login",
 		data: {
 			uid: JSONResponse['userid'], 
 			per: JSONResponse['permid'], 
@@ -91,7 +91,7 @@ function AuthenticateInBrowser(JSONResponse, AsSession=false) {
 function GuestAuthenticateInBrowser(JSONResponse) {
 
 	$.ajax({
-		url: "/operations/web/login",
+		url: "/sys/api/web/login",
 		data: {gdid: JSONResponse['discid'], gperid: JSONResponse['permid']},
 		cache: false,
 		method: "post"

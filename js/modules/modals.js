@@ -4,7 +4,7 @@ export function ShowEditModal(FileId) {
     let dd = GetDiscData();
 
     $.ajax({
-        url: 'operations/readfile', 
+        url: 'sys/api/readfile', 
         data: {discid: dd.discid, fid: FileId, permid: dd.permid},
         dataType: 'json',
         cache: false,
@@ -37,7 +37,7 @@ export function DeclareModalButtons() {
         }
 
         $.ajax({
-            url: 'operations/writefile', 
+            url: 'sys/api/writefile', 
             data: {discid: dd.discid, fid: fileid, content: c, permid: dd.permid},
             dataType: 'json',
             cache: false,

@@ -5,7 +5,7 @@
 	header("Access-Control-Max-Age: 3600");
 	header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");*/
 	
-	require_once($_SERVER['DOCUMENT_ROOT'] ."/obj/User.php");
+	require_once($_SERVER['DOCUMENT_ROOT'] ."/sys/obj/User.php");
 	
 	if(!isset($_POST['email']) && !isset($_POST['pass'])) {
 		http_response_code(400);

@@ -33,7 +33,7 @@ export function Upload(Files) {
     });
     
     $.ajax({
-        url: 'operations/upload', 
+        url: 'sys/api/upload', 
         dataType: 'json',
         cache: false,
         contentType: false,

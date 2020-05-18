@@ -13,14 +13,12 @@
 
 	<link rel="stylesheet" type="text/css" href="css/style-page-disc.css?v=1">
 
-	
-
 	<title>Help</title>
 	
 </head>
 
 <body>
-	
+	<?php echo "<a href='/'>Go back</a>"; ?>
 	
 </body>
 </html>

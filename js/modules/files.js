@@ -11,7 +11,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax( {
-			url: "operations/transfer",
+			url: "sys/api/transfer",
 			data: {source_fid: fid, destination_folder: dd.cd, transfer_op: transf_op, permid: dd.permid},
 			cache: false,
 			type: 'post'
@@ -34,7 +34,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax({
-			url: 'operations/cd', 
+			url: 'sys/api/cd', 
 			cache: false,         
 			method: 'post',
 			dataType: 'json',
@@ -64,7 +64,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax( {
-			url: "operations/new",
+			url: "sys/api/new",
 			data: {discid: dd.discid, cd: dd.cd, permid: dd.permid},
 			cache: false,
 			type: 'post'
@@ -82,7 +82,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax( {
-			url: "operations/newfile",
+			url: "sys/api/newfile",
 			data: {discid: dd.discid, cd: dd.cd, permid: dd.permid},
 			cache: false,
 			type: 'post'
@@ -101,7 +101,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax({
-			url: 'operations/read', 
+			url: 'sys/api/read', 
 			data: {discid: dd.discid, cd: dd.cd, permid: dd.permid},
 			dataType: 'json',
 			cache: false,
@@ -176,13 +176,13 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax({
-			url: 'operations/download', 
+			url: 'sys/api/download', 
 			cache: false,
 			method: 'get',
 			data: { fid: Id, permid: dd.permid }
 		})
 		.done(function() {
-			$("body").append("<iframe src='operations/download?fid=" + Id + "&permid=" + dd.permid + "' style='display: none;' ></iframe>");
+			$("body").append("<iframe src='sys/api/download?fid=" + Id + "&permid=" + dd.permid + "' style='display: none;' ></iframe>");
 			setTimeout(function() {
 				$("iframe").remove();
 			}, 3000);
@@ -196,7 +196,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax({
-			url: 'operations/rename', 
+			url: 'sys/api/rename', 
 			data: { fid: Id, fn: NewName, discid: dd.discid, permid: dd.permid },
 			dataType: 'json',
 			cache: false,
@@ -218,7 +218,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		let dd = GetDiscData();
 
 		$.ajax({
-			url: 'operations/delete', 
+			url: 'sys/api/delete', 
 			data: { fid: Id, permid: dd.permid },
 			dataType: 'json',
 			cache: false,

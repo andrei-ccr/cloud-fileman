@@ -5,7 +5,7 @@ import { Status, GetDiscData } from './states.js';
 		let dd = GetDiscData();
 
 		$.ajax({
-			url: "operations/properties",
+			url: "sys/api/properties",
 			cache: false,
 			method: "get",
 			data: {cdid: "0", h: dd.permid},
@@ -99,7 +99,7 @@ import { Status, GetDiscData } from './states.js';
 		let fid = Status.targetFile.data("id");
 		let hdl = $("#dinfo").data("hdl");
 
-		$.getJSON("operations/properties", {'fid': fid, 'h' : hdl}, function (res) {
+		$.getJSON("sys/api/properties", {'fid': fid, 'h' : hdl}, function (res) {
 			$("#filesize").html("Size: " + res.size + " " + res.unit);
 			return res.size;
 		});
@@ -118,7 +118,7 @@ import { Status, GetDiscData } from './states.js';
 			
 		let hdl = $("#dinfo").data("hdl");
 
-		$.getJSON("operations/properties", {'fid': fid, 'h' : hdl}, function (res) {
+		$.getJSON("sys/api/properties", {'fid': fid, 'h' : hdl}, function (res) {
 			$("#filesize").html(res.filecount + " item(s)");
 			return res.fileCount;
 		});

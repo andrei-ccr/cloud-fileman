@@ -1,4 +1,3 @@
-<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#55C1EC"/>
 <link rel="icon" href="favicon.png">
@@ -12,3 +11,5 @@
 <link rel="stylesheet" type="text/css" href="css/style-page-disc.css?v=1">
 
 <script script type="module" src="js/index-disc.js"></script>
+
+<title><?php echo $pageTitle;?></title>
