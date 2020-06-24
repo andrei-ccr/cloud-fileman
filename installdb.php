@@ -1,6 +1,41 @@
 <?php
-    require_once 'obj/Connection.php';
-    echo "### Mini auto database setup <br><br>";
+    require_once 'sys/obj/Connection.php';
+    echo "### Mini database installer ### <br><br>";
+
+    //-- CHANGE THESE --
+    $host = "localhost";
+    $username = "root";
+    $pwd = "";
+    //------
+
+
+    try {
+        $c = new PDO("mysql:host=" . $host . ";charset=utf8" , $username, $pwd);
+	$c->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+    catch(PDOException $e) {
+        echo "Couldn't connect to the database server.";
+        exit;
+    }
+
+    if(is_null($c)) {
+        echo "Couldn't connect to the database server.";
+        exit;
+    }
+
+
+    echo "Creating database 'cloud_disc' ...<br>";
+
+    try {
+        $c->exec("CREATE DATABASE cloud_disc;");
+         
+    }
+    catch(PDOException $e) {
+        echo "Error: Couldn't create the database.";
+        exit;
+    }
+
+
     $conn = null;
     try {
         $conn = new Connection();
@@ -11,10 +46,6 @@
         exit;
     }
 
-    if(is_null($c)) {
-        echo "Couldn't connect to the database.";
-        exit;
-    }
 
     echo "Creating table 'discs'...<br>";
 
@@ -192,9 +223,30 @@
          
     }
     catch(PDOException $e) {
-        echo "Error: Couldn't create 'users' table.";
+        echo "Error: Failed to set up the tables.";
         exit;
     }
+
+
+    echo "Creating triggers...<br>";
+
+    try {
+        $c->exec("CREATE TRIGGER `CREATE_DEFAULT_SETTINGS` AFTER INSERT ON `users` FOR EACH ROW INSERT INTO settings(user_id) VALUES(new.id)");
+         
+
+        $c->exec( "CREATE TRIGGER `CREATE_USERS_DISC` AFTER INSERT ON `users` FOR EACH ROW BEGIN
+        INSERT INTO discs(name) VALUES('My Disc');
+        INSERT INTO discs_users(user_id, disc_id) VALUES(new.id, (SELECT LAST_INSERT_ID()));
+        END");
+         
+         
+    }
+    catch(PDOException $e) {
+        echo "Error: Failed to create triggers.";
+        exit;
+    }
+
+    echo "SUCCESS!";
   
 
 ?>

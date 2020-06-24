@@ -9,8 +9,8 @@
 			$this->conn = null;
 			
 			$credentials = array( 
-				"username" => "admin", 
-				"password" => "1", 
+				"username" => "root", 
+				"password" => "", 
 				"host" => "localhost", 
 				"db" => "cloud_disc" 
 			);
