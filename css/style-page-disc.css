@@ -1,58 +1,17 @@
 @media only screen and (max-width:590px) {
 	/* For mobile phones: */
-	
-	body #bar svg {
-		position:absolute;
-		top: 10px;
-		font-size: 17px;
-		display:none;
-	}
-	
-	body #bar #mobile-bar {
-		display:block;
-	}
-	
-	body #bar #mobile-bar svg {
-		font-size: 20px;
-		display: inline-block;
-		margin: 2px 10px;
-		padding: 11px;
-		color: #7b8cad;
-		z-index: 99;
-	    position: absolute; 
-	    top: -2px;
-	    right: 0px;
-	}
-	
-	body #bar #current-path {
-		margin: 0px;
-		height: 40px;
-		width: 100%;
-		padding: 0px 10px;
-    	padding-right: 40px;
-		border: 0;
-		font-size: 15px;
-		-webkit-box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		box-sizing: border-box;
-		top: 0px;
-	}
 
 	body #file-zone {
 		text-align:center;
-	}
-
-	body #file-zone #ads-bar {
-		display:none;
-	}
-
-	body #file-zone #side-bar {
-		display: none;
 	}
 	
 	body .listing-container {
 		left: 0px;
 		padding:0;
+	}
+
+	body #bar .path-separator, .path-location {
+		display:none;
 	}
 	
 	body #info-bar {
@@ -63,19 +22,6 @@
 	}
 	body #info-bar img {
 		display:none;
-	}
-}
-
-@media only screen and (min-width: 590px) and (max-width:975px) {
-	body #file-zone #ads-bar {
-		width:210px;
-	}
-	body #file-zone #side-bar {
-		left:210px;
-	}
-
-	#file-zone .listing-container {
-		/*padding-left:215px;*/
 	}
 }
 
@@ -112,17 +58,6 @@ input {
     font-size: 12px;
 }
 
-.seld{
-	background-color: #b2d4ec;
-	font-weight: 500;
-}
-.seld svg {
-	color: #0869ff;
-}
-.seld span {
-	font-weight: 500;
-}
-
 #bar {
 	position:absolute;
 	top:0;
@@ -137,87 +72,38 @@ input {
 }
 
 #bar .path-separator {
-	font-weight: 500;color: #999;font-size: 14px;top: -12px;position: relative;padding: 5px;
+	font-weight: 500;
+	color: #999;
+	font-size: 14px;
+	top: -12px;
+	position: relative;
+	padding: 5px;
 	cursor:pointer;
 }
 
 #bar .path-location {
-	color: #665; font-size: 12px; top: -13px; position: relative; padding: 9px; cursor:pointer; font-weight: 300;
+	color: #665; 
+	font-size: 12px; 
+	top: -13px;
+	position: relative; 
+	padding: 9px; 
+	cursor:pointer; 
+	font-weight: 300;
 }
 
-#bar #current-path {
-    border: 1px solid #ddd;
-    padding: 5px 35px;
-    border-radius: 1px;
-    background-color: #ffffff;
-    color: #111;
-    width: 60%;
-    font-size: 15px;
-    cursor: default;
-    position: relative;
-    top: 8px;
-	margin-left:30px;
-	
-}
 
-#bar .icn {
-	position: absolute;
-    left: 24px;
-    top: 3px;
-
-    z-index: 50;
-}
-
-#bar .icn svg {
-	font-size: 15px;
-	color: #0869ff;
-}
-
-#bar .icn svg:hover {
-	color: #FFCA9E;
-}
-
+/* Bar menu button */
 #bar svg {
 	font-size: 14px;
     color: #0869ff;
     padding: 10px;
     cursor: pointer;
-    margin: 2px 7px;
-}
-
-#bar svg:hover {
+	margin: 2px 7px;
+	
+} #bar svg:hover {
 	color:#3283fb;
 }
 
-/*#bar svg.fa-arrow-left {
-    position: relative;
-    top: 4px;
-    left: 4px;
-    padding: 10px;
-    margin:0;
-}
-
-#bar svg.fa-arrow-left.disabled {
-	cursor: default;
-    color: gray;
-}*/
-
-#bar #mobile-bar {
-	display:none;
-}
-
-#bar #mobile-bar svg {
-	z-index: 99;
-	position: absolute;
-	top: 3px;
-	right: 6px;
-	font-size: 19px;
-	margin: 2px 10px;
-	padding: 9px;
-	color: #63adda;
-}
-
-/* This area contains the side-bar and the area where files, settings, trash etc. stuff is display */
 #file-zone {
     width: 100%;
     height: 100%;
@@ -238,12 +124,8 @@ input {
 	position: relative;
     top: 45px;
 	display:inline-block;
-	/*left: 190px; */
-    /*padding-left: 355px;*/
     box-sizing: border-box;
 }
-
-
 
 .f {
 	display: inline-block;
@@ -258,7 +140,6 @@ input {
 	vertical-align:top;
 }
 
-
 .f.selected {
 	background-color:#efefef;;
 }
@@ -272,29 +153,7 @@ input {
 	font-size: 20px;
     vertical-align: bottom;
 }
-/* Particular file icons properties/colors */
-svg.fa-folder, svg.fa-file-archive {
-	color: #e0b85b;
-}
-svg.fa-file {
-	/*color: #c1c1bc;*/
-	color: #3c3c3c;
-}
-svg.fa-file-alt{
-	color: #0869ff;
-}
-svg.fa-file-image{
-	color: #8297a9;
-}
-svg.fa-file-audio {
-	color: #ffab40;
-}
-svg.fa-file-video{
-	color: #4a535d;
-}
 
-
-/* Special properties if icons-view is enabled */
 .icons-view .f {
 	width: 70px;
     padding: 12px;
@@ -302,7 +161,7 @@ svg.fa-file-video{
 }
 
 .icons-view .f p {
-	display:block;
+	display: block;
 	margin: 5px 0px;
 	white-space: nowrap;
 	overflow: hidden !important;
@@ -325,73 +184,6 @@ svg.fa-file-video{
 	text-align:center;
 }
 
-
-.big-thumbs-view .f {
-	width:115px;
-	text-align:center;
-}
-
-.big-thumbs-view .f svg {
-	font-size: 55px;
-}
-
-.big-thumbs-view .f span {
-	display: block;
-    margin: 10px 0px;
-    white-space: nowrap;
-    overflow: hidden !important;
-    text-overflow: ellipsis;
-    font-size: 14px;
-    color: #444;
-}
-
-#ads-bar {
-	border-right: 1px solid #e0e0e0;
-    width: 350px;
-    height: 650px;
-    position: absolute;
-    top: 42px;
-    left: 0;
-    z-index:50;
-}
-
-/**** Side bar properties ****/
-#side-bar {
-	height: 680px;
-    position: absolute;
-    top: 42px;
-    left: 350px;
-	width: 200px; 
-	display: inline-block; 
-	vertical-align: top; 
-	border-right: 1px solid #e0e0e0;
-	z-index: 90;
-}
-
-#side-bar .f {
-	display:block;
-	margin: 12px;
-	width: auto;
-	padding: 8px;
-}
-
-#side-bar .f:hover {
-	background-color:#dff2ff;
-    box-shadow: 0px 0px 2px #b7d7e4;
-}
-
-
-#side-bar .f span {
-	margin-left: 7px;
-	font-size: 14px;
-    color: #555;
-}
-
-#side-bar .f svg {
-	font-size: 16px;
-    color: #0869ff;
-    vertical-align: top;
-}
 
 /**** Information area at the bottom part of the page ****/
 #info-bar {
@@ -421,9 +213,6 @@ svg.fa-file-video{
 	font-size:13px;
 }
 
-#info-bar #email {
-	font-size:13px; color:#484848; display:block;
-}
 
 #info-bar #memory {
 	font-size:13px; color:#696969;

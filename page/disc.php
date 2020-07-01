@@ -24,17 +24,12 @@
 	</div>
 	
 	<div>
-		<input type="text" placeholder="Search..." id="search-bar" style="position: relative;
-top: -13px;
-left: -13px;
-font-size: 12px;">
+		<input type="text" placeholder="Search..." id="search-bar" style="position: relative; top: -13px; left: -13px; font-size: 12px;">
 		<div id="profile-pic">  </div>
 		<span id="profile-name"><?php echo $username; ?></span>
 		<div id="line-separator"></div> 
 		<i class="fas fa-ellipsis-v"></i>
 	</div>
-	
-	<div id="mobile-bar"> <i class="fas fa-ellipsis-v"></i> </div>
 	
 </div>
 

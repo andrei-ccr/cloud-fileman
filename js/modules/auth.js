@@ -18,15 +18,15 @@ export function Login(Email, Pwd) {
 	});
 }
 
-export function Register(Email, Pwd) {
+export function Register(Email, Pwd, Username="#") {
 	$.ajax({
 		url: "/sys/api/register",
-		data: {email: Email, pass: Pwd},
+		data: {email: Email, pass: Pwd, username: Username},
 		cache: false,
 		method: "post",
 	})
 	.done(function(resp) {	
-		ShowAuthMessage("New account created successfully! You can now log in!");
+		window.location.href="/register?success=1";
 	})
 	.fail(function() {
 		ShowAuthError("Couldn't create a new account! Try again later.");
@@ -56,14 +56,7 @@ export function LoginAsGuest() {
 export function ShowAuthError(error_msg) {
 	
 	if($("#error-container").length>0) { $("#error-container").remove(); }
-	$("body").prepend('<div class="box-container" id="error-container"><p class="box-container-txt" style="color:red">' + error_msg + '</p></div>');
-	
-}
-
-export function ShowAuthMessage(msg) {
-	
-	if($("#error-container").length>0) { $("#error-container").remove(); }
-	$("body").prepend('<div class="box-container" id="error-container"><p class="box-container-txt" style="color:blue">' + msg + '</p></div>');
+	$(".box-container").first().prepend('<div id="error-container"><p class="box-container-txt" style="color:red">' + error_msg + '</p></div>');
 	
 }
 
@@ -106,28 +99,66 @@ function GuestAuthenticateInBrowser(JSONResponse) {
 
 export function ValidateInput(EmailInput, PwdInput) {
 
-	if ($.trim(EmailInput).length <= 0) {
-		ShowAuthError("You must enter an email address!");
-		return false;
-	}
+	$("#email").css("border-color", "#65acc5");
+	$("#pass").css("border-color", "#65acc5");
+	if($("#error-container").length>0) { $("#error-container").remove(); }
 
-	if ($.trim(EmailInput).length >= 255) {
-		ShowAuthError("The email address is not valid!");
+	if (($.trim(EmailInput).length <= 0) || ($.trim(EmailInput).length >= 255)) {
+		ShowAuthError("Enter a valid email address!");
+		$("#email").css("border-color", "red");
 		return false;
 	}
 
 	if ($.trim(PwdInput).length <= 0) {
-		ShowAuthError("You must enter your password!");
+		$("#pass").css("border-color", "red");
 		return false;
 	}
 
-	if ($.trim(PwdInput).length > 60) {
-		ShowAuthError("The password cannot be longer 60 characters!");
+	return true;
+
+}
+
+export function ValidateInputRegister(EmailInput, ConfirmEmailInput, PwdInput, ConfirmPwdInput, UsernameInput="") {
+
+	$("#email").css("border-color", "#65acc5");
+	$("#pass").css("border-color", "#65acc5");
+	$("#username").css("border-color", "#65acc5");
+	$("#cemail").css("border-color", "#65acc5");
+	$("#cpass").css("border-color", "#65acc5");
+
+	let regexSpecialChars = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+	if($("#error-container").length>0) { $("#error-container").remove(); }
+
+	if (($.trim(EmailInput).length <= 0) || ($.trim(EmailInput).length >= 255)) {
+		ShowAuthError("Enter a valid email address!");
+		$("#email").css("border-color", "red");
 		return false;
 	}
 
-	if (PwdInput.length <= 5) {
-		ShowAuthError("Password must be longer than 5 characters!");
+	if ( $.trim(ConfirmEmailInput) !== $.trim(EmailInput))  {
+		ShowAuthError("Email address doesn't match!");
+		$("#email").css("border-color", "red");
+		$("#cemail").css("border-color", "red");
+		return false;
+	}
+
+	if ( regexSpecialChars.test(UsernameInput))  {
+		ShowAuthError("Username cannot contain special characters");
+		$("#username").css("border-color", "red");
+		return false;
+	}
+
+	if ($.trim(PwdInput).length <= 0) {
+		ShowAuthError("Password cannot be empty!");
+		$("#pass").css("border-color", "red");
+		return false;
+	}
+
+	if ( $.trim(ConfirmPwdInput) != $.trim(PwdInput))  {
+		ShowAuthError("Password doesn't match!");
+		$("#pass").css("border-color", "red");
+		$("#cpass").css("border-color", "red");
 		return false;
 	}
 
