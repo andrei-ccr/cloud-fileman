@@ -15,9 +15,6 @@
 		<?php if(true) : ?><li class="cm-upload"><i class="fas fa-upload"></i> Upload File(s)</li><?php endif; ?>
 		<?php if($fs ) : ?><li class="cm-download"><i class="fas fa-download"></i> Download</li><?php endif; ?>
 		<li class="separator"></li>
-		<?php if(true) : ?><li class="cm-to-settings"><i class="fas fa-cog"></i>  Settings</li><?php endif; ?>
-		<?php if(true) : ?><li class="cm-to-help"><i class="fas fa-question-circle"></i>  Help</li><?php endif; ?>
-		<li class="separator"></li>
 		<?php if(isset($_COOKIE['guest'])): ?>
 			<li class="cm-logout-guest"><i class="fas fa-sign-in-alt"></i> Erase Disc</li>
 		<?php else: ?>
