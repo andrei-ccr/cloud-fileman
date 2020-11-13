@@ -7,12 +7,13 @@
 		
 		public function __construct() {
 			$this->conn = null;
+			$cleardb_url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 			
 			$credentials = array( 
-				"username" => "root", 
-				"password" => "", 
-				"host" => "localhost", 
-				"db" => "cloud_disc" 
+				"username" => $cleardb_url["user"], 
+				"password" => $cleardb_url["pass"], 
+				"host" => $cleardb_url["host"], 
+				"db" => substr($cleardb_url["path"],1) 
 			);
 			
 			try {
