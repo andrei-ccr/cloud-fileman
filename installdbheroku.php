@@ -23,7 +23,7 @@
             `space` bigint NOT NULL DEFAULT '10737418240',
             `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `temporary` tinyint(1) NOT NULL DEFAULT '0',
-            `permission_id` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+            `permission_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
          
     }
@@ -53,7 +53,7 @@
         $c->exec("CREATE TABLE `files` (
             `id` bigint UNSIGNED NOT NULL,
             `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-            `key_name` varchar(256) NOT NULL,
+            `key_name` varchar(128) NOT NULL,
             `isDir` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Indicates whether this is a directory or not',
             `parent_id` int NOT NULL DEFAULT '0' COMMENT 'The id of the parent directory',
             `size` bigint NOT NULL DEFAULT '0',
@@ -102,7 +102,7 @@
     try {
         $c->exec("CREATE TABLE `users` (
             `id` int NOT NULL,
-            `email` varchar(320) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+            `email` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
             `password` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
          
