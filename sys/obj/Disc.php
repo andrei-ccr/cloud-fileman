@@ -35,7 +35,12 @@
 
 				$this->discid = (int)$discid;
 				$this->temporary = (bool)$row['temporary']; 
-				$this->maxSpace = (int)$row['space'];
+				if(defined('PREVIEW_MODE')) {
+					$this->maxSpace = 4 * MB;
+				}
+				else {
+					$this->maxSpace = (int)$row['space'];
+				}
 				$this->dateCreated = $row['date_created'];
 				$this->permission_id = $permission_id;
 
@@ -231,8 +236,14 @@
 				throw new Exception("Upload error. Code: " . $file['error'],1);
 			}
 			
-			if($file['size'] > 1*GB ) {
-				throw new Exception("File size exceeds 1GB limit.",2);
+			if(defined('PREVIEW_MODE')) {
+				if($file['size'] > 512*KB ) {
+					throw new Exception("File size exceeds 0.5MB limit in preview mode.",2);
+				}
+			} else {
+				if($file['size'] > 1*GB ) {
+					throw new Exception("File size exceeds 1GB limit.",2);
+				}
 			}
 
 			if($this->GetFreeSpace() < $file['size']) {
