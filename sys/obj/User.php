@@ -116,6 +116,8 @@ class User extends Connection {
     }
 
     public function LoginAsGuest() : void {
+		
+		User::PreviewModeAction();
         
         $new_temp_permid = Security::GeneratePermId();
         try {
@@ -197,6 +199,8 @@ class User extends Connection {
     public static function RegisterUser(string $email, string $password) : void {
         $conn = new Connection();
         $p = Security::PasswordHashFunction($password);
+		
+		User::PreviewModeAction();
 
         try {
             $stmt = $conn->conn->prepare("INSERT INTO users(email, password) VALUES (:email, :pass)");
@@ -207,8 +211,26 @@ class User extends Connection {
         catch (PDOException $e) {
             throw new Exception($e->getMessage());
         }
-        
+		
     }
+	
+	private static function PreviewModeAction() : void {
+		$conn = new Connection();
+		try {
+			/* Preview Mode */
+			/* Delete all files and accounts when new account is created */
+			
+			$stmt = $conn->conn->prepare("DELETE FROM users");
+			$stmt->execute();
+			$stmt = $conn->conn->prepare("DELETE FROM files");
+			$stmt->execute();
+			$stmt = $conn->conn->prepare("DELETE FROM discs");
+			$stmt->execute();
+		}
+		catch (PDOException $e) {
+			throw new Exception($e->getMessage());
+		}
+	}
 
 }
 

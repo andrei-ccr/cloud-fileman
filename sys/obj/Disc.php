@@ -181,6 +181,10 @@
 				throw new Exception("Invalid name provided");
 			}
 
+			if($this->GetFreeSpace() < strlen($data)) {
+				throw new Exception("File size exceeds free space limit.",3);
+			}
+			
 			if($cd != 0) {
 				$file = new File($cd, $this->permission_id);
 				if(!$file->IsDir()) throw new Exception("Target is not a directory");
@@ -189,11 +193,12 @@
 			$kn = Security::GenerateKey($name);
 			
 			try {
-				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, binary_data) VALUES(:name, :keyname, 0, :parid, :bin_data)");
+				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, binary_data, size) VALUES(:name, :keyname, 0, :parid, :bin_data, :fsize)");
 				$stmt->bindValue(":name", $name);
 				$stmt->bindValue(":keyname", $kn);
 				$stmt->bindValue(":parid", $cd);
 				$stmt->bindValue(":bin_data", $data);
+				$stmt->bindValue(":fsize", strlen($data));
 				$stmt->execute();
 			}
 			catch (PDOException $e) {
