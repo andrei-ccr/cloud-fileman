@@ -2,7 +2,7 @@
 	declare(strict_types=1);
 	
 	/** Enable Dev Environment by uncommenting the line below */
-	define('DEVENV',1);
+	//define('DEVENV',1);
 	
 	define('PREVIEW_MODE',1);
 	
