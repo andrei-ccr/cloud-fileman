@@ -319,9 +319,10 @@
 		public function WriteBinaryData($data) {
 
 			try {
-				$stmt = $this->conn->prepare("UPDATE files SET binary_data=:bd WHERE key_name=:kn");
+				$stmt = $this->conn->prepare("UPDATE files SET binary_data=:bd, size=:fsize WHERE key_name=:kn");
 				$stmt->bindParam(":kn", $this->keyname);
 				$stmt->bindParam(":bd", $data);
+				$stmt->bindParam(":fsize", strlen($data));
 				$stmt->execute();
 				
 			} catch (PDOException $e) {

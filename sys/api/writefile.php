@@ -3,14 +3,11 @@
     require_once("../obj/File.php");
 
 	if(!(isset($_POST['discid']) && isset($_POST['fid']) && isset($_POST['content']) && isset($_POST['permid']))) {
+		echo json_encode(array("error" => "Required vars not set"));
 		http_response_code(400);
 		exit;
     }
     
-    if(strlen($_POST['content']) > (1024*1024) ) {
-        http_response_code(400);
-        exit;
-    }
 
 	try {
 
@@ -20,6 +17,10 @@
         if($disc->GetDiscId() != $f->GetDiscId()) 
             throw new Exception("File is not on the current disc");
 
+		if($disc->GetFreeSpace() + $f->GetSize() < strlen($_POST['content'])) {
+			throw new Exception("File size exceeds free space limit.",3);
+		}
+		
         $f->WriteBinaryData($_POST['content']);
 
         echo json_encode(array("success" => true));
@@ -27,6 +28,7 @@
         exit;
         
 	} catch (Exception $e) {
+		echo json_encode(array("error" => $e->getMessage()));
 		http_response_code(400);
 		exit;
 	}
