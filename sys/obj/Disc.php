@@ -8,6 +8,8 @@
 	define("MB", 1024*KB);
 	define("GB", 1024*MB);
 	define("TB", 1024*GB);
+	
+	define("COLORS", array("#e80909", "#09bf2e", "#db6701" ,"#12adea", "#db11bb", "#053bdb", "#7b00bf", "#d9ae04"));
 
 	class Disc extends Connection {
 
@@ -16,6 +18,8 @@
 		private int $maxSpace;
 		private $dateCreated;
 		private string $permission_id;
+		
+		
 		
 		public function __construct(int $discid, string $permission_id) {
 			if($discid <= 0) {
@@ -134,10 +138,11 @@
 			$kn = Security::GenerateKey($name);
 			
 			try {
-				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id) VALUES(:name, :keyname, 1, :parid)");
+				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, color) VALUES(:name, :keyname, 1, :parid, :color)");
 				$stmt->bindValue(":name", $name);
 				$stmt->bindValue(":keyname", $kn);
 				$stmt->bindValue(":parid", $cd);
+				$stmt->bindValue(":color", "#d9ae04");
 				$stmt->execute();
 			} 
 			catch (PDOException $e) {
@@ -175,7 +180,7 @@
 		 *
 		 * @throws Exception Throws an Exception if filename is invalid or database query fails
 		 */ 
-		public function CreateFile(string $name, int $cd=0, string $data=null) : int {
+		public function CreateFile(string $name, int $cd=0, string $data="") : int {
 			
 			if(!Disc::ValidFilename($name)) {
 				throw new Exception("Invalid name provided");
@@ -185,6 +190,7 @@
 				throw new Exception("File size exceeds free space limit.",3);
 			}
 			
+			
 			if($cd != 0) {
 				$file = new File($cd, $this->permission_id);
 				if(!$file->IsDir()) throw new Exception("Target is not a directory");
@@ -193,12 +199,13 @@
 			$kn = Security::GenerateKey($name);
 			
 			try {
-				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, binary_data, size) VALUES(:name, :keyname, 0, :parid, :bin_data, :fsize)");
+				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, isDir, parent_id, binary_data, size, color) VALUES(:name, :keyname, 0, :parid, :bin_data, :fsize, :color)");
 				$stmt->bindValue(":name", $name);
 				$stmt->bindValue(":keyname", $kn);
 				$stmt->bindValue(":parid", $cd);
 				$stmt->bindValue(":bin_data", $data);
 				$stmt->bindValue(":fsize", strlen($data));
+				$stmt->bindValue(":color", COLORS[rand(0, 7)]);
 				$stmt->execute();
 			}
 			catch (PDOException $e) {
@@ -220,6 +227,31 @@
 			return (int)$fid;
 		}
 
+
+private function file_get_contents_chunked($file,$chunk_size, $kn, $callback)
+{
+    try
+    {
+        $handle = fopen($file, "r");
+        $i = 0;
+        while (!feof($handle))
+        {
+            call_user_func_array($callback,array(fread($handle,$chunk_size),&$handle,$i,$kn));
+            $i++;
+        }
+
+        fclose($handle);
+
+    }
+    catch(Exception $e)
+    {
+         trigger_error("file_get_contents_chunked::" . $e->getMessage(),E_USER_NOTICE);
+         return false;
+    }
+
+    return true;
+}
+
 		/**
 		 * Uploads a file to the server. 
 		 *
@@ -240,16 +272,7 @@
 			if($file['error'] > 0) {
 				throw new Exception("Upload error. Code: " . $file['error'],1);
 			}
-			
-			if(defined('PREVIEW_MODE')) {
-				if($file['size'] > 512*KB ) {
-					throw new Exception("File size exceeds 0.5MB limit in preview mode.",2);
-				}
-			} else {
-				if($file['size'] > 1*GB ) {
-					throw new Exception("File size exceeds 1GB limit.",2);
-				}
-			}
+		
 
 			if($this->GetFreeSpace() < $file['size']) {
 				throw new Exception("File size exceeds free space limit.",3);
@@ -264,23 +287,55 @@
 			$filesize = $file['size'];
 
 			$kn = Security::GenerateKey($filename);
-			$blobdata = file_get_contents($file['tmp_name']);
+			//$blobdata = file_get_contents($file['tmp_name']);
 			
 			try {
-				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, size, parent_id, binary_data) VALUES(:name, :kn, :size, :pid, :bindat)");
+				$stmt = $this->conn->prepare("INSERT INTO files(name, key_name, size, parent_id, binary_data, color) VALUES(:name, :kn, :size, :pid, :bindat, :color)");
 				$stmt->bindValue(":name", $filename);
 				$stmt->bindValue(":kn", $kn);
 				$stmt->bindValue(":size", $filesize);
 				$stmt->bindValue(":pid", $target_dir);
-				$stmt->bindValue(":bindat", $blobdata);
+				$stmt->bindValue(":bindat", "");
+				$stmt->bindValue(":color", COLORS[rand(0, 7)]);
 				$stmt->execute();
 				
 			} 
-			catch (PDOException $e) {
-				throw new Exception("Inserting data into database has failed.",5);
+			catch(PDOException $e) {
+				throw new Exception("Inserting data into database has failed." . $e->getMessage() ,5);
 			}
-
+			
 			$uploaded_fid = $this->conn->lastInsertId();
+			
+			
+			if($filesize < 1*MB) {
+				$blobdata = file_get_contents($file['tmp_name']);
+				try {
+					$stmt = $this->conn->prepare("UPDATE files SET binary_data=:bindat WHERE id=:id");
+					$stmt->bindValue(":id", $uploaded_fid);
+					$stmt->bindValue(":bindat", $blobdata);
+					$stmt->execute();
+				} 
+				catch(PDOException $e) {
+					throw new Exception("Inserting data into database has failed. ". $e->getMessage() ,5);
+				}
+				
+			} else {
+				
+				$this->file_get_contents_chunked($file['tmp_name'], 4096, $kn, function($chunk, &$handle, $iteration, $kn){
+					if($iteration == 0) {
+						$targetf_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/UPLOADS/".$kn, "wb");
+					}
+					else {
+						$targetf_handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/UPLOADS/".$kn, "ab");
+					}
+					
+					fwrite($targetf_handle, $chunk);
+					fclose($targetf_handle);
+					
+				});
+			}
+			
+			
 			
 			try {
 				$stmt = $this->conn->prepare("INSERT INTO files_discs(disc_id, file_id) VALUES(:did, :fid)");
@@ -306,7 +361,7 @@
 		 */ 
 		public function ReadDirectory(int $id) : array {
 			try {
-				$stmt = $this->conn->prepare("SELECT f.id, f.name, f.isDir FROM files f LEFT JOIN files_discs fd ON fd.file_id= f.id WHERE f.parent_id=:parid AND fd.disc_id=:discid ORDER BY f.isDir DESC");
+				$stmt = $this->conn->prepare("SELECT f.id, f.name, f.isDir, f.color FROM files f LEFT JOIN files_discs fd ON fd.file_id= f.id WHERE f.parent_id=:parid AND fd.disc_id=:discid ORDER BY f.isDir DESC");
 				$stmt->bindValue(":parid", $id);
 				$stmt->bindValue(":discid", $this->discid);
 				$stmt->execute();

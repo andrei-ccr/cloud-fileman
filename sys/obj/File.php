@@ -312,6 +312,10 @@
 			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			if($row === FALSE) throw new Exception("No file to read data from");
 
+			if(($row["binary_data"] == null) || strlen(trim($row['binary_data'])) == 0 ) {
+				return file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/UPLOADS/" . $this->keyname);
+			}
+			
 			return $row["binary_data"];
 			
 		}

@@ -1,4 +1,5 @@
 import {GetDiscData} from './states.js';
+import {ShowMessage} from './modals.js';
 
 export function IntegrateDragDropUploader() {
 
@@ -42,10 +43,10 @@ export function Upload(Files) {
         type: 'post'
     })
     .done(function(JSONResp){
-        $("#errors").html("");
+        ShowMessage("File(s) uploaded successfully");
     })
     .fail(function(resp){
-        $("#errors").html(resp.responseJSON.error);
+        ShowMessage("Upload failed: " + resp.responseText);
     });
 }
 

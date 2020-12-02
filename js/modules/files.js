@@ -1,5 +1,6 @@
 import {Status, ClipboardStatus, GetDiscData} from './states.js';
 import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
+import {ShowMessage} from './modals.js';
 
 	export function PasteFile() {
 		
@@ -20,7 +21,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 			ReadCurrentDirectory();
 		})
 		.fail(function(jqXHR) {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Can't move/copy here. " + jqXHR.responseText);
+			ShowMessage("<i class='fas fa-exclamation-circle'></i> Can't move/copy here. " + jqXHR.responseText);
 		});
 	}
 
@@ -46,16 +47,16 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 
 			//Write the current path on the bar
 			let DirList = JSONResp.path.split("/");
-			$("#path-bar").html('<span id="root-location"><i class="fas fa-cloud"></i></span>');
+			$("#path-bar").html('<span id="root-location">Home</span>');
 			if(!((DirList.length == 1) && (DirList[0] == ""))){				
 				for(let i=0;i<DirList.length;i++) {
-					$("#path-bar").append('<span class="path-separator">&gt;</span><span class="path-location">' + DirList[i] + '</span>');
+					$("#path-bar").append('<span class="path-separator">&#10151;</span><span class="path-location">' + DirList[i] + '</span>');
 				}	
 			}
 
 		})
 		.fail(function() {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't access that folder!");
+			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't access that folder!");
 		});
 	}
 	
@@ -73,7 +74,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 			ReadCurrentDirectory();
 		})
 		.fail(function(jqXHR) {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't create the folder! " + jqXHR.responseText);
+			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't create the folder! " + jqXHR.responseText);
 		});
 	}
 
@@ -91,14 +92,18 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 			ReadCurrentDirectory();
 		})
 		.fail(function(jqXHR) {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't create the file! " + jqXHR.responseText);
+			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't create the file! " + jqXHR.responseText);
 		});
 	}
 	
 	export function ReadCurrentDirectory() {
-		$("#file-listing").empty();
+		$("#file-listing").html(`<div id="path-bar">
+		<span id="root-location">Home</span>
+	</div>`);;
 
 		let dd = GetDiscData();
+		
+		let FileExt = "";
 
 		$.ajax({
 			url: 'sys/api/read', 
@@ -113,15 +118,23 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 			let FileDOM;
 			JSONResp.forEach(function(file) {
 				if((file.name == "_dummy_") && (file.id == 0)) {
-					$("#file-listing").append("<span class='msg'>Folder is empty</span>");
+					$("#file-listing").append("<span class='msg'>This folder is empty. Upload or create a new file</span>");
 				} else {
+					if(file.color == null) {
+						file.color = "#555";
+					}
+					
+					if(file.name.indexOf(".") != -1) {
+						FileExt = file.name.substring(file.name.indexOf(".")+1, file.name.length);
+					} else {
+						FileExt = "";
+					}
 					
 					FileDOM = "<div class='f noselect " + ((file.isDir!=false)?"dir":"") + "' data-id='"+file.id+"'>";
 					if(file.isDir != false) 
-						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill: #e0b85b;'></path></svg>";
+						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill: " + file.color + ";'></path></svg>";
 					else
-						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M15.475,6.692l-4.084-4.083C11.32,2.538,11.223,2.5,11.125,2.5h-6c-0.413,0-0.75,0.337-0.75,0.75v13.5c0,0.412,0.337,0.75,0.75,0.75h9.75c0.412,0,0.75-0.338,0.75-0.75V6.94C15.609,6.839,15.554,6.771,15.475,6.692 M11.5,3.779l2.843,2.846H11.5V3.779z M14.875,16.75h-9.75V3.25h5.625V7c0,0.206,0.168,0.375,0.375,0.375h3.75V16.75z' style='fill: #0869ff;'></path></svg>";
-					
+						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><text style='font-size:0.5rem; fill: "+file.color+";' y='15' x='7'>"+ FileExt +"</text><path d='M15.475,6.692l-4.084-4.083C11.32,2.538,11.223,2.5,11.125,2.5h-6c-0.413,0-0.75,0.337-0.75,0.75v13.5c0,0.412,0.337,0.75,0.75,0.75h9.75c0.412,0,0.75-0.338,0.75-0.75V6.94C15.609,6.839,15.554,6.771,15.475,6.692 M11.5,3.779l2.843,2.846H11.5V3.779z M14.875,16.75h-9.75V3.25h5.625V7c0,0.206,0.168,0.375,0.375,0.375h3.75V16.75z' style='fill: " + file.color + ";'></path></svg>";
 					FileDOM += "<p>" + file.name + "</p></div>";
 					$("#file-listing").append(FileDOM);
 				}
@@ -134,7 +147,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 			}
 		})
 		.fail( function() {
-			$("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't read the folder!");
+			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't read the folder!");
 		});
 	}
 	
@@ -207,7 +220,7 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 		})
 		.fail(function(res) {
 			Status.targetFile.children("p").html(res.responseJSON.old_fn);
-			$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Couldn't rename the file!");
+			ShowMessage("<i class='fas fa-exclamation-triangle'></i> Couldn't rename the file!");
 		});
 
 		Status.targetFile.css("width", "90px");
@@ -228,6 +241,6 @@ import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
 			ReadCurrentDirectory();
 		})
 		.fail(function() {
-			$("#errors").html("<i class='fas fa-exclamation-triangle'></i> Couldn't delete the file!");
+			ShowMessage("<i class='fas fa-exclamation-triangle'></i> Couldn't delete the file!");
 		});
 	}

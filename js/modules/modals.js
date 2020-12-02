@@ -1,5 +1,17 @@
 import { GetDiscData } from "./states.js";
 
+export function ShowMessage(Message) {
+	$("body").append(`
+		<div class="modal">
+			<div class="container">
+				<a class="close-modal">Close</a>
+				<p>` + Message + `</p>
+			</div>
+		</div>`
+	);
+	setTimeout(function(){ $(".modal").remove() }, 5000);
+}
+
 export function ShowEditModal(FileId) {
     let dd = GetDiscData();
 

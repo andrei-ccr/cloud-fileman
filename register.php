@@ -34,26 +34,32 @@
 
 	<script script type="module" src="js/index-auth.js"></script>
 
-	<title>Register - Cloud Fileman</title>
+	<title>Register &bull; Cloudman File</title>
 </head>
 <body>
 	<?php if(isset($_GET['success'])): ?>
 		<div class="box-container">
-			<p class="box-container-txt">A new account has been created. You can now <a href="/">log in</a></p>
+			<p class="box-container-txt">Your new account has been created. You can now <a href="/">log in.</a></p>
 		</div>
 	<?php else: ?>
 		<div class="box-container" id="register-container">
-			<p class="box-container-txt">Complete the form below to create a new account</p>
-			<input type="text" placeholder="Email" id="email" name="email">
-			<input type="text" placeholder="Confirm Email" id="cemail" name="cemail">
-			<input type="text" placeholder="Username (optional)" id="username" name="username"><br>
-			<input type="password" placeholder="Password" id="pass" name="pass">
-			<input type="password" placeholder="Confirm Password" id="cpass" name="cpass">
-			<button id="btn-register" style="margin: 10px 20px;">Register</button>
+			<p class="box-container-txt" style="text-align: justify; font-size: 20px; line-height: 35px; width: 320px; margin: 15px auto; color: #333;">Register to access your free virtual storage space where you can store files of any kind.</p>
+			<input type="text" placeholder="Email" id="email" name="email" style="width:300px;">
+			<div style="display:block;"></div>
+			<input type="text" placeholder="Confirm Email" id="cemail" name="cemail" style="width:300px;">
+			<div style="display:block; font-size: 20px; color: #0f7dcc;">&diamond;</div>
+			<input type="password" placeholder="Password" id="pass" name="pass" style="width:300px;">
+			<div style="display:block; "></div>
+			<input type="password" placeholder="Confirm Password" id="cpass" name="cpass" style="width:300px;">
+			<div style="display:block;"></div>
+			<button id="btn-register" style="margin: 10px 20px; width:320px;">Register</button>
+			<p class="box-container-txt" style="width: 300px; font-size: 12px; text-align: center; margin: auto;">I read and I agree to the Terms of Service and Privacy Policy including Cookie Policy</p> 
+			<div style="display:block; margin:20px;"></div>
+			<p class="box-container-txt">Already have an account? <a href="/">Log In</a></p>
 		</div>
-		<div class="box-container" id="register-container">
-			<p class="box-container-txt">Already have an account? <a href="/">Login</a></p>
-		</div>
+		
+		 
 	<?php endif;?>
+	<footer style="display: block; margin: auto; text-align: center; color: #888; font-size: 12px;">&copy; Cloudman File 2020</footer>
 </body>
 </html>

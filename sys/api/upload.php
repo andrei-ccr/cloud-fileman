@@ -44,7 +44,7 @@
 					$error_array["error"] = "Not enough free space!";
 				break;
 				default:
-					$error_array["error"] = "Internal error";
+					$error_array["error"] = "Internal error (" . $e->getMessage() . ")";
 				break;
 			}
 			echo json_encode($error_array);

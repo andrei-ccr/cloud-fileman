@@ -24,7 +24,7 @@ export function IntegrateBarMenu() {
 export function IntegrateContextMenu() {
 
 	//Right clicks on file zone or a file
-	$(document).on('contextmenu', "#file-zone, .listing-container .f", function(e) {
+	$(document).on('contextmenu', ".listing-container, .listing-container .f", function(e) {
 		e.preventDefault();
 		e.stopPropagation();
 
@@ -138,10 +138,6 @@ export function DeclareMenuButtons() {
 
 	$(document).on('click', ".cm-upload, #bar .fa-upload", function() {
 		$("#file-up").trigger('click');
-	});
-
-	$(document).on('click', ".cm-to-settings, #profile-pic, #profile-name", function() {
-		window.location.href = "/settings";
 	});
 
 	$(document).on('click', ".cm-to-help", function() {
