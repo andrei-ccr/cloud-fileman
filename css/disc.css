@@ -1,0 +1,249 @@
+/* Try this as main color #22b8cf 
+
+#1e96a8
+#157f8e - darker
+
+#148066 - darker
+#189778
+*/
+
+html {
+	font-size: 62.5%;
+}
+
+html, body {
+	height:100%;	
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	padding: 0;
+	overflow-y: hidden;
+}
+
+a {
+	text-decoration: none;
+}
+
+input {
+	font-family: 'Roboto', sans-serif;
+}
+
+button {
+    background-color: #0f7dcc;
+    border: 0;
+    padding: 9px 20px;
+    margin: 5px 0px;
+    color: white;
+    border-radius: 8px;
+    font-size: 1.6rem;
+    cursor: pointer;
+	vertical-align: baseline;
+	width:220px;
+}
+
+button:focus {
+    outline: 0;
+}
+
+button:hover {
+    background-color: #18a5e8;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.rename-input {
+	padding-left: 3px;
+    font-size: 12px;
+}
+
+
+#main {
+    width: 100%;
+    height: 100%;
+	position:relative;
+	display: grid;
+	grid-template-columns: 300px auto;
+}
+
+#main .msg {
+	font-size: 1.6rem;
+    margin: 1.5rem;
+    color: #0869ff;
+    display: block;
+    padding: 2rem;
+    text-align: center;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.file-container {
+	width:100%;
+	display:inline-block;
+	box-sizing: border-box;
+	height: 100vh;
+	overflow-y: scroll;
+}
+
+.file-container .f {
+	display: inline-block;
+    padding: 3px 6px;
+    margin: 1.2rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    border-radius: 5px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+	width: 110px;
+	vertical-align:top;
+}
+
+.file-container .f:hover {
+	background-color: #fafafa;
+}
+
+.file-container .f.selected {
+	background-color: #efefef;
+}
+
+.file-container .f.hidden {
+	display:none;
+}
+
+.file-container .f.folder-color-standard {
+	fill: #e0b85b;
+}
+
+.file-container .f.file-color-standard {
+	fill: #0869ff;
+}
+
+.file-container .f svg {
+	font-size: 4.2rem;
+    vertical-align: bottom;
+}
+
+.file-container #details-header {
+	display: flex;
+	justify-content: space-around;
+	font-size: 1.4rem;
+	color: #999;
+	margin: 1.6rem 0;
+	padding: 1rem 0;
+}
+
+
+
+/******* LIST VIEW ******/
+
+.file-container.list-view .f {
+	display: flex;
+	justify-content: space-around;
+	width: auto;
+	
+}
+
+.file-container.list-view .f svg {
+	position: relative;
+	left: -10px;
+}
+
+.file-container.list-view .f p {
+	font-weight: 500;
+	color: #555;
+	white-space: wrap;
+	overflow: hidden !important;
+	text-overflow: ellipsis;
+	width: 10rem;
+}
+
+.file-container.list-view .f span {
+	display: flex;
+	align-items: center;
+}
+
+
+
+/******* ICONS VIEW ******/
+
+.file-container.icons-view .f {
+	width: 10rem;
+    padding: 12px;
+	text-align:center;
+	height: 7rem;
+	
+}
+
+.file-container.icons-view #details-header {
+	display:none;
+}
+
+.file-container.icons-view .f div {
+	display: inline-block !important;
+
+}
+
+.file-container.icons-view .f span {
+	display: none;
+}
+
+.file-container.icons-view .f p {
+	display: block;
+	margin: 5px 0px;
+	white-space: normal;
+	overflow: hidden !important;
+	text-overflow: ellipsis;
+	font-weight: 500;
+	color: #555;
+}
+
+.file-container.icons-view .f.selected p {
+	white-space: normal !important;
+	word-wrap: break-word; 
+}
+
+.file-container.icons-view .f svg {
+	font-size: 4.2rem;
+}
+
+.file-container.icons-view .f .rename-input {
+	display: block;
+    margin-top: 2px;
+	text-align:center;
+}
+
+
+
+.f-color-red {
+	fill: #e80909;
+}
+.f-color-green {
+	fill: #09bf2e;
+}
+.f-color-orange {
+	fill: #db6701;
+}
+.f-color-cyan {
+	fill: #12adea;
+}
+.f-color-pink {
+	fill: #db11bb;
+}
+.f-color-blue {
+	fill: #053bdb;
+}
+.f-color-purple {
+	fill: #7b00bf;
+}
+.f-color-yellow {
+	fill: #d9ae04;
+}

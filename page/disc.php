@@ -7,8 +7,8 @@
 	$maxspace = Disc::FormatBytes($disc->GetMaxSpace());
 	$freespace = Disc::FormatBytes($disc->GetFreeSpace());
 
-	$fvclass = "icons-view";
-	
+	$fvclass = "list-view";
+	//$fvclass = "icons-view";
 	
 ?>
 
@@ -19,7 +19,9 @@
 <form method="post" id="file-up-form" style="width:0; position:absolute;" enctype="multipart/form-data"><input type="file" style="width:0;" id="file-up" multiple></form>
 
 <div id="bar">
-	<div id="logo" style="display: flex; align-items: center; cursor: pointer;"><span style="color: black; font-size:16px; font-weight:500;">LOGO</span></div>
+	<div id="logo" style="display: flex; align-items: center; cursor: pointer;">
+	<img src="/logo.png" style="width: 40px; margin-left: 10px;">
+</div>
 	
 	
 	<div class="search-area">
@@ -30,19 +32,19 @@
 
 </div>
 
-<div id="file-zone">
+<div id="main">
 	
-	
-	<div class="side-bar" style="position: relative; top: 5.6rem; border-right: 1px solid #ddd; background-color: #fefefe;">
-		<div class="profile-area" style="margin: 1rem 15px;">
+	<div class="side-bar">
+		<div class="profile-area">
 			<i class="fas fa-user"></i>
 			<span id="profile-name"><?php echo $username; ?></span>
 			<!--<div class="fa-ellipsis-v" id="profile-pic"></div>-->
-			
 		</div>
+
 		<p style="font-size: 1.4rem;color: #777;padding: 1rem 15px;margin-bottom: 3px;">Storage space:</p>
 		<p style="font-size: 1.5rem;padding: 2px 15px;color: #555;margin: 3px 0px;"><?php echo $freespace[0] . $freespace[1]; ?> free</p>
-		<div style="text-align: center; margin-top: 15px;border-top: 1px solid #ccc;padding: 15px;">
+		
+		<div class="side-bar-menu">
 			<button class="cm-upload"><i class="fas fa-upload"></i> Upload File(s)</button>
 			<a class="sbar-btn cm-new-folder"><i class="fas fa-folder"></i> New Folder</a>
 			<a class="sbar-btn cm-new-file"><i class="fas fa-file"></i> New File</a>
@@ -50,11 +52,14 @@
 		</div>
 	</div>
 	
-	<div class="listing-container <?= $fvclass; ?>" id="file-listing">
-	<div id="path-bar">
-		<span id="root-location"><!--<i class="fas fa-cloud"></i>-->Home</span>
+	<div class="file-container <?= $fvclass; ?>" id="file-listing">
+		<div id="path-bar">
+			<span id="root-location"><!--<i class="fas fa-cloud"></i>-->Home</span>
+		</div>
+		
+		<div id="details-header"><span>Filename</span><span>Last modified</span><span>Size</span></div>
+		<span class="msg">Loading files...</span>
 	</div>
-	<span class="msg">Loading files...</span></div>
 </div>
 
 <!--<div id="info-bar">
@@ -90,7 +95,7 @@ font-weight: 500; margin: 0;">File name</h2></div>
 			<span class="prop-title">Stared: </span><span class="prop-value">No</span>
 		</div>
 		
-		<button class="close-modal" style="margin-top:2rem; background-color:white; color:#0f7dcc; font-size: 1.5rem; border:1px solid #0f7dcc;">Close</button>
+		<button class="close-modal close-modal-btn" style="margin-top:2rem; background-color:white; color:#0f7dcc; font-size: 1.5rem; border:1px solid #0f7dcc;">Close</button>
 	</div>
 </div>
 

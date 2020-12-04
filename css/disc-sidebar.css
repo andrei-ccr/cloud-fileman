@@ -1,0 +1,44 @@
+.side-bar {
+	border-right: 1px solid #ddd; 
+	background-color: #fefefe;
+}
+
+.side-bar .profile-area {
+	margin: 2rem 15px;
+}
+
+.side-bar .side-bar-menu {
+	text-align: center; 
+	margin-top: 15px;
+	border-top: 1px solid #ccc;
+	padding: 15px;
+}
+
+.side-bar .sbar-btn {
+	display: block;
+	color: #0f7dcc;
+	padding: 15px;
+	font-size: 1.6rem;
+	margin: 10px;
+	cursor: pointer;
+}
+
+.side-bar .sbar-btn:hover {
+	color: #18a5e8;
+}
+
+.side-bar .profile-area svg {
+	color: #999;
+	cursor: default;
+	font-size: 1.3rem;
+	vertical-align: middle;
+	margin: 0;
+}
+
+.side-bar .profile-area #profile-name {
+	font-size: 1.5rem; 
+	vertical-align: middle; 
+	padding: 7px; 
+	color: #555;
+	font-weight: 400;
+}

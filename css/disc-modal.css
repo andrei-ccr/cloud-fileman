@@ -1,0 +1,51 @@
+.modal {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-height: 1vh;
+	z-index: 100;
+	text-align: center;
+}
+
+.modal .container {
+	color: #777;
+	font-weight: 500;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	display: inline-block;
+	margin: 2rem;
+	padding: 2rem;
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: 1px 1px 1px #ddd;
+}
+
+.modal .close-modal {
+	cursor: pointer;
+	position: relative;
+	top: -10px;
+	font-size: 1.2rem; 
+	color: #717171;
+}
+
+.modal p {
+	
+	color: #424242;
+font-weight: 500;
+font-size: 1.6rem;}
+
+
+.modal .prop-title{
+	text-align: left;
+	font-size: 1.5rem;
+	padding: 1rem 0;
+}
+
+.modal .prop-value {
+	text-align: left;
+	font-size: 1.6rem;
+	color: #444;
+	font-weight: 400;
+	padding: 1rem 0;
+}

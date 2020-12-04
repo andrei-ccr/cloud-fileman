@@ -1,0 +1,28 @@
+#bar {
+	width:100%;
+	text-align: left;
+    background: #fbfbfb;
+	z-index:100;
+	border-bottom: 1px solid #eee;
+	min-height: 25px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding:0.3rem 0;
+}
+
+#bar .search-area svg{
+	color: #777;
+	cursor: default;
+	font-size: 1.7rem;
+	vertical-align: middle;
+	margin: 0;
+}
+
+#bar .search-area #search-bar {
+	font-size: 1.5rem;
+	padding: 1.1rem;
+	vertical-align: middle;
+	min-width: 248px;
+	border: 0px;
+}

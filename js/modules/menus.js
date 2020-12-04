@@ -24,7 +24,7 @@ export function IntegrateBarMenu() {
 export function IntegrateContextMenu() {
 
 	//Right clicks on file zone or a file
-	$(document).on('contextmenu', ".listing-container, .listing-container .f", function(e) {
+	$(document).on('contextmenu', ".file-container, .file-container .f", function(e) {
 		e.preventDefault();
 		e.stopPropagation();
 
@@ -118,22 +118,16 @@ export function DeclareMenuButtons() {
 		}
 	});
 
-	$(document).on("click", ".cm-view-tiles", function() {
-		$("#file-listing").removeClass("big-thumbs-view");
-		$("#file-listing").removeClass("icons-view");
-		$.post("sys/api/settings", {"files_view":0});
-	});
-
 	$(document).on("click", ".cm-view-icons", function() {
-		$("#file-listing").removeClass("big-thumbs-view");
+		$("#file-listing").removeClass("list-view");
 		$("#file-listing").addClass("icons-view");
-		$.post("sys/api/settings", {"files_view":1});
+		//$.post("sys/api/settings", {"files_view":1});
 	});
 
-	$(document).on("click", ".cm-view-bthumbs", function() {
-		$("#file-listing").addClass("big-thumbs-view");
+	$(document).on("click", ".cm-view-list", function() {
+		$("#file-listing").addClass("list-view");
 		$("#file-listing").removeClass("icons-view");
-		$.post("sys/api/settings", {"files_view":2});
+		//$.post("sys/api/settings", {"files_view":2});
 	});
 
 	$(document).on('click', ".cm-upload, #bar .fa-upload", function() {

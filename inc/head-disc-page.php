@@ -8,7 +8,13 @@
 
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="css/style-page-disc.css?v=1">
+<link rel="stylesheet" type="text/css" href="css/disc.css?v=1">
+<link rel="stylesheet" type="text/css" href="css/disc-bar.css?v=1">
+<link rel="stylesheet" type="text/css" href="css/disc-contextmenu.css?v=1">
+<link rel="stylesheet" type="text/css" href="css/disc-modal.css?v=1">
+<link rel="stylesheet" type="text/css" href="css/disc-pathbar.css?v=1">
+<link rel="stylesheet" type="text/css" href="css/disc-sidebar.css?v=1">
+<link rel="stylesheet" type="text/css" href="css/disc-590.css?v=1">
 
 <script script type="module" src="js/index-disc.js"></script>
 

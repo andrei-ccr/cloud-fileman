@@ -17,12 +17,29 @@
 
 <div class="context-menu cm">
 	<ul>
-		<?php if(!$fs && false) : ?><li class="cm-views">View <i class="fas fa-caret-right"></i>
-										<ul id="cm-views-subm">
-											<li class="cm-view-tiles">List</li>
-											<li class="cm-view-icons">Icons</li>
-										</ul>
-									</li> <?php endif; ?>
+		<?php if(!$fs) : ?>
+			<li class="cm-views">View <i class="fas fa-caret-right"></i>
+				<ul id="cm-views-subm">
+					<li class="cm-view-list">List</li>
+					<li class="cm-view-icons">Icons</li>
+				</ul>
+			</li> 
+		<?php endif; ?>
+
+		<?php if($fs) : ?>
+			<li class="cm-colors">Color <i class="fas fa-caret-right"></i>
+				<ul id="cm-colors-subm">
+					<li class="cm-color-red">Red</li>
+					<li class="cm-color-orange">Orange</li>
+					<li class="cm-color-yellow">Yellow</li>
+					<li class="cm-color-green">Green</li>
+					<li class="cm-color-cyan">Cyan</li>
+					<li class="cm-color-blue">Blue</li>
+					<li class="cm-color-purple">Purple</li>
+					<li class="cm-color-pink">Pink</li>
+				</ul>
+			</li> 
+		<?php endif; ?>
 		<?php /*if($fs && ($loc_disk || $loc_fav)) : ?><li id="cm-add-to-fav"><i class="fas fa-star"></i> Mark</li><?php endif;*/ ?>
 
 		<?php if($fs ) :?><li class="cm-edit">Edit text</li><?php endif;?>
