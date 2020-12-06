@@ -1,6 +1,6 @@
 import { ChangeCurrentDirectory, Rename, Select, DeselectAll, ReadCurrentDirectory} from './modules/files.js';
 import { ShowCDInfo } from './modules/properties.js';
-import { IntegrateBarMenu, IntegrateContextMenu, DeclareMenuButtons } from './modules/menus.js';
+import { IntegrateContextMenu, DeclareMenuButtons } from './modules/menus.js';
 import { Status, GetDiscData } from './modules/states.js';
 import { Upload, IntegrateDragDropUploader } from './modules/uploader.js';
 import { DeclareModalButtons, ShowMessage } from './modules/modals.js';
@@ -10,7 +10,6 @@ if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
 	Status.isMobile = true;
 }
 
-IntegrateBarMenu();
 IntegrateContextMenu();
 DeclareMenuButtons();
 

@@ -1,4 +1,5 @@
 import { Status, GetDiscData } from './states.js';
+import { ShowMessage, ShowFileDetailsModal} from './modals.js';
 
 	export function ShowDiskSpace() {
 
@@ -12,10 +13,27 @@ import { Status, GetDiscData } from './states.js';
 			dataType: "json"
 		})
 		.done(function(res) {
-			$("#memory #n").html("Free: " + res['freespace'][0] + " "+ res['freespace'][1] + " of " + res['maxspace'][0] + " " + res['maxspace'][1]);
+			$(".storage-space").html(res['freespace'][0] + res['freespace'][1] + " free");
 		})
 		.fail(function() {
-			$("#memory #n").html("Couldn't retrieve storage space information!");
+			$(".storage-space").html("<a href='#'>Refresh</a>");
+			ShowMessage("Failed to get storage space information. Try again later.")
+		});
+	}
+
+	export function ShowDetails() {
+		let FName = Status.targetFile.find("p").html();
+		let FClass = (Status.targetFile.hasClass("dir"))?"D":"F";
+
+		aGetFileInfo().done(function(res) {
+			if(FClass=="D")
+				ShowFileDetailsModal(FName, "-", res['created'], res['modified'], res['accessed'], res['shared'], res['stared']);
+			else if(FClass == "F");
+				ShowFileDetailsModal(FName, res['size'] + res['unit'], res['created'], res['modified'], res['accessed'], res['shared'], res['stared']);
+		});
+
+		aGetFileInfo().fail(function() {
+			ShowMessage("Failed to retrieve file information!");
 		});
 	}
 
@@ -51,58 +69,13 @@ import { Status, GetDiscData } from './states.js';
 		return result;
 	}
 
-	export function ShowFileInfo() {
-		let t;
-		let fn = Status.targetFile.find("p").html();
+	export function aGetFileInfo(Id=0) {
+		if((Status.targetFile == null) && (Id==0)) return -1;
 
-		if(Status.targetFile.hasClass("dir")) {
-			t = "Directory";
-			$("#fileicon").html("<i class='fas fa-folder'></i>");
-			ShowFolderItems();
-		} else {
-			var fx = ExtractFileMeta(fn);
-			if(fx['ext']!=null) {
-				var ext = fx['ext'];
-				t = ext.toUpperCase() + " File";
-			} else {
-				t = "File";
-			}
-
-			$("#fileicon").html(fx['icon']);
-			ShowFileSize();
-		}
-
-		$("#fileicon").css("display", "inline-block");
-		$("#filename").html(fn);
-		$("#filetype").html(t);
-		
-		$("#info-bar .disc-info").hide();
-		$("#info-bar .file-info").show();
-	}
-
-	export function ShowDiskInfo() {
-		$("#fileicon").hide();
-		$("#filename").html("");
-		$("#filetype").html("");
-		$("#filesize").html("");
-
-		ShowDiskSpace();
-		
-		$("#info-bar .disc-info").show();
-		$("#info-bar .file-info").hide();
-	}
-
-	export function ShowFileSize() {
-		if(Status.targetFile == null) return -1;
-		if(Status.targetFile.hasClass("dir")) return -1; //Size is not calculated for directories
-
-		let fid = Status.targetFile.data("id");
+		let fid = (Id==0)?Status.targetFile.data("id"):Id;
 		let hdl = $("#dinfo").data("hdl");
 
-		$.getJSON("sys/api/properties", {'fid': fid, 'h' : hdl}, function (res) {
-			$("#filesize").html("Size: " + res.size + " " + res.unit);
-			return res.size;
-		});
+		return $.getJSON("sys/api/properties", {'fid': fid, 'h' : hdl});
 	}
 
 	export function ShowFolderItems(folderid = -1) {

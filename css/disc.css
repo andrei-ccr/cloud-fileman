@@ -12,7 +12,7 @@ html {
 }
 
 html, body {
-	height:100%;	
+	height:100vh;
 }
 
 body {
@@ -69,7 +69,7 @@ button:hover {
 
 #main {
     width: 100%;
-    height: 100%;
+    height: 100vh;
 	position:relative;
 	display: grid;
 	grid-template-columns: 300px auto;
@@ -90,7 +90,7 @@ button:hover {
 	width:100%;
 	display:inline-block;
 	box-sizing: border-box;
-	height: 100vh;
+	height:calc(100% - 4.7rem);
 	overflow-y: scroll;
 }
 
@@ -134,27 +134,36 @@ button:hover {
 
 .file-container #details-header {
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
 	font-size: 1.4rem;
 	color: #999;
 	margin: 1.6rem 0;
 	padding: 1rem 0;
 }
 
+.file-container #details-header span:nth-child(1) {
+	margin-left: 4.9rem;
+}
+.file-container #details-header span:nth-child(2) {
+	margin-left: 3rem;
+}
+.file-container #details-header span:nth-child(3) {
+	width: 10rem;
+}
 
 
 /******* LIST VIEW ******/
 
 .file-container.list-view .f {
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
 	width: auto;
 	
 }
 
 .file-container.list-view .f svg {
 	position: relative;
-	left: -10px;
+	left: -0.5rem;
 }
 
 .file-container.list-view .f p {
@@ -166,9 +175,19 @@ button:hover {
 	width: 10rem;
 }
 
+.file-container.list-view .f.selected p {
+	white-space: normal !important;
+	word-wrap: break-word; 
+}
+
 .file-container.list-view .f span {
 	display: flex;
 	align-items: center;
+	color: #333;
+}
+
+.file-container.list-view .f span:nth-child(3) {
+	width: 100px;
 }
 
 
@@ -179,8 +198,6 @@ button:hover {
 	width: 10rem;
     padding: 12px;
 	text-align:center;
-	height: 7rem;
-	
 }
 
 .file-container.icons-view #details-header {

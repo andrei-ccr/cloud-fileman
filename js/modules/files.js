@@ -1,6 +1,24 @@
 import {Status, ClipboardStatus, GetDiscData} from './states.js';
-import {ShowDiskInfo, ShowFileInfo, ShowCDInfo} from './properties.js';
+import {aGetFileInfo} from './properties.js';
 import {ShowMessage} from './modals.js';
+
+	export function SetColor(Id, ColorCode) {
+		let dd = GetDiscData();
+
+		$.ajax({
+			url: 'sys/api/setcolor', 
+			data: { fid: Id, color: ColorCode, discid: dd.discid, permid: dd.permid },
+			dataType: 'json',
+			cache: false,
+			type: 'post'
+		})
+		.done(function() {
+			ReadCurrentDirectory();
+		})
+		.fail(function(res) {
+			ShowMessage("<i class='fas fa-exclamation-triangle'></i> Couldn't change the file's color!");
+		});
+	}
 
 	export function PasteFile() {
 		
@@ -27,7 +45,7 @@ import {ShowMessage} from './modals.js';
 
 	export function ChangeCurrentDirectory(Id) {
 
-		if($(".rename-input").length>0) {
+		if($(".rename-input").length > 0) {
 			//Don't change path while renaming
 			return false;
 		}
@@ -56,7 +74,7 @@ import {ShowMessage} from './modals.js';
 
 		})
 		.fail(function() {
-			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't access that folder!");
+			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't access the folder!");
 		});
 	}
 	
@@ -74,7 +92,7 @@ import {ShowMessage} from './modals.js';
 			ReadCurrentDirectory();
 		})
 		.fail(function(jqXHR) {
-			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't create the folder! " + jqXHR.responseText);
+			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't create a new folder! " + jqXHR.responseText);
 		});
 	}
 
@@ -118,36 +136,65 @@ import {ShowMessage} from './modals.js';
 		.done( function(JSONResp){
 			if(JSONResp.error) return false;
 
-			let FileDOM;
+			let GetFileInfoRequests = [];
+
 			JSONResp.forEach(function(file) {
 				if((file.name == "_dummy_") && (file.id == 0)) {
 					$("#file-listing").append("<span class='msg'>This folder is empty. Upload or create a new file</span>");
 				} else {
-					if(file.color == null) {
-						file.color = "#555";
-					}
-					
-					if(file.name.lastIndexOf(".") != -1) {
-						FileExt = file.name.substring(file.name.lastIndexOf(".")+1, file.name.length);
-					} else {
-						FileExt = "";
-					}
-					
-					FileDOM = "<div class='f noselect " + ((file.isDir!=false)?"dir":"") + "' data-id='"+file.id+"'><div style='display: flex;'>";
-					if(file.isDir != false) 
-						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill: " + file.color + ";'></path></svg>";
-					else
-						FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><text style='font-size:0.5rem; fill: "+file.color+";' y='15' x='7'>"+ FileExt +"</text><path d='M15.475,6.692l-4.084-4.083C11.32,2.538,11.223,2.5,11.125,2.5h-6c-0.413,0-0.75,0.337-0.75,0.75v13.5c0,0.412,0.337,0.75,0.75,0.75h9.75c0.412,0,0.75-0.338,0.75-0.75V6.94C15.609,6.839,15.554,6.771,15.475,6.692 M11.5,3.779l2.843,2.846H11.5V3.779z M14.875,16.75h-9.75V3.25h5.625V7c0,0.206,0.168,0.375,0.375,0.375h3.75V16.75z' style='fill: " + file.color + ";'></path></svg>";
-					FileDOM += "<p>" + file.name + "</p></div><span>02.12.2020 22:11</span><span>0 bytes</span></div>";
-					$("#file-listing").append(FileDOM);
+					GetFileInfoRequests.push(aGetFileInfo(file.id));
 				}
 			});
 
-			if(dd.cd != 0)
-				ShowCDInfo();
-			else {
-				ShowDiskInfo();
+			if(GetFileInfoRequests.length > 0) {
+				$.when.apply(undefined, GetFileInfoRequests).then(function() {
+
+					let ArrayFolderDOM = [""], ArrayFileDOM = [""];
+					let FileDOM;
+
+					$.each(arguments, function(index, fInfoResp) {
+						
+						JSONResp.forEach(function(file, ind) {
+							if(ind != index) return;
+
+							if(file.color == null) {
+								file.color = "#555";
+							}
+							
+							if(file.name.lastIndexOf(".") != -1) {
+								FileExt = file.name.substring(file.name.lastIndexOf(".")+1, file.name.length);
+							} else {
+								FileExt = "";
+							}
+							
+							FileDOM = "<div class='f noselect " + ((file.isDir!=false)?"dir":"") + "' data-id='"+file.id+"'><div style='display: flex;'>";
+							if(file.isDir != false) 
+								FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill: " + file.color + ";'></path></svg>";
+							else
+								FileDOM += "<svg class='svg-icon' viewBox='0 0 20 20' style='width: 1em; height: 1em;'><text style='font-size:0.5rem; fill: "+file.color+";' y='15' x='7'>"+ FileExt +"</text><path d='M15.475,6.692l-4.084-4.083C11.32,2.538,11.223,2.5,11.125,2.5h-6c-0.413,0-0.75,0.337-0.75,0.75v13.5c0,0.412,0.337,0.75,0.75,0.75h9.75c0.412,0,0.75-0.338,0.75-0.75V6.94C15.609,6.839,15.554,6.771,15.475,6.692 M11.5,3.779l2.843,2.846H11.5V3.779z M14.875,16.75h-9.75V3.25h5.625V7c0,0.206,0.168,0.375,0.375,0.375h3.75V16.75z' style='fill: " + file.color + ";'></path></svg>";
+							
+							if(file.isDir != false)
+								FileDOM += "<p>" + file.name + "</p></div><span>" + fInfoResp[0]['modified'] + "</span><span>-</span></div>";
+							else
+								FileDOM += "<p>" + file.name + "</p></div><span>" + fInfoResp[0]['modified'] + "</span><span>" + fInfoResp[0]['size'] + " " + fInfoResp[0]['unit'] +"</span></div>";
+
+							if(file.isDir != false)
+								ArrayFolderDOM.push(FileDOM);
+							else
+								ArrayFileDOM.push(FileDOM);
+
+						});
+					});
+
+					ArrayFolderDOM.forEach(function(val){
+						$("#file-listing").append(val);
+					});
+					ArrayFileDOM.forEach(function(val){
+						$("#file-listing").append(val);
+					});
+				});
 			}
+			
 		})
 		.fail( function() {
 			ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't read the folder!");
@@ -165,7 +212,6 @@ import {ShowMessage} from './modals.js';
 		Status.targetFilename = FileDOM.find("p").html();
 		FileDOM.addClass("selected");
 
-		ShowFileInfo();
 	}
 
 	
@@ -179,12 +225,6 @@ import {ShowMessage} from './modals.js';
 		Status.targetFile = null;
 		Status.targetFilename = "";
 		$(".f").removeClass("selected");
-
-		if($("#dinfo").data("cd") != 0) {
-			ShowCDInfo();
-		} else {
-			ShowDiskInfo();
-		}
 		
 	}
 	
@@ -226,7 +266,7 @@ import {ShowMessage} from './modals.js';
 			ShowMessage("<i class='fas fa-exclamation-triangle'></i> Couldn't rename the file!");
 		});
 
-		Status.targetFile.css("width", "90px");
+		//Status.targetFile.css("width", "90px");
 	}
 	
 	export function Trash(Id) {

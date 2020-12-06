@@ -12,6 +12,29 @@ export function ShowMessage(Message) {
 	setTimeout(function(){ $(".modal").remove() }, 5000);
 }
 
+export function ShowFileDetailsModal(Filename, Size, C, M, A, Shared, Stared) {
+    $("body").append(`
+    <div class="modal">
+        <div class="container">
+            <div style="margin-bottom: 5rem;"><svg class='svg-icon' viewBox='0 0 20 20' style='width: 3rem; height: 3rem;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill:#555;'></path></svg><h2 style="font-size: 1.7rem;
+    font-weight: 500; margin: 0;">`+ Filename +`</h2></div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                <span class="prop-title">Size: </span><span class="prop-value">` + Size + `</span>
+                <span class="prop-title">Uploaded/created: </span><span class="prop-value">`+ C +`</span>
+                <span class="prop-title">Last modified: </span><span class="prop-value">`+ M +`</span>
+                <span class="prop-title">Last accessed: </span><span class="prop-value">`+ A +`</span>
+                <span class="prop-title">Shared: </span><span class="prop-value">` + Shared + `</span>
+                <span class="prop-title">Stared: </span><span class="prop-value">` + Stared + `</span>
+            </div>
+            
+            <button class="close-modal close-modal-btn" style="margin-top:2rem; background-color:white; color:#0f7dcc; font-size: 1.5rem; border:1px solid #0f7dcc;">Close</button>
+        </div>
+    </div>
+    `);
+
+}
+
 export function ShowEditModal(FileId) {
     let dd = GetDiscData();
 

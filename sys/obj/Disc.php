@@ -228,29 +228,29 @@
 		}
 
 
-private function file_get_contents_chunked($file,$chunk_size, $kn, $callback)
-{
-    try
-    {
-        $handle = fopen($file, "r");
-        $i = 0;
-        while (!feof($handle))
-        {
-            call_user_func_array($callback,array(fread($handle,$chunk_size),&$handle,$i,$kn));
-            $i++;
-        }
+		private function file_get_contents_chunked($file,$chunk_size, $kn, $callback)
+		{
+			try
+			{
+				$handle = fopen($file, "r");
+				$i = 0;
+				while (!feof($handle))
+				{
+					call_user_func_array($callback,array(fread($handle,$chunk_size),&$handle,$i,$kn));
+					$i++;
+				}
 
-        fclose($handle);
+				fclose($handle);
 
-    }
-    catch(Exception $e)
-    {
-         trigger_error("file_get_contents_chunked::" . $e->getMessage(),E_USER_NOTICE);
-         return false;
-    }
+			}
+			catch(Exception $e)
+			{
+				trigger_error("file_get_contents_chunked::" . $e->getMessage(),E_USER_NOTICE);
+				return false;
+			}
 
-    return true;
-}
+			return true;
+		}
 
 		/**
 		 * Uploads a file to the server. 
@@ -457,7 +457,7 @@ private function file_get_contents_chunked($file,$chunk_size, $kn, $callback)
 		
 
 		public static function FormatBytes(float $bytes, int $prefferedUnit = 0) :array {
-			if($bytes < KB) return array($bytes, "B");
+			if($bytes < KB) return array($bytes, "Bytes");
 			if($bytes < MB) return array(number_format($bytes/KB, 2), "KB");
 			if($bytes < GB) return array(number_format($bytes/MB, 2), "MB");
 			return array(number_format($bytes/GB, 2), "GB");

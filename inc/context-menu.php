@@ -1,5 +1,5 @@
 <?php
-	if(!isset($_POST['status']) && !isset($_POST['clipboard'])) {
+	if(!isset($_POST['status']) && !isset($_POST['clipboard']) && !isset($_POST['isDir'])) {
 		http_response_code(400);
 		exit;
 	}
@@ -9,8 +9,7 @@
 
 	$fs = !is_null($status->targetFile); //True if a file is selected
 	$f_in_clip = !is_null($clipboard->file); //True if a file is in clipboard
-
-	//$fld = isset($_POST['fld'])?$_POST['fld']:false; //True if selected element is a folder
+	$fld = ($_POST['isDir']=="true")?true:false; //True if selected element is a folder
 
 ?>
 
@@ -42,7 +41,7 @@
 		<?php endif; ?>
 		<?php /*if($fs && ($loc_disk || $loc_fav)) : ?><li id="cm-add-to-fav"><i class="fas fa-star"></i> Mark</li><?php endif;*/ ?>
 
-		<?php if($fs ) :?><li class="cm-edit">Edit text</li><?php endif;?>
+		<?php if($fs && !$fld) :?><li class="cm-edit">Edit text</li><?php endif;?>
 
 		<?php if(!$fs ) : ?><li class="cm-refresh"><i class="fas fa-redo"></i> Refresh</li><?php endif; ?>
 		<?php if(!$fs ) : ?><li class="cm-new-folder"><i class="fas fa-folder"></i> New Folder</li><?php endif; ?>
@@ -53,7 +52,7 @@
 		<?php if($fs ) : ?><li class="cm-copy"><i class="far fa-copy"></i> Copy</li><?php endif; ?>
 
 		<?php if($fs ) :?><li class="cm-rename"><i class="fas fa-edit"></i> Rename</li><?php endif;?>
-		<?php if($fs ) :?><li class="cm-download"><i class="fas fa-download"></i> Download</li><?php endif; ?>
+		<?php if($fs && !$fld) :?><li class="cm-download"><i class="fas fa-download"></i> Download</li><?php endif; ?>
 		<?php if($fs) :?><li class="cm-delete"><i class="fas fa-trash"></i> Delete</li><?php endif; ?>
 		<?php if($fs) :?><li class="cm-file-info"><i class="fas fa-info"></i> Information</li><?php endif; ?>
 		

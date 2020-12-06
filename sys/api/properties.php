@@ -30,13 +30,23 @@
 			if($file->IsDir()) {
 				$count = $file->ItemsCount();
 
-				echo json_encode(array("filecount" => $count));
+				echo json_encode(array("filecount" => $count, "size" => "0", "unit" => "Bytes",
+									"created"=>"05.12.2020 17:45", 
+									"modified"=>"05.12.2020 17:45",
+									"accessed"=>"05.12.2020 17:45",
+									"shared"=>"No",
+									"stared"=>"No"));
 				http_response_code(200);
 				exit;
 			} else {
 				$size = $file->GetSize();
 				$size = Disc::FormatBytes($size);
-				echo json_encode(array("size" => $size[0], "unit" => $size[1]));
+				echo json_encode(array("size" => $size[0], "unit" => $size[1],
+									"created"=>"05.12.2020 17:45", 
+									"modified"=>"05.12.2020 17:45",
+									"accessed"=>"05.12.2020 17:45",
+									"shared"=>"No",
+									"stared"=>"No"));
 		
 				http_response_code(200);
 				exit;

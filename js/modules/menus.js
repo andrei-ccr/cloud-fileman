@@ -1,25 +1,8 @@
 import { Status, ClipboardStatus } from './states.js';
-import { Select, PasteFile, NewFolder, NewFile, ReadCurrentDirectory, Download, Trash, ChangeCurrentDirectory } from './files.js';
+import { Select, PasteFile, NewFolder, NewFile, ReadCurrentDirectory, Download, Trash, ChangeCurrentDirectory, SetColor } from './files.js';
 import { ShowEditModal } from './modals.js';
+import { ShowDetails } from './properties.js';
 
-
-export function IntegrateBarMenu() {
-
-	//Click on menu button on the top bar
-	$(document).on('click', "#bar .fa-ellipsis-v", function(e) {
-		e.preventDefault();
-		
-		let json_status = JSON.stringify(Status);
-
-		$.post("inc/bar-menu", {status : json_status}, function(resp) {
-			$("body").append(resp);
-			$(".m-context-menu").show(50).css({
-				top: "35px",
-				right: "0px"
-			});
-		});
-	});
-}
 
 export function IntegrateContextMenu() {
 
@@ -38,10 +21,12 @@ export function IntegrateContextMenu() {
 
 		let json_status = JSON.stringify(Status);
 		let json_clipboard = JSON.stringify(ClipboardStatus);
+		let bool_isDir = $(this).hasClass("dir");
 
 		$.post("inc/context-menu", {
 			status : json_status, 
-			clipboard : json_clipboard
+			clipboard : json_clipboard,
+			isDir : bool_isDir
 		}, function(resp) {
 			$("body").append(resp);
 			$(".context-menu").show(50).css({
@@ -54,6 +39,45 @@ export function IntegrateContextMenu() {
 }
 
 export function DeclareMenuButtons() {
+
+	$(document).on("click", ".cm-file-info", function(e) {
+		ShowDetails();
+	});
+
+	$(document).on("click", ".cm-color-orange", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid, "#db6701");
+	});
+	$(document).on("click", ".cm-color-yellow", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid,"#d9ae04");
+	});
+	$(document).on("click", ".cm-color-green", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid,"#09bf2e");
+	});
+	$(document).on("click", ".cm-color-cyan", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid,"#12adea");
+	});
+	$(document).on("click", ".cm-color-blue", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid,"#053bdb");
+	});
+	$(document).on("click", ".cm-color-pink", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid,"#db11bb");
+	});
+	$(document).on("click", ".cm-color-purple", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid,"#7b00bf");
+	});
+	$(document).on("click", ".cm-color-red", function() {
+		let fileid = Status.targetFile.data("id");
+		SetColor(fileid,"#e80909");
+	});
+
+
 	$(document).on("click", ".cm-edit", function(e) {
 		let fileid = Status.targetFile.data("id");
 		ShowEditModal(fileid);

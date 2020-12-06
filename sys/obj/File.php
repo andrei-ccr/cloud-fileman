@@ -13,6 +13,7 @@
 		private int $filesize = 0; //Size of the file in bytes
 		private int $discid = 0; //The disc id where this file is located on
 		private string $permission_id = "";
+		private string $color = "";
 
 		public function __construct($identifier, string $permission_id) {
 
@@ -41,6 +42,7 @@
 			$this->filesize = (int)$res['size'];
 			$this->discid = (int)$res['disc_id'];
 			$this->permission_id = $permission_id;
+			$this->color = $res['color'];
 
 		}
 		
@@ -335,6 +337,7 @@
 			
 		}
 
+
 		public function IsFile() : bool {
 			return $this->isDir == false;
 		}
@@ -365,6 +368,21 @@
 
 		public function GetId() : int {
 			return $this->id;
+		}
+
+		public function GetColor() : string {
+			return $this->color;
+		}
+
+		public function SetColor(string $colorCode) : void {
+			try {
+				$stmt = $this->conn->prepare("UPDATE files SET color=:color WHERE key_name=:kn");
+				$stmt->bindParam(":color", $colorCode);
+				$stmt->bindParam(":kn", $this->keyname);
+				$stmt->execute();
+			} catch (PDOException $e) {
+				throw new Exception("Couldn't set new color of file in database: " . $e->getMessage());
+			}
 		}
 
 
