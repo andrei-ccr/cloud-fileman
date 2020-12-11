@@ -1,24 +1,25 @@
 @media only screen and (max-width:600px) {
     body .box-container {
-        width:80%; 
+        width: 300px;
     }
 
     body input {
-        display:block;
-        margin:10px auto;
-    }
-
-    body #email, body #pass {
-        width:80%;
+        width: 250px !important; 
         font-size: 15px;
     }
+
 
     /*body #rememberme, body label[for=rememberme] {
         display:none;
     }*/
 
     body button {
+        width: 250px !important;
         font-size: 17px;
+    }
+
+    body .box-container-txt {
+        width: 100%;
     }
 }
 
@@ -81,8 +82,12 @@ input, textarea {
 }
 
 .box-container-txt {
-	color: #555;
-	font-size:14px;
+    text-align: justify;
+    font-size: 2rem; 
+    line-height: 35px;
+    width: 320px; 
+    margin: 15px auto; 
+    color: #333;
 }
 
 #btn-to-register:hover {

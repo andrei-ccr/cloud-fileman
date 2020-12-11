@@ -90,7 +90,7 @@ button:hover {
 	width:100%;
 	display:inline-block;
 	box-sizing: border-box;
-	height:calc(100% - 4.7rem);
+	height:calc(100% - 9.0rem);
 	overflow-y: scroll;
 }
 
@@ -142,7 +142,7 @@ button:hover {
 }
 
 .file-container #details-header span:nth-child(1) {
-	margin-left: 4.9rem;
+	margin-left: 2.9rem;
 }
 .file-container #details-header span:nth-child(2) {
 	margin-left: 3rem;
@@ -161,9 +161,15 @@ button:hover {
 	
 }
 
+.file-container.list-view .f div:nth-child(1) {
+	display: flex;
+	align-items: center;
+}
+
 .file-container.list-view .f svg {
 	position: relative;
 	left: -0.5rem;
+	font-size: 3rem;
 }
 
 .file-container.list-view .f p {
@@ -263,4 +269,30 @@ button:hover {
 }
 .f-color-yellow {
 	fill: #d9ae04;
+}
+
+
+.back-color-red {
+	background-color: #e80909;
+}
+.back-color-green {
+	background-color: #09bf2e;
+}
+.back-color-orange {
+	background-color: #db6701;
+}
+.back-color-cyan {
+	background-color: #12adea;
+}
+.back-color-pink {
+	background-color: #db11bb;
+}
+.back-color-blue {
+	background-color: #053bdb;
+}
+.back-color-purple {
+	background-color: #7b00bf;
+}
+.back-color-yellow {
+	background-color: #d9ae04;
 }

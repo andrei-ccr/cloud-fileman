@@ -5,7 +5,7 @@
 			</div>
 		<?php endif; ?>
 		
-		<p class="box-container-txt" style="text-align: justify; font-size: 2rem; line-height: 35px; width: 320px; margin: 15px auto; color: #333;">Log in to access your free virtual storage space where you can store files of any kind.</p>
+		<p class="box-container-txt">Log in to access your free virtual storage space where you can store files of any kind.</p>
 		
 		<input type="text" placeholder="Email" id="email" name="email" style="width:300px;">
 		<div style="display:block; margin:10px;"></div>
@@ -18,7 +18,7 @@
 		
 		<div style="display:block"></div>
 		
-		<input type="Checkbox" id="rememberme" name="rememberme" style="vertical-align: middle;"><label for="rememberme" style="font-size: 14px; color: #777;">Stay Logged In</label>
+		<input type="Checkbox" id="rememberme" name="rememberme" style="vertical-align: middle; width: initial !important;"><label for="rememberme" style="font-size: 14px; color: #777;">Stay Logged In</label>
 		
 		<div style="display:block; margin:20px;"></div>
 		

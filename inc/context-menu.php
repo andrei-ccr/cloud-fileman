@@ -28,14 +28,14 @@
 		<?php if($fs) : ?>
 			<li class="cm-colors">Color <i class="fas fa-caret-right"></i>
 				<ul id="cm-colors-subm">
-					<li class="cm-color-red">Red</li>
-					<li class="cm-color-orange">Orange</li>
-					<li class="cm-color-yellow">Yellow</li>
-					<li class="cm-color-green">Green</li>
-					<li class="cm-color-cyan">Cyan</li>
-					<li class="cm-color-blue">Blue</li>
-					<li class="cm-color-purple">Purple</li>
-					<li class="cm-color-pink">Pink</li>
+					<li class="cm-color-red"><div class="color-box back-color-red"></div> Red</li>
+					<li class="cm-color-orange"><div class="color-box back-color-orange"></div> Orange</li>
+					<li class="cm-color-yellow"><div class="color-box back-color-yellow" ></div> Yellow</li>
+					<li class="cm-color-green"><div class="color-box back-color-green" ></div> Green</li>
+					<li class="cm-color-cyan"><div class="color-box back-color-cyan"></div> Cyan</li>
+					<li class="cm-color-blue"><div class="color-box back-color-blue"></div> Blue</li>
+					<li class="cm-color-purple"><div class="color-box back-color-purple" ></div> Purple</li>
+					<li class="cm-color-pink"><div class="color-box back-color-pink" ></div> Pink</li>
 				</ul>
 			</li> 
 		<?php endif; ?>

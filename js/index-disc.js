@@ -18,6 +18,7 @@ DeclareModalButtons();
 IntegrateDragDropUploader();
 
 
+
 $(document).on('change', "#file-up", function() {
 	var files = document.getElementById('file-up').files;
 	

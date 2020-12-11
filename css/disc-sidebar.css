@@ -8,23 +8,28 @@
 }
 
 .side-bar .side-bar-menu {
-	text-align: center; 
+	text-align: left; 
 	margin-top: 15px;
 	border-top: 1px solid #ccc;
 	padding: 15px;
 }
 
-.side-bar .sbar-btn {
-	display: block;
-	color: #0f7dcc;
-	padding: 15px;
-	font-size: 1.6rem;
-	margin: 10px;
+.side-bar .nav-btn {
+	color: #555;
+	padding: 8px;
+	font-size: 1.5rem;
+	margin: 5px;
 	cursor: pointer;
+	display: block;
 }
 
-.side-bar .sbar-btn:hover {
+.side-bar .nav-btn:hover {
 	color: #18a5e8;
+}
+
+.side-bar .nav-btn.selected {
+	color: #0f7dcc;
+	font-weight: 500;
 }
 
 .side-bar .profile-area svg {

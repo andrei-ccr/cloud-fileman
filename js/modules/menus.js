@@ -15,6 +15,10 @@ export function IntegrateContextMenu() {
 			return false;
 		}
 
+		let height = $("body").outerHeight();
+
+		
+
 		if( $(this).hasClass("f") ) { 
 			Select($(this)); 
 		}
@@ -29,10 +33,20 @@ export function IntegrateContextMenu() {
 			isDir : bool_isDir
 		}, function(resp) {
 			$("body").append(resp);
-			$(".context-menu").show(50).css({
-				top: e.clientY + "px",
-				left: e.clientX + "px"
-			});
+			let offset = 0
+			if (e.clientY + $(".context-menu").outerHeight() > height) {
+				offset = height - (e.clientY + $(".context-menu").outerHeight());
+				$(".context-menu").show().css({
+					top: e.clientY + offset + "px",
+					left: e.clientX + 15 + "px"
+				});
+			} else {
+				$(".context-menu").show().css({
+					top: e.clientY + "px",
+					left: e.clientX + 15 + "px"
+				});
+			}
+			
 		});
 
 	});

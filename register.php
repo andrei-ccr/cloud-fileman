@@ -43,7 +43,7 @@
 		</div>
 	<?php else: ?>
 		<div class="box-container" id="register-container">
-			<p class="box-container-txt" style="text-align: justify; font-size: 20px; line-height: 35px; width: 320px; margin: 15px auto; color: #333;">Register to access your free virtual storage space where you can store files of any kind.</p>
+			<p class="box-container-txt">Register to access your free virtual storage space where you can store files of any kind.</p>
 			<input type="text" placeholder="Email" id="email" name="email" style="width:300px;">
 			<div style="display:block;"></div>
 			<input type="text" placeholder="Confirm Email" id="cemail" name="cemail" style="width:300px;">
@@ -53,9 +53,9 @@
 			<input type="password" placeholder="Confirm Password" id="cpass" name="cpass" style="width:300px;">
 			<div style="display:block;"></div>
 			<button id="btn-register" style="margin: 10px 20px; width:320px;">Register</button>
-			<p class="box-container-txt" style="width: 300px; font-size: 12px; text-align: center; margin: auto;">I read and I agree to the Terms of Service and Privacy Policy including Cookie Policy</p> 
+			<p class="box-container-txt" style="width: 300px; font-size: 12px; text-align: center; margin: auto; line-height: 20px;">I read and I agree to the Terms of Service and Privacy Policy including Cookie Policy</p> 
 			<div style="display:block; margin:20px;"></div>
-			<p class="box-container-txt">Already have an account? <a href="/">Log In</a></p>
+			<p class="box-container-txt" style="font-size:14px; color:#555; text-align: center;">Already have an account? <a href="/">Log In</a></p>
 		</div>
 		
 		 

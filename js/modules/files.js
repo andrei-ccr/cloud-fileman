@@ -192,6 +192,8 @@ import {ShowMessage} from './modals.js';
 					ArrayFileDOM.forEach(function(val){
 						$("#file-listing").append(val);
 					});
+
+					//$( ".f" ).draggable();
 				});
 			}
 			

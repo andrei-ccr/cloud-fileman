@@ -31,6 +31,11 @@
 	
 
 </div>
+<div id="second-bar">
+	<a class="sbar-btn cm-upload"><i class="fas fa-upload"></i> Upload File(s)</a>
+	<a class="sbar-btn cm-new-folder"><i class="fas fa-folder"></i> New Folder</a>
+	<a class="sbar-btn cm-new-file"><i class="fas fa-file"></i> New File</a>
+</div>
 
 <div id="main">
 	
@@ -38,6 +43,10 @@
 		<div class="profile-area">
 			<i class="fas fa-user"></i>
 			<span id="profile-name"><?php echo $username; ?></span>
+			<a class="cm-logout" style="display: inline-block;
+font-size: 12px;
+margin: 0px 5px;
+padding: 5px; cursor: pointer"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
 			<!--<div class="fa-ellipsis-v" id="profile-pic"></div>-->
 		</div>
 
@@ -45,10 +54,11 @@
 		<p class="storage-space" style="font-size: 1.5rem;padding: 2px 15px;color: #555;margin: 3px 0px;"><?php echo $freespace[0] . $freespace[1]; ?> free</p>
 		
 		<div class="side-bar-menu">
-			<button class="cm-upload"><i class="fas fa-upload"></i> Upload File(s)</button>
-			<a class="sbar-btn cm-new-folder"><i class="fas fa-folder"></i> New Folder</a>
-			<a class="sbar-btn cm-new-file"><i class="fas fa-file"></i> New File</a>
-			<a class="sbar-btn cm-logout"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+			<a class="nav-btn selected cm-nav-files"><i class="fas fa-hdd"></i> Files</a>
+			<a class="nav-btn cm-nav-starred"><i class="far fa-star"></i> Starred</a>
+			<a class="nav-btn cm-nav-shared"><i class="fas fa-user-friends"></i> Shared</a>
+			<a class="nav-btn cm-nav-recent"><i class="fas fa-history"></i> Recent</a>
+			<a class="nav-btn cm-nav-deleted"><i class="fas fa-trash"></i> Deleted</a>
 		</div>
 	</div>
 	
