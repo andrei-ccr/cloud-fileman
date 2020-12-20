@@ -6,7 +6,7 @@
 
 	$status = json_decode($_POST['status']);
 
-	$fs = !is_null($status->targetFile); //True if a file is selected
+	$fs = !is_null($status->selectedFiles); //True if a file is selected
 ?>
 
 

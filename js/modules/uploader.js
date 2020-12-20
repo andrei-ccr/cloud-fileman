@@ -1,18 +1,20 @@
 import {GetDiscData} from './states.js';
 import {ShowMessage} from './modals.js';
+import {ReadCurrentDirectory} from './files.js';
+import {UpdateDiskSpace} from './properties.js';
 
 export function IntegrateDragDropUploader() {
 
     //Drag and drop file upload 
-    $(document).on('dragover','#file-zone', function(e) {
+    $(document).on('dragover','#file-listing', function(e) {
         e.preventDefault();
         e.stopPropagation();
     });
-    $(document).on('dragenter','#file-zone', function(e) {
+    $(document).on('dragenter','#file-listing', function(e) {
         e.preventDefault();
         e.stopPropagation();
     });
-    $(document).on('drop','#file-zone', function(e) {
+    $(document).on('drop','#file-listing', function(e) {
         var droppedFiles = e.originalEvent.dataTransfer.files;
         e.preventDefault();
         e.stopPropagation();
@@ -44,6 +46,9 @@ export function Upload(Files) {
     })
     .done(function(JSONResp){
         ShowMessage("File(s) uploaded successfully");
+        ReadCurrentDirectory();
+        UpdateDiskSpace();
+
     })
     .fail(function(resp){
         ShowMessage("Upload failed: " + resp.responseText);

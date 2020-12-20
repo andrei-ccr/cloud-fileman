@@ -1,7 +1,7 @@
 import { Status, GetDiscData } from './states.js';
 import { ShowMessage, ShowFileDetailsModal} from './modals.js';
 
-	export function ShowDiskSpace() {
+	export function UpdateDiskSpace() {
 
 		let dd = GetDiscData();
 
@@ -22,8 +22,8 @@ import { ShowMessage, ShowFileDetailsModal} from './modals.js';
 	}
 
 	export function ShowDetails() {
-		let FName = Status.targetFile.find("p").html();
-		let FClass = (Status.targetFile.hasClass("dir"))?"D":"F";
+		let FName = Status.selectedFiles[0][1].find(".filename").html();
+		let FClass = (Status.selectedFiles[0][1].hasClass("dir"))?"D":"F";
 
 		aGetFileInfo().done(function(res) {
 			if(FClass=="D")
@@ -37,13 +37,13 @@ import { ShowMessage, ShowFileDetailsModal} from './modals.js';
 		});
 	}
 
-	export function ShowCDInfo() {
+	/*export function ShowCDInfo() {
 		let t = "Directory";
 		let cdid = $('#dinfo').data("cd");
 		let fn = ""
 
 		$("#fileicon").html("<i class='fas fa-folder'></i>");
-		ShowFolderItems(cdid);
+		//ShowFolderItems(cdid);
 
 		$("#fileicon").css("display", "inline-block");
 		$("#filename").html(fn);
@@ -51,7 +51,7 @@ import { ShowMessage, ShowFileDetailsModal} from './modals.js';
 		
 		$("#info-bar .disc-info").hide();
 		$("#info-bar .file-info").show();
-	}
+	}*/
 
 	export function ExtractFileMeta(Filename) {
 		let FileExt = Filename.split(".");
@@ -70,24 +70,17 @@ import { ShowMessage, ShowFileDetailsModal} from './modals.js';
 	}
 
 	export function aGetFileInfo(Id=0) {
-		if((Status.targetFile == null) && (Id==0)) return -1;
+		if((Status.selectedFiles.length == 0) && (Id==0)) return -1;
 
-		let fid = (Id==0)?Status.targetFile.data("id"):Id;
+		//Get fid of the first selected file only
+		let fid = (Id==0)?Status.selectedFiles[0][0]:Id;
 		let hdl = $("#dinfo").data("hdl");
 
 		return $.getJSON("sys/api/properties", {'fid': fid, 'h' : hdl});
 	}
 
-	export function ShowFolderItems(folderid = -1) {
+	/*export function ShowFolderItems(folderid = -1) {
 		
-		let fid;
-		if(folderid == -1) {
-			if(Status.targetFile == null) return -1;
-			if(!Status.targetFile.hasClass("dir")) return -1; //Items count is not calculated for files
-			fid = Status.targetFile.data("id");
-		} else {
-			fid = folderid;
-		}
 			
 		let hdl = $("#dinfo").data("hdl");
 
@@ -95,5 +88,5 @@ import { ShowMessage, ShowFileDetailsModal} from './modals.js';
 			$("#filesize").html(res.filecount + " item(s)");
 			return res.fileCount;
 		});
-	}
+	}*/
 

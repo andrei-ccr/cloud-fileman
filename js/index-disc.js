@@ -1,5 +1,4 @@
-import { ChangeCurrentDirectory, Rename, Select, DeselectAll, ReadCurrentDirectory} from './modules/files.js';
-import { ShowCDInfo } from './modules/properties.js';
+import { ChangeCurrentDirectory, Rename, Select, Deselect, DeselectAll, ReadCurrentDirectory} from './modules/files.js';
 import { IntegrateContextMenu, DeclareMenuButtons } from './modules/menus.js';
 import { Status, GetDiscData } from './modules/states.js';
 import { Upload, IntegrateDragDropUploader } from './modules/uploader.js';
@@ -37,7 +36,7 @@ $(document).on("mousedown", function(e) {
 	//If renaming is in proccess, finish it
 	if(!$(e.target).is("input")) {
 		if($(".rename-input").length>0) {
-			Rename(Status.targetFile.data("id"), $(".rename-input").val(), 1);
+			Rename(Status.selectedFiles[0][1].data("id"), $(".rename-input").val(), 1);
 			$(".rename-input").replaceWith("<p>"+$(".rename-input").val()+"</p>");
 		}
 	}
@@ -48,19 +47,38 @@ $(document).on("mousedown", function(e) {
 	}
 });
 
+$(window).keydown(function(e) {
+	if (e.which == 17) { 
+		Status.ctrlPressed = true;
+	}
+}).keyup(function(e) {
+	if (e.which == 17) {
+		Status.ctrlPressed = false;
+	}
+});
+
 
 //Clicking on a file
 $(document).on("click", ".file-container .f", function(e) {
 
-	//Select the file. If it's a folder and it's already selected, enter it.
-	if(!$(this).hasClass("selected")) {
-		Select($(this));
+	if(Status.ctrlPressed) {
+		if(!$(this).hasClass("selected")) {
+			Select($(this), true);
+		} else {
+			Deselect($(this));
+		}
 	} else {
-		if($(this).hasClass("dir")) {
-			ChangeCurrentDirectory($(this).data("id"));
-			ShowCDInfo();
+
+		//Select the file. If it's a folder and it's already selected, enter it.
+		if(!$(this).hasClass("selected")) {
+			Select($(this));
+		} else {
+			if($(this).hasClass("dir")) {
+				ChangeCurrentDirectory($(this).data("id"));
+			}
 		}
 	}
+	
 });
 
 //File rename
@@ -68,7 +86,7 @@ $(document).on('keypress', ".rename-input", function(e) {
 	let key = e.which;
 	if(key == 13) {
 		if($.trim($(".rename-input").val()) != "") {
-			Rename(Status.targetFile.data("id"), $(".rename-input").val());
+			Rename(Status.selectedFiles[0][1].data("id"), $(".rename-input").val());
 			$(".rename-input").replaceWith("<p>"+$(".rename-input").val()+"</p>");
 		}
 	}

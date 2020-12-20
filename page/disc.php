@@ -20,8 +20,9 @@
 
 <div id="bar">
 	<div id="logo" style="display: flex; align-items: center; cursor: pointer;">
-	<img src="/logo.png" style="width: 40px; margin-left: 10px;">
-</div>
+		<img src="/logo.png" style="width: 40px; margin-left: 10px;">
+		<span>Alpha Version</span>
+	</div>
 	
 	
 	<div class="search-area">
@@ -71,26 +72,6 @@ padding: 5px; cursor: pointer"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
 		<span class="msg">Loading files...</span>
 	</div>
 </div>
-
-
-<!--<div id="info-bar">
-
-	<div class="disc-info" style="margin-left: 10px; padding: 5px;">
-		<i class="fas fa-hdd" style="color: #5f5f5f;
-    vertical-align: middle;"></i>
-		<div id="memory" style="display:inline-block; vertical-align:middle;">
-			<span id="n"><?php echo "Free: " . $freespace[0] ." ". $freespace[1] . " of " . $maxspace[0] ." ". $maxspace[1]; ?></span>
-		</div>
-	</div>
-				
-	<div class="file-info noselect" >
-		<span id="fileicon"></span>
-		<span id="filename" class="noselect" style="display:inline-block;"></span>
-		<span id="filetype" class="noselect" style="color: #464646; display: inline-block; font-size: 13px;"></span>
-		<span id="filesize" class="noselect" style="color:#5f5f5f; display:inline-block;"></span>
-	</div>
-	
-</div>-->
 
 
 

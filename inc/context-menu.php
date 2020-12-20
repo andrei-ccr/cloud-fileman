@@ -7,7 +7,7 @@
 	$status = json_decode($_POST['status']);
 	$clipboard = json_decode($_POST['clipboard']);
 
-	$fs = !is_null($status->targetFile); //True if a file is selected
+	$fs = !is_null($status->selectedFiles); //True if a file is selected
 	$f_in_clip = !is_null($clipboard->file); //True if a file is in clipboard
 	$fld = ($_POST['isDir']=="true")?true:false; //True if selected element is a folder
 

@@ -47,15 +47,48 @@ export function ShowEditModal(FileId) {
     })
     .done( function(res){
         if(res.content.length >= 2147483646) {
-            $("#errors").html("<i class='fas fa-exclamation-circle'></i> Warning! Files this big cannot be edited!");
+            ShowMessage("<i class='fas fa-exclamation-circle'></i>Files over 2GB cannot be edited");
+            return;
         }
 
-        $.post("inc/modal-edit-file", {content: res.content, fid: FileId, filename: res.filename }, function(resp) {
-            $("body").append(resp);
-        });
+        $("body").append(`
+            <div class="modal">
+            <div class="container">
+                <div style="margin-bottom: 3rem; display: flex; align-items: center;"><svg class='svg-icon' viewBox='0 0 20 20' style='width: 3rem; height: 3rem;'><path d='M17.927,5.828h-4.41l-1.929-1.961c-0.078-0.079-0.186-0.125-0.297-0.125H4.159c-0.229,0-0.417,0.188-0.417,0.417v1.669H2.073c-0.229,0-0.417,0.188-0.417,0.417v9.596c0,0.229,0.188,0.417,0.417,0.417h15.854c0.229,0,0.417-0.188,0.417-0.417V6.245C18.344,6.016,18.156,5.828,17.927,5.828 M4.577,4.577h6.539l1.231,1.251h-7.77V4.577z M17.51,15.424H2.491V6.663H17.51V15.424z' style='fill:#555;'></path></svg><h2 style="font-size: 1.7rem;
+            font-weight: 500; margin: 0;">` +  res.filename + `</h2></div>
+                    
+                    <textarea id="file-content">` + res.content + `</textarea>
+                    
+                    <button class="save-modal-btn">Save</button>
+                    <button class="close-modal close-modal-btn">Back</button>
+                </div>
+            </div>
+        `);
     })
     .fail( function() {
-        $("#errors").html("<i class='fas fa-exclamation-circle'></i> Couldn't read the contents of this file!");
+        ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't read the contents of this file!");
+    });
+
+    $(document).on("click", ".modal .save-modal-btn", function(e) {
+        let c = $("#file-content").val();
+
+
+        $.ajax({
+            url: 'sys/api/writefile', 
+            data: {discid: dd.discid, fid: FileId, content: c, permid: dd.permid},
+            dataType: 'json',
+            cache: false,
+            type: 'post'
+        })
+        .done( function(res) {
+            
+            ShowMessage("File saved.")
+        })
+        .fail( function() {
+            ShowMessage("<i class='fas fa-exclamation-circle'></i> Couldn't save the file!");
+        });
+
+        
     });
 }
 

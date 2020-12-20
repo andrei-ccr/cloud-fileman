@@ -1,5 +1,5 @@
 import { Status, ClipboardStatus } from './states.js';
-import { Select, PasteFile, NewFolder, NewFile, ReadCurrentDirectory, Download, Trash, ChangeCurrentDirectory, SetColor } from './files.js';
+import { ReadLocation, Select, PasteFile, NewFolder, NewFile, ReadCurrentDirectory, Download, Trash, ChangeCurrentDirectory, SetColor } from './files.js';
 import { ShowEditModal } from './modals.js';
 import { ShowDetails } from './properties.js';
 
@@ -15,14 +15,11 @@ export function IntegrateContextMenu() {
 			return false;
 		}
 
-		let height = $("body").outerHeight();
-
-		
-
-		if( $(this).hasClass("f") ) { 
+		if( $(this).hasClass("selected") == false ) { 
 			Select($(this)); 
 		}
 
+		let height = $("body").outerHeight();
 		let json_status = JSON.stringify(Status);
 		let json_clipboard = JSON.stringify(ClipboardStatus);
 		let bool_isDir = $(this).hasClass("dir");
@@ -59,53 +56,108 @@ export function DeclareMenuButtons() {
 	});
 
 	$(document).on("click", ".cm-color-orange", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid, "#db6701");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids, "#db6701");
 	});
 	$(document).on("click", ".cm-color-yellow", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid,"#d9ae04");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids,"#d9ae04");
 	});
 	$(document).on("click", ".cm-color-green", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid,"#09bf2e");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids,"#09bf2e");
 	});
 	$(document).on("click", ".cm-color-cyan", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid,"#12adea");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids,"#12adea");
 	});
 	$(document).on("click", ".cm-color-blue", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid,"#053bdb");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids,"#053bdb");
 	});
 	$(document).on("click", ".cm-color-pink", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid,"#db11bb");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids,"#db11bb");
 	});
 	$(document).on("click", ".cm-color-purple", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid,"#7b00bf");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids,"#7b00bf");
 	});
 	$(document).on("click", ".cm-color-red", function() {
-		let fileid = Status.targetFile.data("id");
-		SetColor(fileid,"#e80909");
+		let fileids = [];
+		Status.selectedFiles.forEach(function(file) {
+			fileids.push(file[0]);
+		});
+
+		SetColor(fileids,"#e80909");
 	});
 
+	$(document).on("click", ".nav-btn", function(e) {
+		$(".nav-btn").removeClass("selected");
+		$(this).addClass("selected");
+	});
+
+	$(document).on("click", ".cm-nav-files", function(e) {
+		ChangeCurrentDirectory(0);
+	});
+	$(document).on("click", ".cm-nav-recent", function(e) {
+		ReadLocation(3);
+	});
+	$(document).on("click", ".cm-nav-shared", function(e) {
+		ReadLocation(2);
+	});
+	$(document).on("click", ".cm-nav-starred", function(e) {
+		ReadLocation(1);
+	});
+	$(document).on("click", ".cm-nav-deleted", function(e) {
+		ReadLocation(4);
+	});
 
 	$(document).on("click", ".cm-edit", function(e) {
-		let fileid = Status.targetFile.data("id");
+		//Edit only the first selected file
+		let fileid = Status.selectedFiles[0][1].data("id");
 		ShowEditModal(fileid);
 	});
 
 	$(document).on("click", ".cm-cut", function(e) {
-		let fileid = Status.targetFile.data("id");
+		//TODO: Get all selected files
+		let fileid = Status.selectedFiles[0][1].data("id");
 		ClipboardStatus.file = fileid;
 		ClipboardStatus.cut = true;
 
 	});
 
 	$(document).on("click", ".cm-copy", function(e) {
-		let fileid = Status.targetFile.data("id");
+		//TODO: Get all selected files
+		let fileid = Status.selectedFiles[0][1].data("id");
 		ClipboardStatus.file = fileid;
 		ClipboardStatus.cut = false;
 
@@ -132,26 +184,28 @@ export function DeclareMenuButtons() {
 	});
 
 	$(document).on("click", ".cm-download", function() {
-		let fileid = Status.targetFile.data("id");
+		//TODO: Get all selected files
+		let fileid = Status.selectedFiles[0][1].data("id");
 		Download(fileid);
 	});
 
 	$(document).on("click", ".cm-delete", function() {
-		let fileid = Status.targetFile.data("id");
+		//TODO: Get all selected files
+		let fileid = Status.selectedFiles[0][1].data("id");
 		Trash(fileid);
 	});
 
 	$(document).on("click", ".cm-rename", function() {
-		Status.targetFile.find("p").replaceWith("<input type='text' value='"+Status.targetFilename+"' class='rename-input' autofocus>");
-		Status.targetFile.css("width", "auto");
+		Status.selectedFiles[0][1].find("p").replaceWith("<input type='text' value='" + Status.selectedFiles[0][1] + "' class='rename-input' autofocus>");
+		Status.selectedFiles[0][1].css("width", "auto");
 		$(".rename-input").focus();
 		$(".rename-input").select();
 	});
 
 	$(document).on("click", ".cm-open", function() {
-		let fileid = Status.targetFile.data("id");
+		let fileid = Status.selectedFiles[0][1].data("id");
 		
-		if(Status.targetFile.hasClass("dir")) {
+		if(Status.selectedFiles[0][1].hasClass("dir")) {
 			ChangeCurrentDirectory(fileid);
 		}
 	});

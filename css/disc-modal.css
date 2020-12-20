@@ -35,6 +35,45 @@
 font-weight: 500;
 font-size: 1.6rem;}
 
+.modal .container textarea {
+	display: block;
+	width: 80rem;
+	min-height: 15rem;
+	border: 1px solid #555;
+	border-radius: 5px;
+	background: #fcfcfc;
+	padding: 10px;
+	font-family: 'Roboto', sans-serif;
+	font-size: 1.5rem;
+}
+
+.modal .container .close-modal-btn {
+	margin-top:2rem; 
+	background-color:white; 
+	color:#0f7dcc; 
+	font-size: 1.5rem; 
+	border:1px solid #0f7dcc;
+	position: initial !important;
+}
+
+.modal .container .close-modal-btn:hover {
+	color: #1388db;
+}
+
+.modal .container .save-modal-btn {
+	margin-top:2rem; 
+	background-color: #0f7dcc;
+	font-size: 1.5rem;
+	border: 1px solid #0f7dcc;
+	color: white;
+	font-weight: 500;
+	position: initial !important;
+}
+
+.modal .container .save-modal-btn:hover {
+	background-color: #1388db;
+}
+
 
 .modal .prop-title{
 	text-align: left;

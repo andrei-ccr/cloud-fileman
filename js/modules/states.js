@@ -1,7 +1,7 @@
 export var Status = {
-	targetFile : null,
-	isMobile : false,
-	targetFilename : ""
+	selectedFiles : [],
+    isMobile : false,
+    ctrlPressed : false
 };
 
 export var ClipboardStatus = {
