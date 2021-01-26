@@ -117,7 +117,7 @@ class User extends Connection {
 
     public function LoginAsGuest() : void {
 		
-		User::PreviewModeAction();
+		//User::PreviewModeAction();
         
         $new_temp_permid = Security::GeneratePermId();
         try {
@@ -200,7 +200,7 @@ class User extends Connection {
         $conn = new Connection();
         $p = Security::PasswordHashFunction($password);
 		
-		User::PreviewModeAction();
+		//User::PreviewModeAction();
 
         try {
             $stmt = $conn->conn->prepare("INSERT INTO users(email, password) VALUES (:email, :pass)");

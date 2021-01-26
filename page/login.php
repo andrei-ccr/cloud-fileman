@@ -1,4 +1,6 @@
 	<div class="box-container">
+
+		<img src="/logo.png" style="width:100px;">
 		<?php if(isset($error)): ?>
 			<div id="error-container">
 				<p class="box-container-txt" style="color:red"><?php echo $error;?></p>

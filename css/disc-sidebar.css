@@ -23,6 +23,11 @@
 	display: block;
 }
 
+.side-bar .nav-btn svg{
+	position: relative;
+	left: -12px;
+}
+
 .side-bar .nav-btn:hover {
 	color: #18a5e8;
 }
